@@ -257,3 +257,22 @@ class CoverageRun(CreatedAt, Base):
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     summary: Mapped[dict[str, Any]] = mapped_column(_json(), nullable=False)
     unreached: Mapped[list[dict[str, Any]]] = mapped_column(_json(), nullable=False)
+
+
+class JagoMessage(Base):
+    """One turn of a Student's conversation with JAGO, with the tools it used to answer."""
+
+    __tablename__ = "jago_messages"
+    __table_args__ = (Index("ix_jago_messages_student_created", "student_id", "created_at"),)
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    student_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("students.id", ondelete="CASCADE"), nullable=False
+    )
+    role: Mapped[str] = mapped_column(String(16), nullable=False)
+    content: Mapped[str] = mapped_column(Text, nullable=False)
+    language: Mapped[str] = mapped_column(String(8), nullable=False)
+    meta: Mapped[dict[str, Any]] = mapped_column(_json(), nullable=False, default=dict)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.clock_timestamp(), nullable=False
+    )

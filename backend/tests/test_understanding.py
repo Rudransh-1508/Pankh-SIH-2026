@@ -1,0 +1,60 @@
+import pytest
+
+from app.jago.understanding import classify, parse_answer
+
+
+@pytest.mark.parametrize(
+    ("fact", "text", "value"),
+    [
+        ("is_scheduled_tribe", "haan", True),
+        ("is_scheduled_tribe", "हाँ", True),
+        ("is_scheduled_tribe", "Nahi", False),
+        ("holds_other_scholarship", "no, none", False),
+        ("family_income", "2.5 lakh", 250000),
+        ("family_income", "ढाई लाख", 250000),
+        ("family_income", "1 lakh 20 thousand", 120000),
+        ("family_income", "1,80,000", 180000),
+        ("family_income", "साढ़े 3 लाख", 350000),
+        ("masters_marks_percent", "58.5%", 58.5),
+        ("date_of_birth", "14/03/2008", "2008-03-14"),
+        ("education_level", "BA", "undergraduate"),
+        ("education_level", "class 10", "class_10"),
+        ("education_level", "12th", "class_12"),
+        ("education_level", "कक्षा 9", "class_9"),
+        ("education_level", "Ph.D", "phd"),
+        ("current_mota_award", "nahi", "none"),
+    ],
+)
+def test_understands_answers(fact, text, value):
+    assert parse_answer(fact, text) == value
+
+
+@pytest.mark.parametrize(
+    ("fact", "text"),
+    [
+        ("is_scheduled_tribe", "what is this?"),
+        ("masters_marks_percent", "150"),
+        ("education_level", "cricket"),
+    ],
+)
+def test_ignores_what_is_not_an_answer(fact, text):
+    assert parse_answer(fact, text) is None
+
+
+@pytest.mark.parametrize(
+    ("text", "intent"),
+    [
+        ("Which scholarships can I get?", "eligibility"),
+        ("मुझे कौन-सी छात्रवृत्ति मिल सकती है?", "eligibility"),
+        ("Where is my application?", "applications"),
+        ("status of my post matric application", "applications"),
+        ("mera paisa kab aayega", "payments"),
+        ("क्या मेरा पैसा आया?", "payments"),
+        ("any problem with my documents", "documents"),
+        ("tell me about top class", "scheme:top_class"),
+        ("namaste", "greeting"),
+        ("what's the weather", "unknown"),
+    ],
+)
+def test_recognises_what_students_ask(text, intent):
+    assert classify(text) == intent

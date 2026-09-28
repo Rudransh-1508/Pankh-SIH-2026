@@ -34,6 +34,12 @@ class Settings(BaseSettings):
     registers_url: str = "http://localhost:8100"
     registers_api_key: str = "pankh-simulator-key"
 
+    # JAGO's language model: any provider with an OpenAI-compatible chat completions API.
+    # Unset, JAGO answers with its own grounded intents and needs no model at all.
+    llm_base_url: str | None = None
+    llm_api_key: str | None = None
+    llm_model: str | None = None
+
     # Proofs are signed with an Ed25519 key. Unset, a key is derived from secret_key.
     proof_signing_key: str | None = None
     proof_ttl: timedelta = timedelta(days=365)

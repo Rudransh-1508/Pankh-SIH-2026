@@ -7,6 +7,7 @@ from app.config import get_settings
 from app.coverage.router import router as coverage_router
 from app.eligibility.router import router as eligibility_router
 from app.facts.router import router as facts_router
+from app.jago.router import router as jago_router
 from app.review.router import router as review_router
 from app.schemes.router import router as schemes_router
 from app.verification.router import router as verification_router
@@ -34,6 +35,7 @@ def create_app() -> FastAPI:
         applications_router,
         review_router,
         coverage_router,
+        jago_router,
     ):
         app.include_router(router, prefix="/v1")
 
