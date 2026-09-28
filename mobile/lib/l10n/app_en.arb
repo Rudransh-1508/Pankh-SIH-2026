@@ -1,0 +1,126 @@
+{
+  "@@locale": "en",
+  "appName": "Pankh",
+  "languageName": "English",
+  "welcomeTitle": "Find the scholarships you can get",
+  "welcomeBody": "Answer a few questions. We check your answers against the official rules of all five Ministry of Tribal Affairs scholarships.",
+  "welcomeStart": "Check my scholarships",
+  "welcomeSignIn": "Already signed up? Sign in",
+  "changeLanguage": "Change language",
+  "phoneTitle": "Your mobile number",
+  "phoneBody": "We will send a 6-digit code by SMS. Your answers are saved to this number.",
+  "phoneLabel": "Mobile number",
+  "sendCode": "Send code",
+  "codeTitle": "Enter the code",
+  "codeBody": "We sent a 6-digit code to {phone}.",
+  "@codeBody": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "codeLabel": "6-digit code",
+  "verifyCode": "Verify",
+  "resendIn": "Resend code in {seconds} s",
+  "@resendIn": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "resendCode": "Resend code",
+  "changeNumber": "Change number",
+  "yes": "Yes",
+  "no": "No",
+  "notSure": "I'm not sure",
+  "next": "Next",
+  "back": "Back",
+  "amountHint": "Amount in rupees",
+  "percentHint": "Percentage",
+  "day": "Day",
+  "month": "Month",
+  "year": "Year",
+  "invalidDate": "Enter a real date, like 14 03 2008.",
+  "invalidNumber": "Enter a number.",
+  "topClassSearch": "Search the Top Class list",
+  "topClassSearchHint": "Institute name or city",
+  "topClassNotListed": "My institute is not on the list",
+  "discoverTitle": "Your scholarships",
+  "forAcademicYear": "For {year}",
+  "@forAcademicYear": {
+    "placeholders": {
+      "year": {
+        "type": "String"
+      }
+    }
+  },
+  "statusEligible": "You qualify",
+  "statusNeedsInformation": "{count, plural, =1{1 answer needed} other{{count} answers needed}}",
+  "@statusNeedsInformation": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statusNotEligible": "Not for you this year",
+  "answerMore": "{count, plural, =1{Answer 1 more question to know for sure} other{Answer {count} more questions to know for sure}}",
+  "@answerMore": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "continueAnswering": "Continue",
+  "changeAnswers": "Change my answers",
+  "saveAnswersTitle": "Keep your answers safe",
+  "saveAnswersBody": "Sign in with your mobile number so you don't have to answer again.",
+  "signIn": "Sign in",
+  "signOut": "Sign out",
+  "signedInAs": "Signed in as {phone}",
+  "@signedInAs": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "whyTitle": "Why",
+  "ruleMet": "Met",
+  "ruleNotMet": "Not met",
+  "ruleUnknown": "We need to know",
+  "ruleWaived": "Does not apply to you",
+  "whatYouCanDo": "What you can do",
+  "answerThis": "Answer this",
+  "sourcePage": "{clause}, page {page}",
+  "@sourcePage": {
+    "placeholders": {
+      "clause": {
+        "type": "String"
+      },
+      "page": {
+        "type": "int"
+      }
+    }
+  },
+  "benefitsTitle": "What you get",
+  "howToApply": "How to apply",
+  "openApplicationSite": "Open the application website",
+  "savedResults": "Showing saved results. Connect to the internet to update them.",
+  "networkError": "Could not reach Pankh. Check your internet connection and try again.",
+  "tryAgain": "Try again",
+  "rulesInEnglish": "Scheme rules are shown in English for now.",
+  "summaryEligible": "{count, plural, =1{You qualify for 1 scholarship.} other{You qualify for {count} scholarships.}}",
+  "summaryNone": "None of the five scholarships fits your answers for this year.",
+  "summaryNoneBody": "Each scholarship below shows which condition was not met. If an answer was wrong, change it.",
+  "@summaryEligible": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
+}
