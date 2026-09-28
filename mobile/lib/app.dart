@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'data/api.dart';
 import 'l10n/generated/app_localizations.dart';
 import 'screens/answers_screen.dart';
+import 'screens/applications_screen.dart';
 import 'screens/digilocker_callback_screen.dart';
 import 'screens/discover_screen.dart';
 import 'screens/questions_screen.dart';
@@ -32,9 +33,21 @@ final routerProvider = Provider((ref) {
         path: '/questions',
         builder: (_, state) => QuestionsScreen(fact: state.uri.queryParameters['fact']),
       ),
-      GoRoute(path: '/discover', builder: (_, _) => const DiscoverScreen()),
+      StatefulShellRoute.indexedStack(
+        builder: (_, _, shell) => _Tabs(shell: shell),
+        branches: [
+          StatefulShellBranch(
+            routes: [GoRoute(path: '/discover', builder: (_, _) => const DiscoverScreen())],
+          ),
+          StatefulShellBranch(
+            routes: [GoRoute(path: '/applications', builder: (_, _) => const ApplicationsScreen())],
+          ),
+          StatefulShellBranch(
+            routes: [GoRoute(path: '/wallet', builder: (_, _) => const WalletScreen())],
+          ),
+        ],
+      ),
       GoRoute(path: '/answers', builder: (_, _) => const AnswersScreen()),
-      GoRoute(path: '/wallet', builder: (_, _) => const WalletScreen()),
       // DigiLocker returns to pankh://digilocker/callback; the router sees the path.
       GoRoute(
         path: '/callback',
@@ -69,6 +82,45 @@ class PankhApp extends ConsumerWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       routerConfig: ref.watch(routerProvider),
+    );
+  }
+}
+
+/// The three places a Student keeps coming back to, always one tap away.
+class _Tabs extends StatelessWidget {
+  const _Tabs({required this.shell});
+
+  final StatefulNavigationShell shell;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return Scaffold(
+      body: shell,
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: shell.currentIndex,
+        onDestinationSelected: (index) =>
+            shell.goBranch(index, initialLocation: index == shell.currentIndex),
+        backgroundColor: PankhColors.card,
+        indicatorColor: PankhColors.peacockMist,
+        destinations: [
+          NavigationDestination(
+            icon: const Icon(Icons.school_outlined),
+            selectedIcon: const Icon(Icons.school_rounded, color: PankhColors.peacockDeep),
+            label: l10n.tabScholarships,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.assignment_outlined),
+            selectedIcon: const Icon(Icons.assignment_rounded, color: PankhColors.peacockDeep),
+            label: l10n.tabApplications,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.folder_outlined),
+            selectedIcon: const Icon(Icons.folder_rounded, color: PankhColors.peacockDeep),
+            label: l10n.tabDocuments,
+          ),
+        ],
+      ),
     );
   }
 }

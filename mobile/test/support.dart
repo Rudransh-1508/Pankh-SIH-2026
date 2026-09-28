@@ -22,6 +22,17 @@ class FakeApi extends PankhApi {
   /// What /me/verification returns; null means DigiLocker is not linked yet.
   Json? verificationJson;
 
+  /// What /me/applications returns.
+  Json applicationsJson = {
+    'linked': true,
+    'stale_sources': <dynamic>[],
+    'warning': null,
+    'applications': <dynamic>[],
+  };
+
+  @override
+  Future<Json> applications() async => applicationsJson;
+
   @override
   Future<List<dynamic>> factSchema() async => fixture('fact_schema') as List<dynamic>;
 

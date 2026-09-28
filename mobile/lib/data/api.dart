@@ -100,6 +100,8 @@ class PankhApi {
 
   Future<Json> verification() => _send(() => _dio.get('/me/verification'));
 
+  Future<Json> applications() => _send(() => _dio.get('/me/applications'));
+
   Future<void> verifyInstitution(String code) =>
       _sendList(() => _dio.post('/me/verifications/institution', data: {'code': code}));
 

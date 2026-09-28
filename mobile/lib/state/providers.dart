@@ -178,3 +178,10 @@ final verificationProvider = FutureProvider<Verification?>((ref) async {
   if (ref.watch(sessionProvider) == null) return null;
   return Verification.fromJson(await ref.read(apiProvider).verification());
 });
+
+/// Applications across NSP, SFMP and the NOS Portal. Null when not signed in.
+final applicationsProvider = FutureProvider<Applications?>((ref) async {
+  if (ref.watch(sessionProvider) == null) return null;
+  ref.watch(verificationProvider);
+  return Applications.fromJson(await ref.read(apiProvider).applications());
+});

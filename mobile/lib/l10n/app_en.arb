@@ -171,5 +171,64 @@
     }
   },
   "done": "Done",
-  "confirmed": "Confirmed"
+  "confirmed": "Confirmed",
+  "tabScholarships": "Scholarships",
+  "tabApplications": "Applications",
+  "tabDocuments": "Documents",
+  "applicationsTitle": "My applications",
+  "applicationsNeedLink": "Link DigiLocker so we can find your applications on the National Scholarship Portal, the fellowship portal and the NOS portal.",
+  "applicationsNone": "We did not find any scholarship applications for you this year.",
+  "applicationsStale": "Could not reach {systems}. Showing what we saw last time.",
+  "@applicationsStale": {
+    "placeholders": {
+      "systems": {
+        "type": "String"
+      }
+    }
+  },
+  "stepApplied": "Applied",
+  "stepVerified": "Verified",
+  "stepSanctioned": "Sanctioned",
+  "stepPaid": "Money",
+  "waitingOnYou": "Waiting for you to act",
+  "waitingOn": "Waiting at your {who} for {days, plural, =1{1 day} other{{days} days}}",
+  "@waitingOn": {
+    "placeholders": {
+      "who": {
+        "type": "String"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "stalledNote": "This is longer than the official timeline.",
+  "received": "{amount} received",
+  "@received": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "paymentsTitle": "Payments",
+  "historyTitle": "History",
+  "instalment": "Instalment {number}",
+  "@instalment": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "paymentCredited": "Credited",
+  "paymentPending": "On its way",
+  "paymentOnHold": "On hold",
+  "paymentFailed": "Did not reach you",
+  "whoInstitute": "institute",
+  "whoDistrict": "district office",
+  "whoState": "state office",
+  "whoSanctioning": "sanctioning office",
+  "whoUniversity": "university",
+  "whoMinistry": "Ministry"
 }

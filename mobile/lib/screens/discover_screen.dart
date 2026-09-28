@@ -128,7 +128,7 @@ class _Results extends ConsumerWidget {
               title: l10n.walletLinkTitle,
               body: l10n.walletLinkBody,
               action: l10n.linkDigiLocker,
-              onPressed: () => context.push('/wallet'),
+              onPressed: () => context.go('/wallet'),
             ),
             const SizedBox(height: PankhSpace.md),
           ],
@@ -321,7 +321,6 @@ class _AccountButton extends ConsumerWidget {
       icon: const Icon(Icons.account_circle_rounded, color: PankhColors.peacockDeep),
       itemBuilder: (context) => [
         PopupMenuItem(enabled: false, child: Text(l10n.signedInAs(phone))),
-        PopupMenuItem(onTap: () => context.push('/wallet'), child: Text(l10n.walletTitle)),
         PopupMenuItem(
           onTap: () async {
             await ref.read(sessionProvider.notifier).signOut();

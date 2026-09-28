@@ -1,0 +1,62 @@
+{
+  "linked": true,
+  "stale_sources": [],
+  "warning": null,
+  "applications": [
+    {
+      "source_system": "NSP",
+      "external_id": "NSPWB2719312216",
+      "scheme_id": "post_matric",
+      "scheme_name": "Post-Matric Scholarship for ST Students",
+      "academic_year": "2026-27",
+      "stage": "disbursing",
+      "status_text": "Payment Initiated",
+      "waiting_on": null,
+      "days_waiting": 37,
+      "stalled": false,
+      "deficiency": null,
+      "sanctioned_amount": 18500,
+      "received": 0,
+      "timeline": [
+        {
+          "label": "Submitted",
+          "on": "2026-05-28"
+        },
+        {
+          "label": "Verified by Institute",
+          "on": "2026-06-11"
+        },
+        {
+          "label": "Verified by District",
+          "on": "2026-06-27"
+        },
+        {
+          "label": "Verified by State",
+          "on": "2026-07-13"
+        },
+        {
+          "label": "Sanctioned",
+          "on": "2026-07-29"
+        },
+        {
+          "label": "Payment Initiated",
+          "on": "2026-08-23"
+        }
+      ],
+      "instalments": [
+        {
+          "number": 1,
+          "amount": 9250,
+          "status": "failed",
+          "initiated_on": "2026-08-23",
+          "credited_on": null,
+          "reference": null,
+          "problem": {
+            "reason": "Your bank account is not linked with your Aadhaar for direct benefit transfer.",
+            "fix": "Visit your bank with your Aadhaar card and ask them to link (seed) it for DBT. The payment is sent again once it is linked."
+          }
+        }
+      ]
+    }
+  ]
+}

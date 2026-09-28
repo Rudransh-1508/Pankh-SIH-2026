@@ -277,3 +277,132 @@ class Verification {
 
   bool get linked => identityName != null;
 }
+
+class Problem {
+  const Problem({required this.reason, required this.fix});
+
+  factory Problem.fromJson(Json json) =>
+      Problem(reason: json['reason'] as String, fix: json['fix'] as String);
+
+  static Problem? maybe(Object? json) => json == null ? null : Problem.fromJson(json as Json);
+
+  final String reason;
+  final String fix;
+}
+
+enum InstalmentStatus { credited, pending, onHold, failed }
+
+class Instalment {
+  const Instalment({
+    required this.number,
+    required this.amount,
+    required this.status,
+    required this.date,
+    required this.reference,
+    required this.problem,
+  });
+
+  factory Instalment.fromJson(Json json) => Instalment(
+    number: json['number'] as int,
+    amount: json['amount'] as int,
+    status: switch (json['status'] as String) {
+      'credited' => InstalmentStatus.credited,
+      'failed' => InstalmentStatus.failed,
+      'on_hold' => InstalmentStatus.onHold,
+      _ => InstalmentStatus.pending,
+    },
+    date: (json['credited_on'] ?? json['initiated_on']) as String?,
+    reference: json['reference'] as String?,
+    problem: Problem.maybe(json['problem']),
+  );
+
+  final int number;
+  final int amount;
+  final InstalmentStatus status;
+  final String? date;
+  final String? reference;
+  final Problem? problem;
+}
+
+enum ApplicationStage { submitted, underVerification, sanctioned, disbursing, closed, rejected }
+
+class TrackedApplication {
+  const TrackedApplication({
+    required this.sourceSystem,
+    required this.externalId,
+    required this.schemeName,
+    required this.academicYear,
+    required this.stage,
+    required this.statusText,
+    required this.waitingOn,
+    required this.daysWaiting,
+    required this.stalled,
+    required this.deficiency,
+    required this.received,
+    required this.timeline,
+    required this.instalments,
+  });
+
+  factory TrackedApplication.fromJson(Json json) => TrackedApplication(
+    sourceSystem: json['source_system'] as String,
+    externalId: json['external_id'] as String,
+    schemeName: json['scheme_name'] as String,
+    academicYear: json['academic_year'] as String,
+    stage: switch (json['stage'] as String) {
+      'under_verification' => ApplicationStage.underVerification,
+      'sanctioned' => ApplicationStage.sanctioned,
+      'disbursing' => ApplicationStage.disbursing,
+      'closed' => ApplicationStage.closed,
+      'rejected' => ApplicationStage.rejected,
+      _ => ApplicationStage.submitted,
+    },
+    statusText: json['status_text'] as String,
+    waitingOn: json['waiting_on'] as String?,
+    daysWaiting: json['days_waiting'] as int?,
+    stalled: json['stalled'] as bool,
+    deficiency: Problem.maybe(json['deficiency']),
+    received: json['received'] as int,
+    timeline: [
+      for (final t in json['timeline'] as List) ((t as Json)['label'] as String, t['on'] as String),
+    ],
+    instalments: [for (final i in json['instalments'] as List) Instalment.fromJson(i as Json)],
+  );
+
+  final String sourceSystem;
+  final String externalId;
+  final String schemeName;
+  final String academicYear;
+  final ApplicationStage stage;
+  final String statusText;
+  final String? waitingOn;
+  final int? daysWaiting;
+  final bool stalled;
+  final Problem? deficiency;
+  final int received;
+  final List<(String, String)> timeline;
+  final List<Instalment> instalments;
+
+  bool get needsAction =>
+      deficiency != null || instalments.any((i) => i.problem != null) || stalled;
+}
+
+class Applications {
+  const Applications({
+    required this.linked,
+    required this.staleSources,
+    required this.warning,
+    required this.items,
+  });
+
+  factory Applications.fromJson(Json json) => Applications(
+    linked: json['linked'] as bool,
+    staleSources: [for (final s in json['stale_sources'] as List) s as String],
+    warning: json['warning'] as String?,
+    items: [for (final a in json['applications'] as List) TrackedApplication.fromJson(a as Json)],
+  );
+
+  final bool linked;
+  final List<String> staleSources;
+  final String? warning;
+  final List<TrackedApplication> items;
+}
