@@ -1,4 +1,5 @@
 import csv
+import re
 from dataclasses import dataclass
 from functools import cache
 from pathlib import Path
@@ -36,3 +37,28 @@ def top_class_institutes() -> dict[int, TopClassInstitute]:
             )
             for row in csv.DictReader(handle)
         }
+
+
+_MINOR_WORDS = {"of", "and", "the", "for", "in", "at"}
+
+
+def _initials(name: str) -> str:
+    """'National Institute of Technology Rourkela' -> 'nitr'."""
+    words = re.findall(r"[a-z]+", name.lower())
+    return "".join(word[0] for word in words if word not in _MINOR_WORDS)
+
+
+def search_top_class(query: str, limit: int = 20) -> list[TopClassInstitute]:
+    """Institutes matching every word of the query.
+
+    A word matches the name, location or state, or, if it has three or more letters, the
+    institute's initials, so students can type "NIT Rourkela", "IIT Delhi" or "AIIMS".
+    """
+    words = re.findall(r"[a-z0-9]+", query.lower())
+    matches = []
+    for institute in top_class_institutes().values():
+        text = f"{institute.name} {institute.location} {institute.state}".lower()
+        initials = _initials(institute.name)
+        if all(word in text or (len(word) >= 3 and word in initials) for word in words):
+            matches.append(institute)
+    return matches[:limit]

@@ -5,6 +5,8 @@ Student is told exactly which Facts are missing. Every judgment names the academ
 Rule Version it used.
 """
 
+import itertools
+import math
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from datetime import date
@@ -21,6 +23,7 @@ from pankh_rules.system import concrete_variables, pankh_system
 from pankh_rules.variables import facts as fact_variables
 
 FIRST_SUPPORTED_ACADEMIC_YEAR = 2021
+_MAX_ASSUMPTIONS = 64
 
 
 class FactKind(StrEnum):
@@ -186,13 +189,21 @@ class _Judge:
         self.facts = facts
         self.period = f"{academic_year}-07"
         self.academic_year = academic_year
-        system = pankh_system()
-        self.parameters = system.parameters(f"{academic_year}-07-01")
-        inputs = {name: {self.period: _to_openfisca(value)} for name, value in facts.items()}
-        self.simulation = SimulationBuilder().build_from_entities(
-            system, {"students": {"student": inputs}}
-        )
+        self.parameters = pankh_system().parameters(f"{academic_year}-07-01")
+        self._simulations: dict[frozenset[tuple[str, Any]], Any] = {}
+        self.simulation = self._simulation({})
         self.context = self._display_facts()
+
+    def _simulation(self, assumed: dict[str, Any]):
+        """A simulation of the known Facts plus `assumed` values for some missing ones."""
+        key = frozenset(assumed.items())
+        if key not in self._simulations:
+            facts = self.facts | assumed
+            inputs = {name: {self.period: _to_openfisca(value)} for name, value in facts.items()}
+            self._simulations[key] = SimulationBuilder().build_from_entities(
+                pankh_system(), {"students": {"student": inputs}}
+            )
+        return self._simulations[key]
 
     def scheme(self, scheme: Scheme) -> SchemeResult:
         results = tuple(self.rule(rule) for rule in scheme.rules)
@@ -211,18 +222,48 @@ class _Judge:
         if rule.waived_by and self.facts.get(rule.waived_by) is True:
             return RuleResult(rule, Outcome.WAIVED, title, None, None, ())
         missing = tuple(name for name in rule.required_facts(self.facts) if name not in self.facts)
-        if missing:
+        passed = self._decided_regardless(rule, missing) if missing else self._passes(rule, {})
+        if passed is None:
             return RuleResult(rule, Outcome.UNKNOWN, title, None, None, missing)
-        if self.simulation.calculate(rule.variable, self.period)[0]:
+        if passed:
             return RuleResult(rule, Outcome.PASS, title, None, None, ())
+        text = _PartialContext(context)
         return RuleResult(
             rule,
             Outcome.FAIL,
             title,
-            rule.fail_reason.format_map(context),
-            rule.remedy.format_map(context) if rule.remedy else None,
+            rule.fail_reason.format_map(text),
+            rule.remedy.format_map(text) if rule.remedy else None,
             (),
         )
+
+    def _passes(self, rule: Rule, assumed: dict[str, Any]) -> bool:
+        return bool(self._simulation(assumed).calculate(rule.variable, self.period)[0])
+
+    def _decided_regardless(self, rule: Rule, missing: tuple[str, ...]) -> bool | None:
+        """The Rule's outcome if every possible answer to the missing Facts gives the same one.
+
+        Only yes/no and choice Facts can be tried exhaustively, and only a few combinations.
+        This spares the Student questions whose answers could not change the outcome, such as
+        asking a Class XI student whether they study abroad when judging Pre-Matric.
+        """
+        specs = fact_specs()
+        options: list[list[Any]] = []
+        for name in missing:
+            spec = specs[name]
+            if spec.kind is FactKind.BOOLEAN:
+                options.append([True, False])
+            elif spec.kind is FactKind.CHOICE:
+                options.append([choice.key for choice in spec.choices])
+            else:
+                return None
+        if math.prod(len(values) for values in options) > _MAX_ASSUMPTIONS:
+            return None
+        outcomes = {
+            self._passes(rule, dict(zip(missing, values, strict=True)))
+            for values in itertools.product(*options)
+        }
+        return outcomes.pop() if len(outcomes) == 1 else None
 
     def _parameter_values(self, rule: Rule) -> dict[str, str]:
         values = {}
@@ -298,3 +339,10 @@ def _to_openfisca(value: Any) -> Any:
     if isinstance(value, OpenFiscaEnum):
         return value.name
     return value
+
+
+class _PartialContext(dict):
+    """Template values where a Fact that is still unknown reads as a neutral placeholder."""
+
+    def __missing__(self, key: str) -> str:
+        return "unknown"

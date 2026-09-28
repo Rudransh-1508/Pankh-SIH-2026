@@ -97,3 +97,25 @@ def test_top_class_students_are_not_on_post_matric(profiles):
     rule = _rule(facts, "post_matric.not_at_top_class_institute")
     assert rule.outcome is Outcome.FAIL
     assert "Top Class" in rule.remedy
+
+
+def test_rule_settled_when_every_possible_answer_agrees():
+    # Class XI fails "Class IX or X in India" whatever the answer about studying abroad.
+    rule = _rule({"education_level": "class_11"}, "pre_matric.class_ix_or_x")
+    assert rule.outcome is Outcome.FAIL
+    assert rule.missing_facts == ()
+
+
+def test_rule_stays_unknown_when_a_missing_answer_matters():
+    rule = _rule({"education_level": "class_9"}, "pre_matric.class_ix_or_x")
+    assert (rule.outcome, rule.missing_facts) == (Outcome.UNKNOWN, ("studies_abroad",))
+
+
+def test_rule_passes_when_every_possible_answer_passes():
+    # Before 2025-26 NET was not required, so the NET answer cannot change the outcome.
+    assert _rule({}, "nfst.net_qualified", year=2024).outcome is Outcome.PASS
+
+
+def test_numbers_and_dates_are_never_assumed():
+    rule = _rule({"education_level": "phd"}, "nfst.age_limit")
+    assert (rule.outcome, rule.missing_facts) == (Outcome.UNKNOWN, ("date_of_birth",))

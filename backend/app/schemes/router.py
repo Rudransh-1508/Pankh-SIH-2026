@@ -46,15 +46,7 @@ async def search_top_class_institutes(
     q: str = Query("", max_length=100, description="Words to match in name, location or state"),
     limit: int = Query(20, ge=1, le=265),
 ) -> list[InstituteOut]:
-    words = q.lower().split()
-    matches = [
-        institute
-        for institute in pankh_rules.top_class_institutes().values()
-        if all(
-            word in f"{institute.name} {institute.location} {institute.state}".lower()
-            for word in words
-        )
-    ]
+    matches = pankh_rules.search_top_class(q, limit)
     return [
         InstituteOut(
             id=i.id,
@@ -64,5 +56,5 @@ async def search_top_class_institutes(
             courses=i.courses,
             citation=CitationOut.of(i.citation),
         )
-        for i in matches[:limit]
+        for i in matches
     ]

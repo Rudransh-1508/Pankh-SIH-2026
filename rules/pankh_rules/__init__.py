@@ -15,7 +15,7 @@ from pankh_rules.engine import (
     next_facts,
     validate_facts,
 )
-from pankh_rules.institutes import TopClassInstitute, top_class_institutes
+from pankh_rules.institutes import TopClassInstitute, search_top_class, top_class_institutes
 from pankh_rules.schemes import SCHEMES, Benefit, Rule, Scheme
 
 __all__ = [
@@ -37,6 +37,7 @@ __all__ = [
     "evaluate",
     "fact_specs",
     "next_facts",
+    "search_top_class",
     "sources",
     "top_class_institutes",
     "validate_facts",

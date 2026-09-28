@@ -18,8 +18,8 @@ QUESTIONS: dict[str, dict[str, str]] = {
         "hi": "इस साल आप क्या पढ़ रहे हैं, या किस पढ़ाई के लिए आवेदन कर रहे हैं?",
     },
     "studies_abroad": {
-        "en": "Is your course at a college or university outside India?",
-        "hi": "क्या आपका कोर्स भारत के बाहर किसी कॉलेज या विश्वविद्यालय में है?",
+        "en": "Is your course outside India?",
+        "hi": "क्या आपका कोर्स भारत के बाहर है?",
     },
     "institution_recognised": {
         "en": "Is your school or college run or recognised by the government?",
