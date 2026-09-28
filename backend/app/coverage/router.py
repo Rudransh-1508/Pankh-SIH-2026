@@ -74,7 +74,14 @@ async def _latest(session) -> CoverageRun:
 async def coverage(official: CurrentOfficial, session: SessionDep) -> dict[str, Any]:
     _require(official)
     run = await _latest(session)
-    summary = run.summary | {"states": _for(official, run.summary["states"])}
+    states = _for(official, run.summary["states"])
+    summary = run.summary | {"states": states}
+    if official.level != "ministry":
+        # Totals must describe what this official can see, not the whole country.
+        keys = ("enrolled", "reached", "possible", "unreached")
+        totals = {key: sum(state[key] for state in states) for key in keys}
+        share = round(totals["reached"] / totals["enrolled"], 3) if totals["enrolled"] else 0.0
+        summary["totals"] = totals | {"coverage": share}
     return {"id": str(run.id), "created_at": run.created_at.isoformat(), **summary}
 
 

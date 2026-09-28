@@ -30,6 +30,7 @@ async def test_state_officials_see_only_their_state(client, official):
     state = await official("state", "Jharkhand")
     coverage = (await client.get("/v1/ministry/coverage", headers=state)).json()
     assert [s["state"] for s in coverage["states"]] == ["Jharkhand"]
+    assert coverage["totals"]["enrolled"] == coverage["states"][0]["enrolled"]
     assert (await client.post("/v1/ministry/coverage/runs", headers=state)).status_code == 403
     district = await official("district", "Jharkhand", "Dumka")
     assert (await client.get("/v1/ministry/coverage", headers=district)).status_code == 403

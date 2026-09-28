@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+/* Pankh colours, from Gond painting: peacock, leaf and turmeric on a cool paper ground. */
+@theme {
+  --color-ink: #1b2a4a;
+  --color-ink-soft: #4a5670;
+  --color-peacock: #0e6f78;
+  --color-peacock-deep: #0a545b;
+  --color-peacock-mist: #e1efef;
+  --color-turmeric: #e9a800;
+  --color-turmeric-mist: #fbf0cf;
+  --color-leaf: #2f7d4f;
+  --color-leaf-mist: #e2f0e7;
+  --color-laterite: #b3412e;
+  --color-laterite-mist: #f6e4e0;
+  --color-paper: #f5f7f6;
+  --color-card: #ffffff;
+  --color-line: #dce3e1;
+
+  --font-sans: var(--font-noto-sans), var(--font-noto-devanagari), system-ui, sans-serif;
+  --font-display: var(--font-baloo), var(--font-noto-sans), sans-serif;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-peacock);
+  outline-offset: 2px;
+}

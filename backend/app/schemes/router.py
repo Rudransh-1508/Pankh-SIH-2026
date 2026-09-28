@@ -1,6 +1,8 @@
 from fastapi import APIRouter, HTTPException, Query, status
+from pydantic import BaseModel
 
 import pankh_rules
+from app.academic_year import current_academic_year, label
 from app.schemes.schemas import CitationOut, FactSpecOut, InstituteOut, SchemeOut, SourceOut
 
 router = APIRouter(tags=["catalogue"])
@@ -58,3 +60,46 @@ async def search_top_class_institutes(
         )
         for i in matches
     ]
+
+
+class RuleOut(BaseModel):
+    id: str
+    title: str
+    citation: CitationOut
+
+
+class SchemeRulesOut(BaseModel):
+    scheme: SchemeOut
+    rules: list[RuleOut]
+
+
+class RulesOut(BaseModel):
+    academic_year: int
+    academic_year_label: str
+    schemes: list[SchemeRulesOut]
+
+
+@router.get("/rules")
+async def list_rules(
+    academic_year: int | None = Query(None, description="Start year of the session, e.g. 2026"),
+) -> RulesOut:
+    """Every Rule of every Scheme, as in force for the academic year, with its source."""
+    year = academic_year or current_academic_year()
+    try:
+        results = pankh_rules.evaluate({}, year)
+    except pankh_rules.UnsupportedAcademicYear as error:
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(error)) from error
+    return RulesOut(
+        academic_year=year,
+        academic_year_label=label(year),
+        schemes=[
+            SchemeRulesOut(
+                scheme=SchemeOut.of(result.scheme),
+                rules=[
+                    RuleOut(id=r.rule.id, title=r.title, citation=CitationOut.of(r.rule.citation))
+                    for r in result.rules
+                ],
+            )
+            for result in results
+        ],
+    )

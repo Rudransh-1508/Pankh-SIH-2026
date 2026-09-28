@@ -32,3 +32,13 @@ async def test_searches_top_class_institutes(client):
     ).json()
     assert results[0]["name"] == "Indian Institute of Technology Delhi"
     assert results[0]["citation"]["clause"] == "S.No. 1"
+
+
+async def test_lists_rules_with_their_values_for_the_year(client):
+    body = (await client.get("/v1/rules", params={"academic_year": 2024})).json()
+    nfst = next(s for s in body["schemes"] if s["scheme"]["id"] == "nfst")
+    titles = [rule["title"] for rule in nfst["rules"]]
+    assert "Aged 36 or under on 1 July" in titles
+    assert all(
+        rule["citation"]["url"].startswith("https://tribal.nic.in/") for rule in nfst["rules"]
+    )

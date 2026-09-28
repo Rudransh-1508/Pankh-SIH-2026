@@ -1,7 +1,7 @@
 """The Reviewer's queue: Exceptions within their jurisdiction, and their decisions."""
 
 import uuid
-from datetime import UTC, date, datetime, timedelta
+from datetime import UTC, datetime, timedelta
 from typing import Any, Literal
 
 from fastapi import APIRouter, HTTPException, Query, status
@@ -89,7 +89,7 @@ def _item(exception: VerificationException, identity: Identity | None) -> dict[s
         "match_score": exception.match_score,
         "level": exception.level,
         "status": exception.status,
-        "days_open": (date.today() - exception.created_at.date()).days,
+        "days_open": (datetime.now(UTC) - exception.created_at).days,
     }
 
 
