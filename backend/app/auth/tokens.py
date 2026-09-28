@@ -2,7 +2,7 @@ import hashlib
 import secrets
 import uuid
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 
 import jwt
 from sqlalchemy import select, update
@@ -26,20 +26,26 @@ class InvalidToken(Exception):
     pass
 
 
-def create_access_token(settings: Settings, student_id: uuid.UUID) -> str:
+def create_access_token(
+    settings: Settings, subject_id: uuid.UUID, role: str = "student", ttl: timedelta | None = None
+) -> str:
     now = datetime.now(UTC)
     claims = {
-        "sub": str(student_id),
+        "sub": str(subject_id),
+        "role": role,
         "aud": AUDIENCE,
         "iat": now,
-        "exp": now + settings.access_token_ttl,
+        "exp": now + (ttl or settings.access_token_ttl),
     }
     return jwt.encode(claims, settings.secret_key, algorithm=ALGORITHM)
 
 
-def read_access_token(settings: Settings, token: str) -> uuid.UUID:
+def read_access_token(settings: Settings, token: str, role: str = "student") -> uuid.UUID:
+    """The subject of a valid token for the given role. Other roles' tokens are refused."""
     try:
         claims = jwt.decode(token, settings.secret_key, algorithms=[ALGORITHM], audience=AUDIENCE)
+        if claims.get("role", "student") != role:
+            raise InvalidToken("Sign in again")
         return uuid.UUID(claims["sub"])
     except (jwt.PyJWTError, KeyError, ValueError) as error:
         raise InvalidToken("Sign in again") from error

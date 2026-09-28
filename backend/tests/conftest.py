@@ -140,3 +140,35 @@ def link_digilocker(client: AsyncClient):
         return complete.json()
 
     return link
+
+
+@pytest.fixture
+def official(client: AsyncClient, sms: CapturingSmsSender):
+    """Create an official and sign them in; returns their Authorization header."""
+    from app.db import get_sessionmaker
+    from app.models import Official
+
+    counter = iter(range(100, 1000))
+
+    async def make(level: str, state: str | None = None, district: str | None = None) -> dict:
+        phone = f"+9191000{next(counter):05d}"
+        async with get_sessionmaker()() as session:
+            session.add(
+                Official(
+                    phone=phone,
+                    name=f"{level} official",
+                    level=level,
+                    state=state,
+                    district=district,
+                )
+            )
+            await session.commit()
+        await client.post("/v1/auth/otp/request", json={"phone": phone})
+        response = await client.post(
+            "/v1/auth/otp/verify",
+            json={"phone": phone, "code": sms.sent[phone], "role": "official"},
+        )
+        assert response.status_code == 200, response.text
+        return {"Authorization": f"Bearer {response.json()['access_token']}"}
+
+    return make

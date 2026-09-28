@@ -32,6 +32,8 @@ class Certificate:
     holder_name: str
     holder_dob: date | None
     holder_gender: str | None
+    holder_district: str | None = None
+    holder_state: str | None = None
     data: dict[str, str] = field(default_factory=dict)
 
 
@@ -44,6 +46,7 @@ def parse_certificate(xml: str) -> Certificate:
     if root.tag != "Certificate" or person is None:
         raise CertificateError("Not an issuer certificate")
     organisation = root.find("IssuedBy/Organization")
+    address = person.find("Address")
     data_element = root.find("CertificateData")
     data = {}
     if data_element is not None and len(data_element):
@@ -56,6 +59,8 @@ def parse_certificate(xml: str) -> Certificate:
         holder_name=person.get("name", ""),
         holder_dob=_date(person.get("dob")),
         holder_gender=person.get("gender"),
+        holder_district=address.get("district") if address is not None else None,
+        holder_state=address.get("state") if address is not None else None,
         data=data,
     )
 

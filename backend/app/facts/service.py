@@ -18,6 +18,7 @@ class FactSource(StrEnum):
     UDISE = "udise"
     NTA = "nta"
     NPCI = "npci"
+    REVIEWER = "reviewer"
 
 
 @dataclass(frozen=True)

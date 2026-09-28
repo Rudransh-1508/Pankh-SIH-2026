@@ -44,6 +44,7 @@ class ExceptionOut(BaseModel):
     message: str
     remedy: str | None
     status: str
+    reviewer_note: str | None = None
     created_at: datetime
 
 
@@ -127,6 +128,7 @@ def _exception(e: VerificationException) -> ExceptionOut:
         message=e.message,
         remedy=e.remedy,
         status=e.status,
+        reviewer_note=e.resolution,
         created_at=e.created_at,
     )
 
@@ -223,7 +225,7 @@ async def my_verification(student: CurrentStudent, session: SessionDep) -> Verif
         await session.scalars(
             select(VerificationException)
             .where(VerificationException.student_id == student.id)
-            .where(VerificationException.status == "open")
+            .where(VerificationException.status.in_(("open", "rejected")))
             .order_by(VerificationException.created_at.desc())
         )
     ).all()

@@ -1,5 +1,5 @@
 import uuid
-from typing import Annotated
+from typing import Annotated, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, Field
@@ -13,11 +13,12 @@ from app.auth.sms import SmsSender, get_sms_sender
 from app.auth.tokens import (
     InvalidToken,
     TokenPair,
+    create_access_token,
     issue_tokens,
     revoke_refresh_token,
     rotate_refresh_token,
 )
-from app.models import Student
+from app.models import Official, Student
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -35,6 +36,7 @@ class OtpRequested(BaseModel):
 class OtpVerification(BaseModel):
     phone: str
     code: str = Field(pattern=r"^\d{6}$")
+    role: Literal["student", "official"] = "student"
 
 
 class Tokens(BaseModel):
@@ -98,6 +100,20 @@ async def verify(body: OtpVerification, session: SessionDep, settings: SettingsD
     except OtpInvalid as error:
         await session.commit()  # keep the attempt count
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, str(error)) from error
+    if body.role == "official":
+        official = await session.scalar(select(Official).where(Official.phone == phone))
+        await session.commit()
+        if official is None:
+            raise HTTPException(
+                status.HTTP_403_FORBIDDEN, "This number is not registered as an official."
+            )
+        return Tokens(
+            access_token=create_access_token(
+                settings, official.id, role="official", ttl=settings.official_session_ttl
+            ),
+            refresh_token="",
+            expires_in=int(settings.official_session_ttl.total_seconds()),
+        )
     created_id = await session.scalar(
         insert(Student)
         .values(id=uuid.uuid4(), phone=phone)

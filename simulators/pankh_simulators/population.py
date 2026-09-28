@@ -286,7 +286,7 @@ def _code(rng: random.Random, digits: int) -> str:
     return "".join(rng.choice("0123456789") for _ in range(digits))
 
 
-def _spelling(rng: random.Random, first: str, surname: str) -> str:
+def spelling(rng: random.Random, first: str, surname: str) -> str:
     """How another office might write this name."""
     roll = rng.random()
     if roll < 0.55:
@@ -469,7 +469,7 @@ def population(size: int = POPULATION_SIZE, seed: int = SEED) -> Population:
                 has_caste_certificate=tribe is not None and rng.random() < 0.93,
                 has_income_certificate=rng.random() < 0.85,
                 stale_income_certificate=rng.random() < 0.15,
-                caste_certificate_spelling=_spelling(rng, first, surname),
+                caste_certificate_spelling=spelling(rng, first, surname),
                 enrolled_in_udise=level.startswith("class_") and rng.random() < 0.97,
                 has_scholarship_record=has_record,
                 mota_award=award,

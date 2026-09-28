@@ -18,6 +18,7 @@ class Settings(BaseSettings):
 
     access_token_ttl: timedelta = timedelta(minutes=15)
     refresh_token_ttl: timedelta = timedelta(days=60)
+    official_session_ttl: timedelta = timedelta(hours=8)
 
     otp_ttl: timedelta = timedelta(minutes=5)
     otp_max_attempts: int = 5

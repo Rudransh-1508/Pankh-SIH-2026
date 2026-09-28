@@ -15,7 +15,7 @@ from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 
-from pankh_simulators.population import Person, population
+from pankh_simulators.population import Person, population, spelling
 from pankh_simulators.registers import require_api_key
 
 router = APIRouter(dependencies=[Depends(require_api_key)])
@@ -237,3 +237,37 @@ async def sfmp(reference_key: str = Query(...)) -> dict[str, Any]:
 @router.get("/nos/applications", tags=["NOS Portal"])
 async def nos(reference_key: str = Query(...)) -> dict[str, Any]:
     return {"applications": nos_applications(_person(reference_key))}
+
+
+@router.get("/nsp/registrations", tags=["NSP"])
+async def nsp_registrations(
+    state: str | None = None,
+    offset: int = Query(0, ge=0),
+    limit: int = Query(500, ge=1, le=5000),
+) -> dict[str, Any]:
+    """Every registration on NSP, as the ministry can export it, names as applicants typed them."""
+    rows = [
+        p
+        for p in population().people
+        if p.has_scholarship_record
+        and p.mota_award in NSP_SCHEMES
+        and (state is None or p.state.name == state)
+    ]
+    items = []
+    for person in rows[offset : offset + limit]:
+        application = nsp_applications(person)[0]
+        rng = _rng(person, "nsp-name")
+        items.append(
+            {
+                "application_id": application["application_id"],
+                "scheme_code": application["scheme_code"],
+                "applicant_name": spelling(rng, person.first_name, person.surname),
+                "date_of_birth": person.date_of_birth.isoformat(),
+                "gender": person.gender,
+                "state": person.state.name,
+                "district": person.district,
+                "institute_code": person.institution.code if person.institution else None,
+                "status": application["status"],
+            }
+        )
+    return {"total": len(rows), "items": items}

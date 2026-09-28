@@ -23,6 +23,19 @@ class ScholarshipSystemsClient:
     async def nos_applications(self, reference_key: str) -> list[dict[str, Any]]:
         return (await self._get("/nos/applications", "NOS Portal", reference_key))["applications"]
 
+    async def nsp_registrations(self, offset: int = 0, limit: int = 2000) -> dict[str, Any]:
+        """The ministry's export of every NSP registration."""
+        try:
+            response = await self.http.get(
+                f"{self.base}/nsp/registrations",
+                params={"offset": offset, "limit": limit},
+                headers=self.headers,
+            )
+        except httpx.HTTPError as error:
+            raise SourceUnavailable(f"NSP could not be reached: {error}") from error
+        raise_for_source(response, "NSP")
+        return response.json()
+
     async def _get(self, path: str, source: str, reference_key: str) -> dict[str, Any]:
         try:
             response = await self.http.get(

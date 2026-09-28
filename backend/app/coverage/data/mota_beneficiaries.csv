@@ -1,0 +1,712 @@
+scheme,state,financial_year,fund_released_crore,utilised_crore,beneficiaries,estimated
+pre_matric,Andaman & Nicobar,2013-14,0,0,0,False
+pre_matric,Andaman & Nicobar,2014-15,0,0,0,False
+pre_matric,Andaman & Nicobar,2015-16,0,0,0,False
+pre_matric,Andaman & Nicobar,2016-17,0,0,325,False
+pre_matric,Andaman & Nicobar,2017-18,0,0,353,False
+pre_matric,Andaman & Nicobar,2018-19,0.05,0.05,222,False
+pre_matric,Andaman & Nicobar,2019-20,0.06,0.06,247,False
+pre_matric,Andaman & Nicobar,2020-21,0.12,0.12,296,False
+pre_matric,Andaman & Nicobar,2021-22,0.08,0.08,284,False
+pre_matric,Andaman & Nicobar,2022-23,,,260,False
+pre_matric,Andaman & Nicobar,2023-24,,,173,False
+pre_matric,Andaman & Nicobar,2024-25,0.1,0.1,281,False
+pre_matric,Andhra Pradesh,2013-14,0,0,0,False
+pre_matric,Andhra Pradesh,2014-15,13.86,13.86,75812,False
+pre_matric,Andhra Pradesh,2015-16,19.83,19.83,79602,False
+pre_matric,Andhra Pradesh,2016-17,0,0,39466,False
+pre_matric,Andhra Pradesh,2017-18,52.83,52.83,34529,False
+pre_matric,Andhra Pradesh,2018-19,12.11,12.11,27437,False
+pre_matric,Andhra Pradesh,2019-20,7.36,7.36,28124,False
+pre_matric,Andhra Pradesh,2020-21,14.34,14.34,26676,False
+pre_matric,Andhra Pradesh,2021-22,39.35,39.35,35364,False
+pre_matric,Andhra Pradesh,2022-23,,,40465,False
+pre_matric,Andhra Pradesh,2023-24,57,57,0,False
+pre_matric,Andhra Pradesh,2024-25,30.77,30.77,0,False
+pre_matric,Arunachal Pradesh,2013-14,2.1844,2.1844,29143,False
+pre_matric,Arunachal Pradesh,2014-15,0,0,0,False
+pre_matric,Arunachal Pradesh,2015-16,0,0,0,False
+pre_matric,Arunachal Pradesh,2016-17,0,0,2594,False
+pre_matric,Arunachal Pradesh,2017-18,0,0,0,False
+pre_matric,Arunachal Pradesh,2018-19,0,0,0,False
+pre_matric,Arunachal Pradesh,2019-20,0,0,0,False
+pre_matric,Arunachal Pradesh,2020-21,0,0,5676,False
+pre_matric,Arunachal Pradesh,2021-22,2.07,2.07,4548,False
+pre_matric,Arunachal Pradesh,2022-23,2.67,2.67,5178,False
+pre_matric,Arunachal Pradesh,2023-24,,,2852,False
+pre_matric,Arunachal Pradesh,2024-25,,,2831,False
+pre_matric,Assam,2013-14,2.1188,2.1188,12255,False
+pre_matric,Assam,2014-15,0,0,0,False
+pre_matric,Assam,2015-16,0,0,0,False
+pre_matric,Assam,2016-17,3.21,3.21,2740,False
+pre_matric,Assam,2017-18,0,0,10040,False
+pre_matric,Assam,2018-19,0,0,12933,False
+pre_matric,Assam,2019-20,0,0,2869,False
+pre_matric,Assam,2020-21,0.17,0.17,2504,False
+pre_matric,Assam,2021-22,1.02,1.02,4767,False
+pre_matric,Assam,2022-23,1.07,1.07,5688,False
+pre_matric,Assam,2023-24,1.88,1.88,4353,False
+pre_matric,Assam,2024-25,1,1,8075,False
+pre_matric,Bihar,2013-14,0,0,0,False
+pre_matric,Bihar,2014-15,6.89,6.89,40700,False
+pre_matric,Bihar,2015-16,3.75,3.75,37095,False
+pre_matric,Bihar,2016-17,0,0,0,False
+pre_matric,Bihar,2017-18,0,0,67115,False
+pre_matric,Bihar,2018-19,0,0,46096,False
+pre_matric,Bihar,2019-20,71.31,71.31,46096,False
+pre_matric,Bihar,2020-21,0,0,51076,False
+pre_matric,Bihar,2021-22,0,0,42425,False
+pre_matric,Bihar,2022-23,,,26450,False
+pre_matric,Bihar,2023-24,,,8451,False
+pre_matric,Bihar,2024-25,,,15139,False
+pre_matric,Chhattisgarh,2013-14,0,0,0,False
+pre_matric,Chhattisgarh,2014-15,37.18,37.18,228626,False
+pre_matric,Chhattisgarh,2015-16,36.07,36.07,225705,False
+pre_matric,Chhattisgarh,2016-17,25.34,25.34,207956,False
+pre_matric,Chhattisgarh,2017-18,18.05,18.05,191864,False
+pre_matric,Chhattisgarh,2018-19,47.56,47.56,194413,False
+pre_matric,Chhattisgarh,2019-20,47.97,47.97,143986,False
+pre_matric,Chhattisgarh,2020-21,35.42,35.42,132421,False
+pre_matric,Chhattisgarh,2021-22,0,0,129615,False
+pre_matric,Chhattisgarh,2022-23,,,28642,False
+pre_matric,Chhattisgarh,2023-24,52.5,52.5,44837,False
+pre_matric,Chhattisgarh,2024-25,,,27171,False
+pre_matric,Dadra & Nagar Haveli and Daman & Diu,2020-21,2.34,2.34,2760,False
+pre_matric,Dadra & Nagar Haveli and Daman & Diu,2021-22,2.07,2.07,2167,False
+pre_matric,Dadra & Nagar Haveli and Daman & Diu,2022-23,,,2017,False
+pre_matric,Dadra & Nagar Haveli and Daman & Diu,2023-24,,,1273,False
+pre_matric,Dadra & Nagar Haveli and Daman & Diu,2024-25,,,1162,False
+pre_matric,Dadar & Nagar Haveli,2013-14,0,0,0,False
+pre_matric,Dadar & Nagar Haveli,2014-15,0,0,0,False
+pre_matric,Dadar & Nagar Haveli,2015-16,0,0,0,False
+pre_matric,Dadar & Nagar Haveli,2016-17,0,0,0,False
+pre_matric,Dadar & Nagar Haveli,2017-18,0,0,5226,False
+pre_matric,Dadar & Nagar Haveli,2018-19,0.2,0.2,4399,False
+pre_matric,Dadar & Nagar Haveli,2019-20,0.38,0.38,5044,False
+pre_matric,Daman & Diu,2013-14,0,0,0,False
+pre_matric,Daman & Diu,2014-15,0,0,0,False
+pre_matric,Daman & Diu,2015-16,0,0,0,False
+pre_matric,Daman & Diu,2016-17,0,0,356,False
+pre_matric,Daman & Diu,2017-18,0.08,0.08,468,False
+pre_matric,Daman & Diu,2018-19,0,0,332,False
+pre_matric,Daman & Diu,2019-20,0.06,0.06,377,False
+pre_matric,Goa,2013-14,0.14,0.14,1728,False
+pre_matric,Goa,2014-15,0,0,0,False
+pre_matric,Goa,2015-16,0,0,0,False
+pre_matric,Goa,2016-17,0.53,0.53,3721,False
+pre_matric,Goa,2017-18,0.04,0.04,3640,False
+pre_matric,Goa,2018-19,0.81,0.81,3582,False
+pre_matric,Goa,2019-20,0.81,0.81,3332,False
+pre_matric,Goa,2020-21,0.41,0.41,2504,False
+pre_matric,Goa,2021-22,0,0,1978,False
+pre_matric,Goa,2022-23,1.08,1.08,2108,False
+pre_matric,Goa,2023-24,0.53,0.53,1670,False
+pre_matric,Goa,2024-25,0.36,0.36,1698,False
+pre_matric,Gujarat,2013-14,28.352800000000002,28.352800000000002,265168,False
+pre_matric,Gujarat,2014-15,37.5,37.5,179169,False
+pre_matric,Gujarat,2015-16,37.46,37.46,138465,False
+pre_matric,Gujarat,2016-17,0.81,0.81,188593,False
+pre_matric,Gujarat,2017-18,36.51,36.51,151113,False
+pre_matric,Gujarat,2018-19,44.82,44.82,124491,False
+pre_matric,Gujarat,2019-20,52.48,52.48,180123,False
+pre_matric,Gujarat,2020-21,21.99,21.99,166649,False
+pre_matric,Gujarat,2021-22,36.89,36.89,157714,False
+pre_matric,Gujarat,2022-23,54.52,54.52,157553,False
+pre_matric,Gujarat,2023-24,62,62,121083,False
+pre_matric,Gujarat,2024-25,9.23,9.23,124886,False
+pre_matric,Himachal Pradesh,2013-14,0.4573,0.4573,2124,False
+pre_matric,Himachal Pradesh,2014-15,0.73,0.73,3996,False
+pre_matric,Himachal Pradesh,2015-16,0.96,0.96,5798,False
+pre_matric,Himachal Pradesh,2016-17,0.51,0.51,1972,False
+pre_matric,Himachal Pradesh,2017-18,0,0,1705,False
+pre_matric,Himachal Pradesh,2018-19,0.39,0.39,3582,False
+pre_matric,Himachal Pradesh,2019-20,0.84,0.84,2709,False
+pre_matric,Himachal Pradesh,2020-21,0.92,0.92,1846,False
+pre_matric,Himachal Pradesh,2021-22,0,0,2160,False
+pre_matric,Himachal Pradesh,2022-23,0.79,0.79,2479,False
+pre_matric,Himachal Pradesh,2023-24,1.1,1.1,2616,False
+pre_matric,Himachal Pradesh,2024-25,,,3260,False
+pre_matric,Jammu & Kashmir,2013-14,0,0,0,False
+pre_matric,Jammu & Kashmir,2014-15,0,0,0,False
+pre_matric,Jammu & Kashmir,2015-16,7,7,37813,False
+pre_matric,Jammu & Kashmir,2016-17,0,0,6131,False
+pre_matric,Jammu & Kashmir,2017-18,0,0,4979,False
+pre_matric,Jammu & Kashmir,2018-19,0,0,25920,False
+pre_matric,Jammu & Kashmir,2019-20,0,0,1362,False
+pre_matric,Jammu & Kashmir,2020-21,0,0,2621,False
+pre_matric,Jammu & Kashmir,2021-22,0,0,5883,False
+pre_matric,Jammu & Kashmir,2022-23,,,4689,False
+pre_matric,Jammu & Kashmir,2023-24,,,2548,False
+pre_matric,Jammu & Kashmir,2024-25,,,8371,False
+pre_matric,Jharkhand,2013-14,0,0,0,False
+pre_matric,Jharkhand,2014-15,16.13,16.13,93533,False
+pre_matric,Jharkhand,2015-16,0,0,0,False
+pre_matric,Jharkhand,2016-17,0,0,92743,False
+pre_matric,Jharkhand,2017-18,17.05,17.05,104942,False
+pre_matric,Jharkhand,2018-19,23.46,23.46,119877,False
+pre_matric,Jharkhand,2019-20,15.14,15.14,106761,False
+pre_matric,Jharkhand,2020-21,0,0,87131,False
+pre_matric,Jharkhand,2021-22,38.99,38.99,136830,False
+pre_matric,Jharkhand,2022-23,,,129269,False
+pre_matric,Jharkhand,2023-24,57,57,114519,False
+pre_matric,Jharkhand,2024-25,,,129142,False
+pre_matric,Karnataka,2013-14,33.200500000000005,33.200500000000005,84680,False
+pre_matric,Karnataka,2014-15,0,0,0,False
+pre_matric,Karnataka,2015-16,0,0,0,False
+pre_matric,Karnataka,2016-17,0,0,52096,False
+pre_matric,Karnataka,2017-18,13.65,13.65,59448,False
+pre_matric,Karnataka,2018-19,12.56,12.56,62126,False
+pre_matric,Karnataka,2019-20,18.47,18.47,87364,False
+pre_matric,Karnataka,2020-21,0,0,92254,False
+pre_matric,Karnataka,2021-22,17.53,17.53,85554,False
+pre_matric,Karnataka,2022-23,23.7,23.7,98705,False
+pre_matric,Karnataka,2023-24,34,34,97191,False
+pre_matric,Karnataka,2024-25,7,7,104211,False
+pre_matric,Kerala,2013-14,0,0,0,False
+pre_matric,Kerala,2014-15,0,0,0,False
+pre_matric,Kerala,2015-16,3,3,30010,False
+pre_matric,Kerala,2016-17,7.96,7.96,14464,False
+pre_matric,Kerala,2017-18,0,0,14265,False
+pre_matric,Kerala,2018-19,3.09,3.09,12121,False
+pre_matric,Kerala,2019-20,2.87,2.87,7858,False
+pre_matric,Kerala,2020-21,1.17,1.17,9880,False
+pre_matric,Kerala,2021-22,3.47,3.47,7071,False
+pre_matric,Kerala,2022-23,,,9457,False
+pre_matric,Kerala,2023-24,4.36,4.36,8331,False
+pre_matric,Kerala,2024-25,1,1,10980,False
+pre_matric,Ladakh,2020-21,0.42,0.42,421,False
+pre_matric,Ladakh,2021-22,0.74,0.74,1439,False
+pre_matric,Ladakh,2022-23,,,760,False
+pre_matric,Ladakh,2023-24,,,2228,False
+pre_matric,Ladakh,2024-25,0.4,0.4,2029,False
+pre_matric,Madhya Pradesh,2013-14,0,0,0,False
+pre_matric,Madhya Pradesh,2014-15,0,0,0,False
+pre_matric,Madhya Pradesh,2015-16,43,43,364167,False
+pre_matric,Madhya Pradesh,2016-17,0,0,151611,False
+pre_matric,Madhya Pradesh,2017-18,55.39,55.39,362120,False
+pre_matric,Madhya Pradesh,2018-19,58.84,58.84,359092,False
+pre_matric,Madhya Pradesh,2019-20,76.99,76.99,318870,False
+pre_matric,Madhya Pradesh,2020-21,54.29,54.29,378127,False
+pre_matric,Madhya Pradesh,2021-22,114.58,114.58,328961,False
+pre_matric,Madhya Pradesh,2022-23,127.44,127.44,255944,False
+pre_matric,Madhya Pradesh,2023-24,,,259997,False
+pre_matric,Madhya Pradesh,2024-25,53.05,53.05,212347,False
+pre_matric,Maharashtra,2013-14,0,0,0,False
+pre_matric,Manipur,2013-14,7.297000000000001,7.297000000000001,27112,False
+pre_matric,Manipur,2014-15,4.96,4.96,40126,False
+pre_matric,Manipur,2015-16,0,0,0,False
+pre_matric,Manipur,2016-17,8.67,8.67,22401,False
+pre_matric,Manipur,2017-18,6.19,6.19,9189,False
+pre_matric,Manipur,2018-19,7.73,7.73,21006,False
+pre_matric,Manipur,2019-20,4.43,4.43,24760,False
+pre_matric,Manipur,2020-21,0,0,2479,False
+pre_matric,Manipur,2021-22,0,0,2365,False
+pre_matric,Manipur,2022-23,,,1836,False
+pre_matric,Manipur,2023-24,,,3470,False
+pre_matric,Manipur,2024-25,,,3916,False
+pre_matric,Meghalaya,2013-14,2.96762,2.96762,10707,False
+pre_matric,Meghalaya,2014-15,0,0,0,False
+pre_matric,Meghalaya,2015-16,0,0,0,False
+pre_matric,Meghalaya,2016-17,0,0,3273,False
+pre_matric,Meghalaya,2017-18,1.57,1.57,966,False
+pre_matric,Meghalaya,2018-19,0,0,150,False
+pre_matric,Meghalaya,2019-20,0,0,136,False
+pre_matric,Meghalaya,2020-21,0,0,616,False
+pre_matric,Meghalaya,2021-22,0,0,2406,False
+pre_matric,Meghalaya,2022-23,1.15,1.15,1588,False
+pre_matric,Meghalaya,2023-24,,,5590,False
+pre_matric,Meghalaya,2024-25,0.7,0.7,6149,False
+pre_matric,Mizoram,2013-14,1.2318500000000001,1.2318500000000001,3283,False
+pre_matric,Mizoram,2014-15,0,0,0,False
+pre_matric,Mizoram,2015-16,0,0,0,False
+pre_matric,Mizoram,2016-17,3.36,3.36,9843,False
+pre_matric,Mizoram,2017-18,1.32,1.32,9783,False
+pre_matric,Mizoram,2018-19,3.2,3.2,14880,False
+pre_matric,Mizoram,2019-20,7.02,7.02,16890,False
+pre_matric,Mizoram,2020-21,1.68,1.68,11046,False
+pre_matric,Mizoram,2021-22,6.57,6.57,10031,False
+pre_matric,Mizoram,2022-23,,,10312,False
+pre_matric,Mizoram,2023-24,3.07,3.07,8911,False
+pre_matric,Mizoram,2024-25,,,8807,False
+pre_matric,Nagaland,2013-14,0,0,0,False
+pre_matric,Nagaland,2014-15,0,0,0,False
+pre_matric,Nagaland,2015-16,8.51,8.51,42048,False
+pre_matric,Nagaland,2016-17,0,0,18780,False
+pre_matric,Nagaland,2017-18,0,0,10715,False
+pre_matric,Nagaland,2018-19,0,0,12553,False
+pre_matric,Nagaland,2019-20,0,0,1291,False
+pre_matric,Nagaland,2020-21,0.61,0.61,451,False
+pre_matric,Nagaland,2021-22,0,0,307,False
+pre_matric,Nagaland,2022-23,,,0,False
+pre_matric,Odisha,2013-14,56.0108375,56.0108375,221709,False
+pre_matric,Odisha,2014-15,45.11,45.11,203301,False
+pre_matric,Odisha,2015-16,49,49,221243,False
+pre_matric,Odisha,2016-17,33.76,33.76,222837,False
+pre_matric,Odisha,2017-18,51.35,51.35,211425,False
+pre_matric,Odisha,2018-19,66.66,66.66,204916,False
+pre_matric,Odisha,2019-20,61.58,61.58,219875,False
+pre_matric,Odisha,2020-21,69.45,69.45,190066,False
+pre_matric,Odisha,2021-22,52.37,52.37,135053,False
+pre_matric,Odisha,2022-23,93.97,93.97,79252,False
+pre_matric,Odisha,2023-24,,,106691,False
+pre_matric,Odisha,2024-25,29.5,29.5,122029,False
+pre_matric,Puducherry,2019-20,0,0,60,False
+pre_matric,Puducherry,2020-21,0.02,0.02,19,False
+pre_matric,Puducherry,2021-22,0,0,23,False
+pre_matric,Puducherry,2022-23,,,21,False
+pre_matric,Puducherry,2023-24,,,11,False
+pre_matric,Puducherry,2024-25,,,14,False
+pre_matric,Rajasthan,2013-14,47.9255,47.9255,213002,False
+pre_matric,Rajasthan,2014-15,23.83,23.83,187508,False
+pre_matric,Rajasthan,2015-16,0,0,0,False
+pre_matric,Rajasthan,2016-17,0,0,0,False
+pre_matric,Rajasthan,2017-18,32.85,32.85,101696,False
+pre_matric,Rajasthan,2018-19,17.16,17.16,136915,False
+pre_matric,Rajasthan,2019-20,53.47,53.47,184163,False
+pre_matric,Rajasthan,2020-21,31.27,31.27,208751,False
+pre_matric,Rajasthan,2021-22,62.34,62.34,213064,False
+pre_matric,Rajasthan,2022-23,35.31,35.31,73816,False
+pre_matric,Rajasthan,2023-24,,,76272,False
+pre_matric,Rajasthan,2024-25,22.36,22.36,57037,False
+pre_matric,Sikkim,2013-14,0,0,0,False
+pre_matric,Sikkim,2014-15,0.08,0.08,408,False
+pre_matric,Sikkim,2015-16,0,0,0,False
+pre_matric,Sikkim,2016-17,0,0,297,False
+pre_matric,Sikkim,2017-18,0.26,0.26,212,False
+pre_matric,Sikkim,2018-19,0.08,0.08,247,False
+pre_matric,Sikkim,2019-20,0.04,0.04,415,False
+pre_matric,Sikkim,2020-21,0.09,0.09,88,False
+pre_matric,Sikkim,2021-22,0,0,296,False
+pre_matric,Sikkim,2022-23,0.18,0.18,49,False
+pre_matric,Sikkim,2023-24,,,62,False
+pre_matric,Sikkim,2024-25,,,377,False
+pre_matric,Tamil Nadu,2013-14,0,0,0,False
+pre_matric,Tamil Nadu,2014-15,0,0,0,False
+pre_matric,Tamil Nadu,2015-16,6,6,15750,False
+pre_matric,Tamil Nadu,2016-17,0,0,6602,False
+pre_matric,Tamil Nadu,2017-18,0,0,12676,False
+pre_matric,Tamil Nadu,2018-19,0,0,12800,False
+pre_matric,Tamil Nadu,2019-20,5.9,5.9,13423,False
+pre_matric,Tamil Nadu,2020-21,2.41,2.41,14822,False
+pre_matric,Tamil Nadu,2021-22,5.47,5.47,16854,False
+pre_matric,Tamil Nadu,2022-23,4.04,4.04,15325,False
+pre_matric,Tamil Nadu,2023-24,3.62,3.62,17557,False
+pre_matric,Tamil Nadu,2024-25,0.6,0.6,19178,False
+pre_matric,Telangana,2013-14,0,0,0,False
+pre_matric,Telangana,2014-15,7.46,7.46,24060,False
+pre_matric,Telangana,2015-16,0,0,23617,False
+pre_matric,Telangana,2016-17,0,0,28966,False
+pre_matric,Telangana,2017-18,3.58,3.58,6196,False
+pre_matric,Telangana,2018-19,6.94,6.94,354,False
+pre_matric,Telangana,2019-20,0,0,10412,False
+pre_matric,Telangana,2020-21,0,0,7623,False
+pre_matric,Telangana,2021-22,0,0,3066,False
+pre_matric,Telangana,2022-23,,,9255,False
+pre_matric,Telangana,2023-24,1.5,1.5,2460,False
+pre_matric,Tripura,2013-14,6.74332,6.74332,65690,False
+pre_matric,Tripura,2014-15,6.79,6.79,44598,False
+pre_matric,Tripura,2015-16,13.04,13.04,53516,False
+pre_matric,Tripura,2016-17,0,0,16723,False
+pre_matric,Tripura,2017-18,2.33,2.33,11662,False
+pre_matric,Tripura,2018-19,0,0,12353,False
+pre_matric,Tripura,2019-20,3.86,3.86,10980,False
+pre_matric,Tripura,2020-21,2.52,2.52,9404,False
+pre_matric,Tripura,2021-22,0.59,0.59,17307,False
+pre_matric,Tripura,2022-23,11.37,11.37,15017,False
+pre_matric,Tripura,2023-24,,,11601,False
+pre_matric,Tripura,2024-25,6.92,6.92,12597,False
+pre_matric,Uttar Pradesh,2013-14,0,0,12255,False
+pre_matric,Uttar Pradesh,2014-15,0,0,0,False
+pre_matric,Uttar Pradesh,2015-16,0,0,0,False
+pre_matric,Uttar Pradesh,2016-17,0,0,0,False
+pre_matric,Uttar Pradesh,2020-21,0,0,2007,False
+pre_matric,Uttar Pradesh,2021-22,0.88,0.88,815,False
+pre_matric,Uttar Pradesh,2022-23,,,1579,False
+pre_matric,Uttar Pradesh,2023-24,,,2329,False
+pre_matric,Uttar Pradesh,2024-25,,,3211,False
+pre_matric,Uttarakhand,2013-14,4.602,4.602,119856,False
+pre_matric,Uttarakhand,2014-15,0.2,0.2,9869,False
+pre_matric,Uttarakhand,2015-16,1.07,1.07,10856,False
+pre_matric,Uttarakhand,2016-17,0,0,5687,False
+pre_matric,Uttarakhand,2017-18,1.04,1.04,6256,False
+pre_matric,Uttarakhand,2018-19,0,0,2572,False
+pre_matric,Uttarakhand,2019-20,0,0,287,False
+pre_matric,Uttarakhand,2020-21,1.38,1.38,1212,False
+pre_matric,Uttarakhand,2021-22,0,0,1313,False
+pre_matric,Uttarakhand,2022-23,,,1464,False
+pre_matric,Uttarakhand,2023-24,0.15,0.15,902,False
+pre_matric,Uttarakhand,2024-25,0.7,0.7,812,False
+pre_matric,West Bengal,2013-14,26.2,26.2,20455,False
+pre_matric,West Bengal,2014-15,0,0,0,False
+pre_matric,West Bengal,2015-16,0,0,0,False
+pre_matric,West Bengal,2016-17,0,0,29249,False
+pre_matric,West Bengal,2017-18,0,0,37985,False
+pre_matric,West Bengal,2018-19,5.85,5.85,33870,False
+pre_matric,West Bengal,2019-20,8.94,8.94,37333,False
+pre_matric,West Bengal,2020-21,7.88,7.88,28504,False
+pre_matric,West Bengal,2021-22,9.13,9.13,28053,False
+pre_matric,West Bengal,2022-23,,,23979,False
+pre_matric,West Bengal,2023-24,29.89,29.89,21789,False
+pre_matric,West Bengal,2024-25,,,24333,False
+post_matric,Andaman & Nicobar,2013-14,0.0075,0.0075,28,False
+post_matric,Andaman & Nicobar,2014-15,0.01,0.01,148,False
+post_matric,Andaman & Nicobar,2015-16,0,0,0,False
+post_matric,Andaman & Nicobar,2016-17,0,0,167,False
+post_matric,Andaman & Nicobar,2017-18,0,0,544,False
+post_matric,Andaman & Nicobar,2018-19,0.1,0.1,439,False
+post_matric,Andaman & Nicobar,2019-20,0.11,0.11,449,False
+post_matric,Andaman & Nicobar,2020-21,0.13,0.13,327,False
+post_matric,Andaman & Nicobar,2021-22,0.1,0.1,491,False
+post_matric,Andaman & Nicobar,2022-23,,,386,False
+post_matric,Andaman & Nicobar,2023-24,,,193,False
+post_matric,Andaman & Nicobar,2024-25,0.1,0.1,311,False
+post_matric,Andhra Pradesh,2013-14,48.95165,48.95165,229360,False
+post_matric,Andhra Pradesh,2014-15,50.7,50.7,82091,False
+post_matric,Andhra Pradesh,2015-16,19.87,19.87,49239,False
+post_matric,Andhra Pradesh,2016-17,97.78,97.78,65173,False
+post_matric,Andhra Pradesh,2017-18,82.69,82.69,71687,False
+post_matric,Andhra Pradesh,2018-19,139.45,139.45,59146,False
+post_matric,Andhra Pradesh,2019-20,77.97,77.97,158195,False
+post_matric,Andhra Pradesh,2020-21,60.39,60.39,112645,False
+post_matric,Andhra Pradesh,2021-22,89.91,89.91,117089,False
+post_matric,Andhra Pradesh,2022-23,133.57,133.57,129032,False
+post_matric,Andhra Pradesh,2023-24,114.71,114.71,79780,False
+post_matric,Andhra Pradesh,2024-25,120,120,67888,False
+post_matric,Arunachal Pradesh,2013-14,13.6685,13.6685,630,False
+post_matric,Arunachal Pradesh,2014-15,0.02,0.02,630,False
+post_matric,Arunachal Pradesh,2015-16,11.38,11.38,22656,False
+post_matric,Arunachal Pradesh,2016-17,11.36,11.36,22564,False
+post_matric,Arunachal Pradesh,2017-18,58.04,58.04,18863,False
+post_matric,Arunachal Pradesh,2018-19,18.84,18.84,26000,False
+post_matric,Arunachal Pradesh,2019-20,61.13,61.13,20500,False
+post_matric,Arunachal Pradesh,2020-21,57.13,57.13,31527,False
+post_matric,Arunachal Pradesh,2021-22,123.61,123.61,43744,False
+post_matric,Arunachal Pradesh,2022-23,96.16,96.16,46330,False
+post_matric,Arunachal Pradesh,2023-24,80,80,42417,False
+post_matric,Arunachal Pradesh,2024-25,100,100,45125,False
+post_matric,Assam,2013-14,47.5681491,47.5681491,102800,False
+post_matric,Assam,2014-15,11.14,11.14,102800,False
+post_matric,Assam,2015-16,67.48,67.48,116693,False
+post_matric,Assam,2016-17,2.67,2.67,29423,False
+post_matric,Assam,2017-18,25.16,25.16,26867,False
+post_matric,Assam,2018-19,32.48,32.48,79526,False
+post_matric,Assam,2019-20,48.67,48.67,55507,False
+post_matric,Assam,2020-21,54.14,54.14,53205,False
+post_matric,Assam,2021-22,10.93,10.93,71115,False
+post_matric,Assam,2022-23,68.45,68.45,62140,False
+post_matric,Assam,2023-24,35,35,58774,False
+post_matric,Assam,2024-25,79.71,79.71,77350,False
+post_matric,Bihar,2013-14,0.23,0.23,6463,False
+post_matric,Bihar,2014-15,0.23,0.23,6463,False
+post_matric,Bihar,2015-16,0,0,0,False
+post_matric,Bihar,2016-17,0,0,0,False
+post_matric,Bihar,2017-18,0.71,0.71,9950,False
+post_matric,Bihar,2018-19,0,0,12544,False
+post_matric,Bihar,2019-20,15.25,15.25,5675,False
+post_matric,Bihar,2020-21,7.08,7.08,9068,False
+post_matric,Bihar,2021-22,,,16302,False
+post_matric,Bihar,2022-23,,,3768,False
+post_matric,Bihar,2023-24,,,1444,False
+post_matric,Bihar,2024-25,4.43,4.43,3428,False
+post_matric,Chhattisgarh,2013-14,13.4147839,13.4147839,106231,False
+post_matric,Chhattisgarh,2014-15,40.67,40.67,139447,False
+post_matric,Chhattisgarh,2015-16,47.65,47.65,148660,False
+post_matric,Chhattisgarh,2016-17,26.75,26.75,135586,False
+post_matric,Chhattisgarh,2017-18,38.11,38.11,143320,False
+post_matric,Chhattisgarh,2018-19,46.1,46.1,154656,False
+post_matric,Chhattisgarh,2019-20,70.23,70.23,144453,False
+post_matric,Chhattisgarh,2020-21,87.9,87.9,73550,False
+post_matric,Chhattisgarh,2021-22,,,86910,False
+post_matric,Chhattisgarh,2022-23,93.3,93.3,34184,False
+post_matric,Chhattisgarh,2023-24,71.25,71.25,40552,False
+post_matric,Chhattisgarh,2024-25,70,70,34022,False
+post_matric,Dadra & Nagar Haveli and Daman & Diu,2020-21,34.82,34.82,3549,False
+post_matric,Dadra & Nagar Haveli and Daman & Diu,2021-22,,,3352,False
+post_matric,Dadra & Nagar Haveli and Daman & Diu,2022-23,,,2208,False
+post_matric,Dadra & Nagar Haveli and Daman & Diu,2023-24,4.04,4.04,1053,False
+post_matric,Dadra & Nagar Haveli and Daman & Diu,2024-25,4.9,4.9,1627,False
+post_matric,Dadar & Nagar Haveli,2014-15,0,0,0,False
+post_matric,Dadar & Nagar Haveli,2015-16,0,0,0,False
+post_matric,Dadar & Nagar Haveli,2017-18,0,0,3720,False
+post_matric,Dadar & Nagar Haveli,2018-19,0,0,2115,False
+post_matric,Dadar & Nagar Haveli,2019-20,0.89,0.89,5618,False
+post_matric,Daman & Diu,2013-14,0.109,0.109,320,False
+post_matric,Daman & Diu,2014-15,0.01,0.01,320,False
+post_matric,Daman & Diu,2015-16,0,0,0,False
+post_matric,Daman & Diu,2016-17,0.54,0.54,328,False
+post_matric,Daman & Diu,2017-18,0.26,0.26,196,False
+post_matric,Daman & Diu,2018-19,0.03,0.03,192,False
+post_matric,Daman & Diu,2019-20,0,0,351,False
+post_matric,Goa,2013-14,0.02,0.02,1332,False
+post_matric,Goa,2014-15,0.02,0.02,1332,False
+post_matric,Goa,2015-16,3.56,3.56,4270,False
+post_matric,Goa,2016-17,6.45,6.45,1924,False
+post_matric,Goa,2017-18,3.65,3.65,4442,False
+post_matric,Goa,2018-19,5.36,5.36,5847,False
+post_matric,Goa,2019-20,7.33,7.33,5870,False
+post_matric,Goa,2020-21,4.58,4.58,4822,False
+post_matric,Goa,2021-22,,,4047,False
+post_matric,Goa,2022-23,11.87,11.87,4439,False
+post_matric,Goa,2023-24,5.27,5.27,3274,False
+post_matric,Goa,2024-25,5,5,3163,False
+post_matric,Gujarat,2013-14,71.3858,71.3858,218570,False
+post_matric,Gujarat,2014-15,39.29,39.29,218570,False
+post_matric,Gujarat,2015-16,55.2,55.2,163989,False
+post_matric,Gujarat,2016-17,220.4,220.4,192322,False
+post_matric,Gujarat,2017-18,146.1,146.1,214605,False
+post_matric,Gujarat,2018-19,324.29,324.29,198557,False
+post_matric,Gujarat,2019-20,140.04,140.04,202667,False
+post_matric,Gujarat,2020-21,229.78,229.78,237041,False
+post_matric,Gujarat,2021-22,461.7,461.7,260770,False
+post_matric,Gujarat,2022-23,244.26,244.26,262538,False
+post_matric,Gujarat,2023-24,350,350,226456,False
+post_matric,Gujarat,2024-25,231.22,231.22,233161,False
+post_matric,Himachal Pradesh,2013-14,2.8283,2.8283,5189,False
+post_matric,Himachal Pradesh,2014-15,2.37,2.37,5189,False
+post_matric,Himachal Pradesh,2015-16,13.5,13.5,8079,False
+post_matric,Himachal Pradesh,2016-17,9.31,9.31,3739,False
+post_matric,Himachal Pradesh,2017-18,31.23,31.23,10747,False
+post_matric,Himachal Pradesh,2018-19,2.78,2.78,4729,False
+post_matric,Himachal Pradesh,2019-20,24.69,24.69,3009,False
+post_matric,Himachal Pradesh,2020-21,0,0,2410,False
+post_matric,Himachal Pradesh,2021-22,,,3332,False
+post_matric,Himachal Pradesh,2022-23,,,4303,False
+post_matric,Himachal Pradesh,2023-24,,,4390,False
+post_matric,Himachal Pradesh,2024-25,5,5,4937,False
+post_matric,Jammu & Kashmir,2013-14,1.77,1.77,18700,False
+post_matric,Jammu & Kashmir,2014-15,24.94,24.94,8925,False
+post_matric,Jammu & Kashmir,2015-16,24.94,24.94,21000,False
+post_matric,Jammu & Kashmir,2016-17,25.88,25.88,13854,False
+post_matric,Jammu & Kashmir,2017-18,23.23,23.23,16905,False
+post_matric,Jammu & Kashmir,2018-19,6.38,6.38,27900,False
+post_matric,Jammu & Kashmir,2019-20,10.48,10.48,10685,False
+post_matric,Jammu & Kashmir,2020-21,8.05,8.05,4316,False
+post_matric,Jammu & Kashmir,2021-22,,,8335,False
+post_matric,Jammu & Kashmir,2022-23,6.84,6.84,10430,False
+post_matric,Jammu & Kashmir,2023-24,7.46,7.46,7319,False
+post_matric,Jammu & Kashmir,2024-25,9.95,9.95,15309,False
+post_matric,Jharkhand,2013-14,32.674,32.674,72878,False
+post_matric,Jharkhand,2014-15,49.27,49.27,81768,False
+post_matric,Jharkhand,2015-16,0,0,0,False
+post_matric,Jharkhand,2016-17,81.48,81.48,82422,False
+post_matric,Jharkhand,2017-18,27.17,27.17,73385,False
+post_matric,Jharkhand,2018-19,52.81,52.81,76782,False
+post_matric,Jharkhand,2019-20,78.63,78.63,79823,False
+post_matric,Jharkhand,2020-21,0,0,92117,False
+post_matric,Jharkhand,2021-22,126.55,126.55,127258,False
+post_matric,Jharkhand,2022-23,,,147633,False
+post_matric,Jharkhand,2023-24,53.11,53.11,148676,False
+post_matric,Jharkhand,2024-25,200,200,65104,False
+post_matric,Karnataka,2013-14,33.4076,33.4076,132376,False
+post_matric,Karnataka,2014-15,36.91,36.91,134988,False
+post_matric,Karnataka,2015-16,58.39,58.39,140891,False
+post_matric,Karnataka,2016-17,85.4,85.4,109943,False
+post_matric,Karnataka,2017-18,88.73,88.73,101059,False
+post_matric,Karnataka,2018-19,73.41,73.41,111614,False
+post_matric,Karnataka,2019-20,150.03,150.03,118083,False
+post_matric,Karnataka,2020-21,0,0,112381,False
+post_matric,Karnataka,2021-22,170.81,170.81,133422,False
+post_matric,Karnataka,2022-23,,,131968,False
+post_matric,Karnataka,2023-24,225.56,225.56,123707,False
+post_matric,Karnataka,2024-25,125,125,125823,False
+post_matric,Kerala,2013-14,6.2553,6.2553,12705,False
+post_matric,Kerala,2014-15,6.47,6.47,13225,False
+post_matric,Kerala,2015-16,0,0,0,False
+post_matric,Kerala,2016-17,31.22,31.22,15834,False
+post_matric,Kerala,2017-18,27.45,27.45,16111,False
+post_matric,Kerala,2018-19,26.74,26.74,16245,False
+post_matric,Kerala,2019-20,16.42,16.42,16583,False
+post_matric,Kerala,2020-21,32.85,32.85,15820,False
+post_matric,Kerala,2021-22,25.16,25.16,14558,False
+post_matric,Kerala,2022-23,,,14863,False
+post_matric,Kerala,2023-24,46.89,46.89,13731,False
+post_matric,Kerala,2024-25,29,29,13034,False
+post_matric,Ladakh,2020-21,7.38,7.38,3055,False
+post_matric,Ladakh,2021-22,22.14,22.14,8631,False
+post_matric,Ladakh,2022-23,18.91,18.91,8619,False
+post_matric,Ladakh,2023-24,5.96,5.96,9413,False
+post_matric,Ladakh,2024-25,35,35,8969,False
+post_matric,Madhya Pradesh,2013-14,52.7671,52.7671,192437,False
+post_matric,Madhya Pradesh,2014-15,23.85,23.85,188145,False
+post_matric,Madhya Pradesh,2015-16,30.65,30.65,197176,False
+post_matric,Madhya Pradesh,2016-17,130.54,130.54,263176,False
+post_matric,Madhya Pradesh,2017-18,103.21,103.21,272714,False
+post_matric,Madhya Pradesh,2018-19,134.05,134.05,289095,False
+post_matric,Madhya Pradesh,2019-20,121.99,121.99,244126,False
+post_matric,Madhya Pradesh,2020-21,123.44,123.44,346060,False
+post_matric,Madhya Pradesh,2021-22,245.29,245.29,457808,False
+post_matric,Madhya Pradesh,2022-23,270.49,270.49,391317,False
+post_matric,Madhya Pradesh,2023-24,350,350,353486,False
+post_matric,Madhya Pradesh,2024-25,250,250,326410,False
+post_matric,Maharashtra,2013-14,119.9604,119.9604,178146,False
+post_matric,Maharashtra,2014-15,74.52,74.52,117578,False
+post_matric,Maharashtra,2015-16,52.1,52.1,175000,False
+post_matric,Maharashtra,2016-17,220.92,220.92,163321,False
+post_matric,Maharashtra,2017-18,108.85,108.85,147262,False
+post_matric,Maharashtra,2018-19,152.38,152.38,131000,False
+post_matric,Maharashtra,2019-20,155.75,155.75,139550,False
+post_matric,Maharashtra,2020-21,181.5,181.5,157503,False
+post_matric,Maharashtra,2021-22,192.15,192.15,130732,False
+post_matric,Maharashtra,2022-23,90.27,90.27,135915,False
+post_matric,Maharashtra,2023-24,570.36,570.36,139165,False
+post_matric,Maharashtra,2024-25,117.81,117.81,144785,False
+post_matric,Manipur,2013-14,61.1101,61.1101,53965,False
+post_matric,Manipur,2014-15,36.15,36.15,57828,False
+post_matric,Manipur,2015-16,35.88,35.88,66928,False
+post_matric,Manipur,2016-17,33.85,33.85,59995,False
+post_matric,Manipur,2017-18,63.83,63.83,59661,False
+post_matric,Manipur,2018-19,20.27,20.27,22644,False
+post_matric,Manipur,2019-20,62.36,62.36,30969,False
+post_matric,Manipur,2020-21,21.84,21.84,37258,False
+post_matric,Manipur,2021-22,42.92,42.92,47793,False
+post_matric,Manipur,2022-23,41.38,41.38,42572,False
+post_matric,Manipur,2023-24,30,30,33542,False
+post_matric,Manipur,2024-25,25,25,32275,False
+post_matric,Meghalaya,2013-14,34.38,34.38,79011,False
+post_matric,Meghalaya,2014-15,4.38,4.38,79011,False
+post_matric,Meghalaya,2015-16,32.75,32.75,74608,False
+post_matric,Meghalaya,2016-17,31.89,31.89,54900,False
+post_matric,Meghalaya,2017-18,7.71,7.71,35305,False
+post_matric,Meghalaya,2018-19,24.58,24.58,634,False
+post_matric,Meghalaya,2019-20,0,0,6159,False
+post_matric,Meghalaya,2020-21,0,0,16399,False
+post_matric,Meghalaya,2021-22,26.36,26.36,52598,False
+post_matric,Meghalaya,2022-23,146.2,146.2,61360,False
+post_matric,Meghalaya,2023-24,85,85,76755,False
+post_matric,Meghalaya,2024-25,145.08,145.08,73902,False
+post_matric,Mizoram,2013-14,53.938900000000004,53.938900000000004,56873,False
+post_matric,Mizoram,2014-15,45.01,45.01,62410,False
+post_matric,Mizoram,2015-16,49.28,49.28,57330,False
+post_matric,Mizoram,2016-17,42.68,42.68,42072,False
+post_matric,Mizoram,2017-18,24.35,24.35,51983,False
+post_matric,Mizoram,2018-19,35.28,35.28,47948,False
+post_matric,Mizoram,2019-20,44.16,44.16,38174,False
+post_matric,Mizoram,2020-21,34.47,34.47,33073,False
+post_matric,Mizoram,2021-22,38.75,38.75,37448,False
+post_matric,Mizoram,2022-23,25.9,25.9,38784,False
+post_matric,Mizoram,2023-24,25,25,31685,False
+post_matric,Mizoram,2024-25,24,24,28471,False
+post_matric,Nagaland,2013-14,26.2619,26.2619,39867,False
+post_matric,Nagaland,2014-15,23.3,23.3,40133,False
+post_matric,Nagaland,2015-16,26.46,26.46,45140,False
+post_matric,Nagaland,2016-17,13.44,13.44,44404,False
+post_matric,Nagaland,2017-18,25.15,25.15,28949,False
+post_matric,Nagaland,2018-19,47.17,47.17,38380,False
+post_matric,Nagaland,2019-20,32.69,32.69,40164,False
+post_matric,Nagaland,2020-21,32.26,32.26,36940,False
+post_matric,Nagaland,2021-22,44.36,44.36,40588,False
+post_matric,Nagaland,2022-23,36.08,36.08,40638,False
+post_matric,Nagaland,2023-24,35,35,42485,False
+post_matric,Nagaland,2024-25,62,62,41793,False
+post_matric,Odisha,2013-14,34.5987,34.5987,89115,False
+post_matric,Odisha,2014-15,45.12,45.12,130960,False
+post_matric,Odisha,2015-16,40.5,40.5,165100,False
+post_matric,Odisha,2016-17,155.56,155.56,176579,False
+post_matric,Odisha,2017-18,87.84,87.84,185888,False
+post_matric,Odisha,2018-19,148.02,148.02,196667,False
+post_matric,Odisha,2019-20,166.4,166.4,171532,False
+post_matric,Odisha,2020-21,190.96,190.96,175252,False
+post_matric,Odisha,2021-22,218.43,218.43,207678,False
+post_matric,Odisha,2022-23,171.33,171.33,204172,False
+post_matric,Odisha,2023-24,135.64,135.64,213957,False
+post_matric,Odisha,2024-25,294,294,230366,False
+post_matric,Puducherry,2019-20,0,0,23,False
+post_matric,Puducherry,2020-21,0.2,0.2,24,False
+post_matric,Puducherry,2021-22,,,23,False
+post_matric,Puducherry,2022-23,,,18,False
+post_matric,Puducherry,2023-24,,,11,False
+post_matric,Puducherry,2024-25,0,0,10,False
+post_matric,Rajasthan,2013-14,22.160169999999997,22.160169999999997,288020,False
+post_matric,Rajasthan,2014-15,64.4,64.4,246249,False
+post_matric,Rajasthan,2015-16,108.9,108.9,275669,False
+post_matric,Rajasthan,2016-17,98,98,126965,False
+post_matric,Rajasthan,2017-18,199.12,199.12,135523,False
+post_matric,Rajasthan,2018-19,135.99,135.99,269659,False
+post_matric,Rajasthan,2019-20,259.51,259.51,286652,False
+post_matric,Rajasthan,2020-21,255.57,255.57,206011,False
+post_matric,Rajasthan,2021-22,137.45,137.45,188614,False
+post_matric,Rajasthan,2022-23,188.1,188.1,236628,False
+post_matric,Rajasthan,2023-24,220,220,168516,False
+post_matric,Sikkim,2013-14,8.4549,8.4549,2643,False
+post_matric,Sikkim,2014-15,4.14,4.14,2705,False
+post_matric,Sikkim,2015-16,4,4,3053,False
+post_matric,Sikkim,2016-17,9.38,9.38,2605,False
+post_matric,Sikkim,2017-18,12.47,12.47,2962,False
+post_matric,Sikkim,2018-19,11.34,11.34,4299,False
+post_matric,Sikkim,2019-20,5.67,5.67,4431,False
+post_matric,Sikkim,2020-21,5.54,5.54,3488,False
+post_matric,Sikkim,2021-22,10.36,10.36,4233,False
+post_matric,Sikkim,2022-23,9.25,9.25,2650,False
+post_matric,Sikkim,2023-24,,,1849,False
+post_matric,Sikkim,2024-25,6,6,2411,False
+post_matric,Tamil Nadu,2013-14,14.3902,14.3902,11092,False
+post_matric,Tamil Nadu,2014-15,0.44,0.44,11092,False
+post_matric,Tamil Nadu,2015-16,22.67,22.67,20060,False
+post_matric,Tamil Nadu,2016-17,30.62,30.62,23574,False
+post_matric,Tamil Nadu,2017-18,24.4,24.4,21605,False
+post_matric,Tamil Nadu,2018-19,39.34,39.34,29622,False
+post_matric,Tamil Nadu,2019-20,50.25,50.25,29478,False
+post_matric,Tamil Nadu,2020-21,33.29,33.29,21383,False
+post_matric,Tamil Nadu,2021-22,48.49,48.49,24441,False
+post_matric,Tamil Nadu,2022-23,28.54,28.54,23529,False
+post_matric,Tamil Nadu,2023-24,20,20,25216,False
+post_matric,Tamil Nadu,2024-25,25,25,28273,False
+post_matric,Telangana,2014-15,123.3,123.3,171329,False
+post_matric,Telangana,2015-16,96.5,96.5,171329,False
+post_matric,Telangana,2016-17,114.83,114.83,112236,False
+post_matric,Telangana,2017-18,180.31,180.31,153845,False
+post_matric,Telangana,2018-19,99.22,99.22,58253,False
+post_matric,Telangana,2019-20,196.11,196.11,129243,False
+post_matric,Telangana,2020-21,272.98,272.98,118347,False
+post_matric,Telangana,2021-22,75.04,75.04,126708,False
+post_matric,Telangana,2022-23,238.51,238.51,114911,False
+post_matric,Telangana,2023-24,112.5,112.5,131505,False
+post_matric,Telangana,2024-25,152.5,152.5,131032,False
+post_matric,Tripura,2013-14,13.9099,13.9099,24270,False
+post_matric,Tripura,2014-15,9.75,9.75,22261,False
+post_matric,Tripura,2015-16,17,17,28374,False
+post_matric,Tripura,2016-17,13.24,13.24,21001,False
+post_matric,Tripura,2017-18,27.56,27.56,23020,False
+post_matric,Tripura,2018-19,36.27,36.27,22896,False
+post_matric,Tripura,2019-20,23.56,23.56,23720,False
+post_matric,Tripura,2020-21,48.05,48.05,26108,False
+post_matric,Tripura,2021-22,71.89,71.89,35520,False
+post_matric,Tripura,2022-23,45.22,45.22,37380,False
+post_matric,Tripura,2023-24,40,40,33678,False
+post_matric,Tripura,2024-25,74.94,74.94,33506,False
+post_matric,Uttar Pradesh,2013-14,0.56,0.56,7500,False
+post_matric,Uttar Pradesh,2014-15,0.56,0.56,7500,False
+post_matric,Uttar Pradesh,2015-16,0,0,0,False
+post_matric,Uttar Pradesh,2016-17,10.58,10.58,5322,False
+post_matric,Uttar Pradesh,2017-18,12.45,12.45,2779,False
+post_matric,Uttar Pradesh,2018-19,12.11,12.11,15086,False
+post_matric,Uttar Pradesh,2019-20,18.23,18.23,17984,False
+post_matric,Uttar Pradesh,2020-21,22.19,22.19,8132,False
+post_matric,Uttar Pradesh,2021-22,,,8930,False
+post_matric,Uttar Pradesh,2022-23,,,9655,False
+post_matric,Uttar Pradesh,2023-24,10,10,9676,False
+post_matric,Uttar Pradesh,2024-25,15,15,10427,False
+post_matric,Uttarakhand,2013-14,10.865,10.865,24812,False
+post_matric,Uttarakhand,2014-15,1.64,1.64,25269,False
+post_matric,Uttarakhand,2015-16,9,9,27796,False
+post_matric,Uttarakhand,2016-17,50.91,50.91,15401,False
+post_matric,Uttarakhand,2017-18,6,6,8335,False
+post_matric,Uttarakhand,2018-19,0,0,6133,False
+post_matric,Uttarakhand,2019-20,0,0,8631,False
+post_matric,Uttarakhand,2020-21,0,0,3039,False
+post_matric,Uttarakhand,2021-22,35.68,35.68,3837,False
+post_matric,Uttarakhand,2022-23,,,3534,False
+post_matric,Uttarakhand,2023-24,1.88,1.88,3972,False
+post_matric,Uttarakhand,2024-25,2.7,2.7,3853,False
+post_matric,West Bengal,2013-14,22.776300000000003,22.776300000000003,79230,False
+post_matric,West Bengal,2014-15,2.37,2.37,79230,False
+post_matric,West Bengal,2015-16,29.48,29.48,73357,False
+post_matric,West Bengal,2016-17,0,0,85901,False
+post_matric,West Bengal,2017-18,28.08,28.08,90395,False
+post_matric,West Bengal,2018-19,22.19,22.19,58421,False
+post_matric,West Bengal,2019-20,24.11,24.11,62234,False
+post_matric,West Bengal,2020-21,22.56,22.56,60846,False
+post_matric,West Bengal,2021-22,38.72,38.72,78100,False
+post_matric,West Bengal,2022-23,,,63208,False
+post_matric,West Bengal,2023-24,34.06,34.06,37760,False
+post_matric,West Bengal,2024-25,35,35,29528,False

@@ -72,16 +72,20 @@ class NameMatch:
 MATCH_THRESHOLD = 0.9
 
 
-_CONSONANT = "[bcdfgjklmnpqrstvwxyz]h?"
+_ITRANS_VOWEL = "[aAiIuUeEoO]"
+_ITRANS_CONSONANT = "[^aAiIuUeEoO\\s.~^]h?"
 
 
 def _delete_schwas(word: str) -> str:
-    """Drop the inherent 'a' Hindi does not pronounce: keraketta -> kerketta.
+    """Drop the inherent short 'a' Hindi does not pronounce: keraketta -> kerketta.
 
-    Transliterating Devanagari writes an 'a' after every bare consonant. Hindi drops it
-    between a vowel-consonant and a consonant-vowel, so that is where it is removed.
+    Works on case-sensitive ITRANS, where 'a' is the inherent vowel and 'A' is a written long
+    vowel that must stay (खराड़ी, kharADI). Hindi drops the inherent vowel between a
+    vowel-consonant and a consonant-vowel.
     """
-    pattern = re.compile(rf"(?<=[aeiou])({_CONSONANT})a(?={_CONSONANT}[aeiou])")
+    pattern = re.compile(
+        rf"(?<={_ITRANS_VOWEL})({_ITRANS_CONSONANT})a(?={_ITRANS_CONSONANT}{_ITRANS_VOWEL})"
+    )
     previous = None
     while previous != word:
         previous, word = word, pattern.sub(r"\1", word, count=1)
@@ -95,8 +99,9 @@ def _is_devanagari(ch: str) -> bool:
 def _latin(name: str) -> str:
     if any(_is_devanagari(ch) for ch in name):
         name = sanscript.transliterate(name, sanscript.DEVANAGARI, sanscript.ITRANS)
-        # Anusvara and nasal marks sound as n; case in ITRANS only marks vowel length.
-        name = name.replace("M", "n").replace(".n", "").replace("~N", "n").lower()
+        # Anusvara and nasal marks sound as n.
+        name = name.replace("M", "n").replace(".n", "").replace("~N", "n")
+        name = name.replace(".", "")  # nukta marks, as in .D for ड़
         name = " ".join(_delete_schwas(word) for word in name.split())
     name = unicodedata.normalize("NFKD", name)
     return "".join(ch for ch in name if not unicodedata.combining(ch)).lower()
@@ -105,11 +110,11 @@ def _latin(name: str) -> str:
 def _key(word: str) -> str:
     for spelling, sound in _SOUND_ALIKES:
         word = word.replace(spelling, sound)
+    # Devanagari transliteration keeps a final inherent vowel (रमेश -> ramesha); drop it everywhere.
+    word = re.sub(r"(?<=[^aeiou])a$", "", word) or word
     word = re.sub(r"(ey|ie|y|e)$", "i", word)
     word = re.sub(r"([aeiou])h$", r"\1", word)
-    word = re.sub(r"(.)\1+", r"\1", word)
-    # Devanagari transliteration keeps a final inherent vowel (रमेश -> ramesha); drop it everywhere.
-    return re.sub(r"(?<=[^aeiou])a$", "", word) or word
+    return re.sub(r"(.)\1+", r"\1", word)
 
 
 def name_key(name: str) -> tuple[str, ...]:

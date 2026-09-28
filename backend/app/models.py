@@ -90,6 +90,8 @@ class Identity(Base):
     gender: Mapped[str | None] = mapped_column(String(8))
     reference_key: Mapped[str] = mapped_column(String(128), nullable=False)
     """DigiLocker's reference for the Aadhaar record. The Aadhaar number itself is never held."""
+    state: Mapped[str | None] = mapped_column(String(64), index=True)
+    district: Mapped[str | None] = mapped_column(String(64), index=True)
     linked_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )
@@ -213,3 +215,45 @@ class ApplicationSnapshot(Base):
     since: Mapped[date | None] = mapped_column(Date)
     record: Mapped[dict[str, Any]] = mapped_column(_json(), nullable=False)
     fetched_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+
+
+class Official(CreatedAt, Base):
+    """A Reviewer or ministry user, working at one Verification Level within a jurisdiction."""
+
+    __tablename__ = "officials"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    phone: Mapped[str] = mapped_column(String(16), unique=True, nullable=False)
+    name: Mapped[str] = mapped_column(String(200), nullable=False)
+    level: Mapped[str] = mapped_column(
+        String(16), nullable=False
+    )  # institute | district | state | ministry
+    state: Mapped[str | None] = mapped_column(String(64))
+    district: Mapped[str | None] = mapped_column(String(64))
+
+
+class AuditEvent(Base):
+    """Something an official or an Agent did, and on what. Never updated or deleted."""
+
+    __tablename__ = "audit_events"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    actor_type: Mapped[str] = mapped_column(String(16), nullable=False)
+    actor_id: Mapped[uuid.UUID] = mapped_column(nullable=False, index=True)
+    action: Mapped[str] = mapped_column(String(48), nullable=False)
+    subject_type: Mapped[str] = mapped_column(String(32), nullable=False)
+    subject_id: Mapped[uuid.UUID] = mapped_column(nullable=False, index=True)
+    detail: Mapped[dict[str, Any]] = mapped_column(_json(), nullable=False, default=dict)
+    at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+
+
+class CoverageRun(CreatedAt, Base):
+    """One linkage of education registers against scholarship registrations."""
+
+    __tablename__ = "coverage_runs"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    summary: Mapped[dict[str, Any]] = mapped_column(_json(), nullable=False)
+    unreached: Mapped[list[dict[str, Any]]] = mapped_column(_json(), nullable=False)

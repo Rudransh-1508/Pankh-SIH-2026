@@ -4,8 +4,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.applications.router import router as applications_router
 from app.auth.router import router as auth_router
 from app.config import get_settings
+from app.coverage.router import router as coverage_router
 from app.eligibility.router import router as eligibility_router
 from app.facts.router import router as facts_router
+from app.review.router import router as review_router
 from app.schemes.router import router as schemes_router
 from app.verification.router import router as verification_router
 
@@ -30,6 +32,8 @@ def create_app() -> FastAPI:
         eligibility_router,
         verification_router,
         applications_router,
+        review_router,
+        coverage_router,
     ):
         app.include_router(router, prefix="/v1")
 

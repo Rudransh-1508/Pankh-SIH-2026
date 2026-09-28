@@ -170,6 +170,10 @@ class Verifier:
                 )
             )
             return
+        identity = await self.session.get(Identity, student.id)
+        if identity is not None and certificate.holder_state and identity.state is None:
+            identity.state = certificate.holder_state
+            identity.district = certificate.holder_district
         found = facts_from_certificate(certificate, self.academic_year)
         if not found.facts:
             return
@@ -383,34 +387,19 @@ class Verifier:
         match: dict[str, Any],
         expires_at: datetime,
     ) -> Proof:
-        now = datetime.now(UTC).replace(microsecond=0)
-        proof_id = uuid.uuid4()
-        payload = {
-            "id": str(proof_id),
-            "subject": str(student.id),
-            "fact": fact_name,
-            "value": value.isoformat() if isinstance(value, date) else value,
-            "source": source,
-            "issuer": issuer,
-            "evidence": evidence,
-            "match": match,
-            "academic_year": label(self.academic_year),
-            "issued_at": now.isoformat(),
-            "expires_at": expires_at.replace(microsecond=0).isoformat(),
-            "key_id": proofs.key_id(self.settings),
-        }
-        proof = Proof(
-            id=proof_id,
-            student_id=student.id,
-            fact_name=fact_name,
-            payload=payload,
-            signature=proofs.sign(self.settings, payload),
-            key_id=payload["key_id"],
-            issued_at=now,
+        return issue_proof(
+            self.session,
+            self.settings,
+            student.id,
+            fact_name,
+            value,
+            source=source,
+            issuer=issuer,
+            evidence=evidence,
+            match=match,
             expires_at=expires_at,
+            academic_year=self.academic_year,
         )
-        self.session.add(proof)
-        return proof
 
     def _exception(
         self,
@@ -432,9 +421,67 @@ class Verifier:
             evidence=evidence,
             match_score=score,
             status=status,
+            level=_level_for(fact_name),
         )
         self.session.add(exception)
         return exception
+
+
+def _level_for(fact_name: str | None) -> str:
+    """Caste, income and identity certificates are issued by district offices, so their
+    District verifies them; academic and institutional Facts go to the institute."""
+    if fact_name in (
+        "net_jrf_qualified",
+        "institution_recognised",
+        "institution_eligible_for_fellowship",
+    ):
+        return "institute"
+    return "district"
+
+
+def issue_proof(
+    session: AsyncSession,
+    settings: Settings,
+    student_id: uuid.UUID,
+    fact_name: str,
+    value: Any,
+    *,
+    source: str,
+    issuer: str,
+    evidence: str,
+    match: dict[str, Any],
+    expires_at: datetime,
+    academic_year: int,
+) -> Proof:
+    """Sign and store a Proof that a Fact was confirmed by `source`."""
+    now = datetime.now(UTC).replace(microsecond=0)
+    proof_id = uuid.uuid4()
+    payload = {
+        "id": str(proof_id),
+        "subject": str(student_id),
+        "fact": fact_name,
+        "value": value.isoformat() if isinstance(value, date) else value,
+        "source": source,
+        "issuer": issuer,
+        "evidence": evidence,
+        "match": match,
+        "academic_year": label(academic_year),
+        "issued_at": now.isoformat(),
+        "expires_at": expires_at.replace(microsecond=0).isoformat(),
+        "key_id": proofs.key_id(settings),
+    }
+    proof = Proof(
+        id=proof_id,
+        student_id=student_id,
+        fact_name=fact_name,
+        payload=payload,
+        signature=proofs.sign(settings, payload),
+        key_id=payload["key_id"],
+        issued_at=now,
+        expires_at=expires_at,
+    )
+    session.add(proof)
+    return proof
 
 
 _DOCUMENT_NAMES = {
