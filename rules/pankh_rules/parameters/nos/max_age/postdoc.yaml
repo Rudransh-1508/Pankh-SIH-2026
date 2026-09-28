@@ -1,0 +1,6 @@
+description: Maximum age in years on 1 July of the selection year
+reference: nos-guidelines-2022, page 3, para 2.2 (i)
+unit: year
+values:
+  2021-07-01:
+    value: 38

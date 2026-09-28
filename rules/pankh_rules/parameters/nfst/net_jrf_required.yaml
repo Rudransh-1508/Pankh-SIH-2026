@@ -1,0 +1,7 @@
+description: Whether qualifying UGC NET or Joint CSIR-UGC NET is required
+reference: nfst-selection-netjrf-2024, page 1, paras 2-3 (selection from 2025-26)
+values:
+  2021-07-01:
+    value: false
+  2025-07-01:
+    value: true

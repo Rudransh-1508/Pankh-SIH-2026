@@ -1,0 +1,6 @@
+description: Maximum annual family income from all sources (INR)
+reference: nfs-guidelines-2022, page 17, Part B para 2.2
+unit: currency-INR
+values:
+  2021-07-01:
+    value: 600000

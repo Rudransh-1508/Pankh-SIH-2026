@@ -1,0 +1,81 @@
+# Official documents the scheme Rules are derived from.
+# Every Rule citation points at one of these ids plus a PDF page (1-based) and paragraph.
+# Documents are fetched and checked against their sha256 by tools/fetch_sources.py.
+# `issued` is the date printed on the document; `effective` is the date it takes effect.
+# Academic sessions are taken to start on 1 July (e.g. "2023-24 onwards" is effective 2023-07-01).
+# All documents are published by the Ministry of Tribal Affairs at https://tribal.nic.in/ScholarshiP.aspx
+
+pre-matric-guidelines-2022:
+  title: Guidelines, Pre-Matric Scholarship for ST students studying in Classes IX and X (2021-22 to 2025-26)
+  issued: 2022-10-17
+  url: https://tribal.nic.in/downloads/guidelines/pre-matric/guidelines-Pre-matric-17-Oct-2022.pdf
+  sha256: 8e35745e3319bfe532502d9c28e49d6ce704ec1a95a87bd7e983631b1a99474b
+  pages: 12
+
+pre-matric-income-revision-2020:
+  title: Upward revision of annual parental income ceiling, Pre-Matric Scholarship, from academic year 2020-21
+  issued: 2020-04-29
+  url: https://tribal.nic.in/downloads/guidelines/pre-matric/upward%20revision%20of%20annual%20parantal%20income%20Pre-Matric.pdf
+  sha256: 4affd2b28535722f862e5614bfd1983491d2c3c963cf2983d465c686d7043318
+  pages: 1
+  scanned: true
+
+post-matric-regulations:
+  title: Post-Matric Scholarship for ST students, income ceiling revision letter (23 May 2013) and Regulations (applicable from 01.07.2010)
+  issued: 2013-05-23
+  url: https://tribal.nic.in/downloads/guidelines/post-matric/EDUPostMatricScholarshipPMSforSTstudents230513.pdf
+  sha256: 12432cbc5ca7fc16636470a2615858d4cb13134df36823d60fbccd2e1fe078b3
+  pages: 24
+  scanned: true
+
+nfs-guidelines-2022:
+  title: Guidelines, National Fellowship and Scholarship for Higher Education of ST Students (2021-22 to 2025-26). Part A covers NFST, Part B covers Top Class
+  url: https://tribal.nic.in/downloads/guidelines/NFS/GuidelinesFellowshipandScholarship2022.pdf
+  sha256: c2b4bb32b95475bb1f12a72bae9dcebab44a5469d445f8d75e2f5ceadfe960c9
+  pages: 38
+
+nfs-payment-amendment-2023:
+  title: Amendment to para 4.1 (Part B, Scholarship payment process) of the National Fellowship and Scholarship guidelines, from 2023-24
+  issued: 2023-07-07
+  url: https://tribal.nic.in/downloads/guidelines/NFS/AmendmentGuidelinesNFS4highereducaton4STstudents_7July2023.pdf
+  sha256: a4ed3528c93269dccee0fd38aec2d7d07de62318879c1438d7ef30f5bdcda558
+  pages: 2
+  scanned: true
+
+nfst-rate-revision-2023:
+  title: Revision of fellowship amounts under the National Fellowship scheme, with effect from 01.01.2023
+  effective: 2023-01-01
+  url: https://tribal.nic.in/downloads/circulars/RevisionOfFellowshipAmountNFS4HESTStudentsScheme01012023.pdf
+  sha256: ac06be88ae0ca426044132e62771ea9716115439dc57e0438f2d4564b610ef39
+  pages: 1
+  scanned: true
+
+nfst-selection-netjrf-2024:
+  title: Notice, selection for National Fellowship from 2025-26 based on UGC/CSIR NET-JRF and Master's marks
+  issued: 2024-07-01
+  url: https://tribal.nic.in/downloads/circulars/NETJRFCISREligibilityamendmentNotice01072024.pdf
+  sha256: 461bf7a61ccce50c11d920fad0ffb99cbc4a237d8260786f47a79bb5bdabf2e5
+  pages: 1
+  scanned: true
+
+nos-guidelines-2022:
+  title: Guidelines, National Overseas Scholarship for ST students (2021-22 to 2025-26)
+  issued: 2022-10-07
+  url: https://tribal.nic.in/downloads/guidelines/NOS/RevisedGuidelinesNOS07102022.pdf
+  sha256: 10156fbf98dbed02e18b5862857341a3deb5249ecbebcc474c1c14aadd6931d2
+  pages: 11
+
+nos-amendment-2026:
+  title: Amendment in eligibility criteria and courses covered under the NOS scheme, from selection year 2026-27
+  issued: 2026-07-14
+  url: https://tribal.nic.in/downloads/guidelines/NOS/Amendment_NOS-2627.pdf
+  sha256: fbe59613da26395a9645144929a2ad2501a592195cf0ad122d4f20345fc80098
+  pages: 2
+  scanned: true
+
+top-class-institutes-2023:
+  title: Revised list of 265 institutes eligible under the Top Class scholarship, 2023-24 onwards
+  effective: 2023-07-01
+  url: https://tribal.nic.in/downloads/guidelines/Top-Class/Revised265-InstituteListTopClassScholarship2023-24onwards.pdf
+  sha256: 86aff95eee9599dfb5ebf06ad5e0e85b66c6a3c42afecbc53801901b7e98e804
+  pages: 21

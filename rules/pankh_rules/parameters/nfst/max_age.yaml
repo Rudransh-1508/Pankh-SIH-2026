@@ -1,0 +1,6 @@
+description: Maximum age in years on 1 July of the award year
+reference: nfs-guidelines-2022, page 5, Part A para 2.3
+unit: year
+values:
+  2021-07-01:
+    value: 36

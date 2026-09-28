@@ -1,0 +1,6 @@
+description: Minimum percentage in the final Master's (post-graduation) examination
+reference: nfs-guidelines-2022, page 5, Part A para 2.1 (ii)
+unit: percent
+values:
+  2021-07-01:
+    value: 55

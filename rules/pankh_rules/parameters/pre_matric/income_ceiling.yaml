@@ -1,0 +1,6 @@
+description: Maximum annual family income from all sources (INR)
+reference: pre-matric-income-revision-2020, page 1; pre-matric-guidelines-2022, page 3, para 3.3
+unit: currency-INR
+values:
+  2020-07-01:
+    value: 250000

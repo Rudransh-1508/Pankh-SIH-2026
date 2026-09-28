@@ -1,0 +1,6 @@
+description: Minimum percentage in the relevant qualifying degree (Bachelor's for a Master's course, Master's for a Ph.D or post-doctoral course)
+reference: nos-guidelines-2022, page 3, para 2.2 (i)
+unit: percent
+values:
+  2021-07-01:
+    value: 55

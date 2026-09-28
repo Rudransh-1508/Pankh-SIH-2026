@@ -1,0 +1,7 @@
+description: Whether post-doctoral research is covered by the scheme
+reference: nos-guidelines-2022, page 3, para 2.1 (i); nos-amendment-2026, page 1, para 2 (i) omits post-doctoral research from 2026-27
+values:
+  2021-07-01:
+    value: true
+  2026-07-01:
+    value: false

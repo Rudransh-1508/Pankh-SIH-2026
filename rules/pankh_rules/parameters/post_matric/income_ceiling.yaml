@@ -1,0 +1,6 @@
+description: Maximum annual income of parents or guardians from all sources (INR)
+reference: post-matric-regulations, page 1 (letter of 23 May 2013, effective 04.04.2013)
+unit: currency-INR
+values:
+  2013-04-04:
+    value: 250000

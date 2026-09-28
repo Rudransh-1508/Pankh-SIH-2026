@@ -1,0 +1,6 @@
+description: Maximum annual family income from all sources (INR)
+reference: nos-guidelines-2022, page 4, para 2.2 (iii)
+unit: currency-INR
+values:
+  2021-07-01:
+    value: 600000
