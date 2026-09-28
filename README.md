@@ -26,7 +26,8 @@ This README is the master plan: the problem, the ideas that make Pankh different
 14. [Build phases](#14-build-phases)
 15. [Costs](#15-costs)
 16. [Access to apply for now](#16-access-to-apply-for-now)
-17. [Open items](#17-open-items)
+17. [Running it locally](#17-running-it-locally)
+18. [Open items](#18-open-items)
 
 ---
 
@@ -363,7 +364,7 @@ Every one of these sits behind a Source Adapter with a contract test. When real 
 | Long-running workflows | Temporal |
 | Voice | LiveKit Agents; Bhashini, AI4Bharat or Sarvam for speech |
 | SMS and calls | Exotel |
-| Language model | A cost-efficient, non-Claude provider behind one provider-neutral interface (see [open items](#17-open-items)) |
+| Language model | A cost-efficient, non-Claude provider behind one provider-neutral interface (see [open items](#18-open-items)) |
 | Hosting | AWS India region, Docker |
 
 The reasons behind the harder-to-reverse choices are in [docs/adr/](docs/adr/).
@@ -433,7 +434,46 @@ These take weeks, so they start before the code needs them:
 
 ---
 
-## 17. Open items
+## 17. Running it locally
+
+What is built so far: the rules engine (all five MoTA Schemes, with citations), the backend
+(sign-in, Facts, eligibility, DigiLocker verification with signed Proofs, application and
+payment tracking, Reviewer queues, record linkage and coverage), the simulators, the student
+app (questions, Discover, scheme details, Wallet, Applications) and the officials' dashboard.
+
+**Needs:** Docker, [uv](https://docs.astral.sh/uv/), Flutter 3.38, Node 22.
+
+```bash
+# 1. Database (Postgres on port 5433, so it does not clash with a local Postgres)
+docker compose -f infra/docker-compose.yml up -d --wait
+
+# 2. Backend and simulators
+uv sync --all-packages
+cd backend && uv run alembic upgrade head && uv run python -m app.seed && cd ..
+uv run --directory backend uvicorn app.main:app --port 8000 > api.log 2>&1 &
+uv run --directory simulators uvicorn pankh_simulators.app:app --port 8100 &
+
+# 3. Demo Students who link DigiLocker (sign-in codes are read from api.log)
+uv run --directory backend python tools/demo_data.py --log ../api.log --count 12
+
+# 4. Officials' dashboard on http://localhost:3000
+cd dashboard && npm ci && npm run dev
+
+# 5. Student app (Android phone over USB: forward the API and simulator ports first)
+adb reverse tcp:8000 tcp:8000 && adb reverse tcp:8100 tcp:8100
+cd mobile && flutter run --dart-define=PANKH_API_URL=http://localhost:8000
+```
+
+No SMS is sent in development: every sign-in code is written to the API log. The demo officials
+are `+91 90000 00001` (ministry), `…02` (Jharkhand), `…03` (Dumka) and `…04` (Mayurbhanj).
+
+**Checks:** `uv run ruff check && uv run pytest` (rules, backend, simulators),
+`flutter analyze && flutter test` in `mobile/`, `npm run lint && npm run build` in `dashboard/`.
+CI runs all of them on every push.
+
+---
+
+## 18. Open items
 
 - **Language model provider.** Claude is ruled out for cost. Candidates to evaluate on our own test set of Indic, multi-step agent tasks: Sarvam (Indian, strong in Indic languages, data in India), Gemini Flash, DeepSeek and GPT mini-class models. The backend talks to models through one provider-neutral interface, so this choice can be made, and changed, by measurement.
 - **Product name check.** Search trademarks and the Play Store before any public launch.
