@@ -16,12 +16,12 @@ from pankh_simulators.population import Person, population
 API_KEY = "pankh-simulator-key"
 
 
-def _api_key(x_api_key: Annotated[str | None, Header()] = None) -> None:
+def require_api_key(x_api_key: Annotated[str | None, Header()] = None) -> None:
     if x_api_key != API_KEY:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "A valid X-API-Key header is required")
 
 
-router = APIRouter(dependencies=[Depends(_api_key)])
+router = APIRouter(dependencies=[Depends(require_api_key)])
 
 
 def _not_found(what: str) -> HTTPException:

@@ -181,3 +181,35 @@ class Consent(Base):
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )
     withdrawn_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class ApplicationSnapshot(Base):
+    """The latest record of an Application from its system of record.
+
+    Kept so the Student sees their applications when a system of record is down, and so
+    stages can be counted across Students to see where applications stall.
+    """
+
+    __tablename__ = "application_snapshots"
+    __table_args__ = (
+        Index(
+            "uq_application_snapshots_student_source_external",
+            "student_id",
+            "source_system",
+            "external_id",
+            unique=True,
+        ),
+    )
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    student_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("students.id", ondelete="CASCADE"), nullable=False
+    )
+    source_system: Mapped[str] = mapped_column(String(16), nullable=False)
+    external_id: Mapped[str] = mapped_column(String(64), nullable=False)
+    scheme_id: Mapped[str] = mapped_column(String(32), nullable=False)
+    stage: Mapped[str] = mapped_column(String(32), nullable=False, index=True)
+    waiting_on: Mapped[str | None] = mapped_column(String(32))
+    since: Mapped[date | None] = mapped_column(Date)
+    record: Mapped[dict[str, Any]] = mapped_column(_json(), nullable=False)
+    fetched_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)

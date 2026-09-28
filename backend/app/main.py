@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.applications.router import router as applications_router
 from app.auth.router import router as auth_router
 from app.config import get_settings
 from app.eligibility.router import router as eligibility_router
@@ -28,6 +29,7 @@ def create_app() -> FastAPI:
         schemes_router,
         eligibility_router,
         verification_router,
+        applications_router,
     ):
         app.include_router(router, prefix="/v1")
 

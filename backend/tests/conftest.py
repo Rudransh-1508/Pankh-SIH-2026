@@ -8,6 +8,7 @@ os.environ.setdefault(
 import asyncio
 from collections.abc import AsyncIterator
 from pathlib import Path
+from urllib.parse import parse_qs, urlparse
 
 import pytest
 from alembic import command
@@ -106,3 +107,36 @@ def sign_in(client: AsyncClient, sms: CapturingSmsSender):
 async def auth(sign_in) -> dict[str, str]:
     tokens = await sign_in()
     return {"Authorization": f"Bearer {tokens['access_token']}"}
+
+
+@pytest.fixture
+def link_digilocker(client: AsyncClient):
+    """Walk the whole DigiLocker flow as the phone and the Student would."""
+    from pankh_simulators.app import app as simulator_app
+
+    async def link(auth: dict, person) -> dict:
+        start = await client.post("/v1/me/digilocker/start", headers=auth)
+        assert start.status_code == 200, start.text
+        query = parse_qs(urlparse(start.json()["authorization_url"]).query)
+        transport = ASGITransport(app=simulator_app)
+        async with AsyncClient(transport=transport, base_url="http://sim") as sim:
+            consent = await sim.post(
+                "/digilocker/public/oauth2/1/authorize",
+                data={
+                    "client_id": query["client_id"][0],
+                    "redirect_uri": query["redirect_uri"][0],
+                    "state": query["state"][0],
+                    "code_challenge": query["code_challenge"][0],
+                    "person_id": person.id,
+                },
+            )
+        callback = parse_qs(urlparse(consent.headers["location"]).query)
+        complete = await client.post(
+            "/v1/me/digilocker/complete",
+            headers=auth,
+            json={"code": callback["code"][0], "state": callback["state"][0]},
+        )
+        assert complete.status_code == 200, complete.text
+        return complete.json()
+
+    return link
