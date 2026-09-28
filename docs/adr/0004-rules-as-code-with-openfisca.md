@@ -1,0 +1,3 @@
+# Scheme Rules are versioned code on OpenFisca, each citing its Guideline paragraph
+
+Eligibility is written as machine-checkable Rules rather than prose or hard-coded conditions, so results can be explained clause by clause and answer "what would change this". OpenFisca was chosen over JSON Logic, Catala or a custom format because it is Python and versions rule parameters over time natively, which matches Guidelines that change most years. Rule Versions are keyed by academic year so past Applications are judged by the Rules in force then. New Rules are drafted by an AI from Guideline PDFs but only go live after a person approves each one against its cited paragraph.

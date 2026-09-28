@@ -1,0 +1,3 @@
+# Every external system sits behind a Source Adapter, backed by a Simulator where real access is unavailable
+
+NSP, SFMP, the NOS Portal, PFMS, UDISE+, APAAR, AISHE, e-District, UIDAI and UGC-NTA require government licences or agreements that a student team cannot get. Instead of faking integrations, each system gets one Source Adapter with a contract test. Where real access exists (DigiLocker once approved, Bhashini, Exotel) the adapter calls the real service. Elsewhere it calls a Simulator built from the system's published manuals and portal flows. Moving to the real service later changes only the adapter, and the same contract tests prove it works.

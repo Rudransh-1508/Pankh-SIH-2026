@@ -1,0 +1,3 @@
+# One monorepo with a Flutter app, a FastAPI backend and a Next.js dashboard
+
+The student app, backend, dashboard, Rules and Simulators live in one repository so a change to a shared contract lands in one commit. The student app is Flutter rather than native Kotlin so Android and iOS share one codebase with strong offline and custom UI support. The backend is Python because the rules engine (OpenFisca), record linkage (Splink) and Indic language tooling are all Python. The dashboard is Next.js rather than Flutter web because it is mostly maps, data tables and review queues, where the React ecosystem is much stronger.
