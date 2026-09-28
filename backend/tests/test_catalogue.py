@@ -14,7 +14,9 @@ async def test_fact_schema_describes_forms(client):
     assert specs["family_income"]["kind"] == "number"
     level = specs["education_level"]
     assert level["kind"] == "choice"
-    assert {"key": "class_9", "label": "Class IX"} in level["choices"]
+    class_9 = next(c for c in level["choices"] if c["key"] == "class_9")
+    assert class_9["labels"] == {"en": "Class IX", "hi": "कक्षा 9"}
+    assert specs["is_scheduled_tribe"]["question"]["hi"].startswith("क्या आप")
     assert all(choice["key"] != "unknown" for choice in level["choices"])
 
 

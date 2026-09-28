@@ -15,6 +15,7 @@ from typing import Any
 from openfisca_core.indexed_enums import Enum as OpenFiscaEnum
 from openfisca_core.simulation_builder import SimulationBuilder
 
+from pankh_rules.questions import CHOICE_LABELS, GATING_FACTS, HELP, QUESTIONS
 from pankh_rules.schemes import SCHEMES, Rule, Scheme
 from pankh_rules.system import concrete_variables, pankh_system
 from pankh_rules.variables import facts as fact_variables
@@ -33,6 +34,8 @@ class FactKind(StrEnum):
 class Choice:
     key: str
     label: str
+    labels: Mapping[str, str]
+    """The label in each supported language, keyed by language code."""
 
 
 @dataclass(frozen=True)
@@ -41,6 +44,9 @@ class FactSpec:
     label: str
     description: str | None
     kind: FactKind
+    question: Mapping[str, str]
+    """How the Fact is asked of a Student, keyed by language code."""
+    help: Mapping[str, str] | None = None
     choices: tuple[Choice, ...] = ()
 
 
@@ -106,8 +112,9 @@ def fact_specs() -> dict[str, FactSpec]:
             kind = FactKind.DATE
         else:
             kind = FactKind.CHOICE
+            labels = CHOICE_LABELS[variable.name]
             choices = tuple(
-                Choice(item.name, item.value)
+                Choice(item.name, item.value, labels[item.name])
                 for item in variable.possible_values
                 if item.name != "unknown"
             )
@@ -116,6 +123,8 @@ def fact_specs() -> dict[str, FactSpec]:
             label=variable.label,
             description=variable.documentation,
             kind=kind,
+            question=QUESTIONS[variable.name],
+            help=HELP.get(variable.name),
             choices=choices,
         )
     return specs
@@ -152,17 +161,24 @@ def evaluate(
 
 
 def next_facts(results: Iterable[SchemeResult]) -> list[str]:
-    """Facts worth asking for next: those that would settle the most undecided Schemes first.
+    """Facts worth asking for next, most useful first.
 
-    Schemes already ruled out are ignored, so a Student is never asked something that cannot
-    change any outcome.
+    Facts that can rule out whole Schemes on their own come first, then those that would settle
+    the most undecided Schemes. Schemes already ruled out are ignored, so a Student is never
+    asked something that cannot change any outcome.
     """
     counts: dict[str, int] = {}
     for result in results:
         if result.status is Status.NEEDS_INFORMATION:
             for name in result.missing_facts:
                 counts[name] = counts.get(name, 0) + 1
-    return sorted(counts, key=lambda name: -counts[name])
+    declared = list(fact_specs())
+
+    def priority(name: str) -> tuple[int, int, int]:
+        gating = GATING_FACTS.index(name) if name in GATING_FACTS else len(GATING_FACTS)
+        return gating, -counts[name], declared.index(name)
+
+    return sorted(counts, key=priority)
 
 
 class _Judge:

@@ -60,7 +60,7 @@ def test_next_facts_skips_schemes_already_ruled_out():
 
 def test_next_facts_prefers_facts_that_settle_more_schemes():
     asked = next_facts(evaluate({"is_scheduled_tribe": True}, 2026))
-    assert asked[0] in {"education_level", "current_mota_award", "holds_other_scholarship"}
+    assert asked[0] == "education_level"
     assert asked.index("education_level") < asked.index("net_jrf_qualified")
 
 
@@ -84,3 +84,20 @@ def test_every_rule_variable_belongs_to_a_rule():
     rule_variables = {rule.variable for scheme in SCHEMES.values() for rule in scheme.rules}
     defined = {name for name in pankh_system().variables if "__" in name}
     assert defined == rule_variables
+
+
+def test_every_fact_is_asked_in_every_language():
+    from pankh_rules.questions import LANGUAGES
+
+    for spec in fact_specs().values():
+        assert set(spec.question) == set(LANGUAGES), spec.name
+        assert all(text.strip() for text in spec.question.values()), spec.name
+        if spec.help:
+            assert set(spec.help) == set(LANGUAGES), spec.name
+        for choice in spec.choices:
+            assert set(choice.labels) == set(LANGUAGES), (spec.name, choice.key)
+
+
+def test_gating_facts_are_asked_first():
+    asked = next_facts(evaluate({}, 2026))
+    assert asked[:3] == ["is_scheduled_tribe", "education_level", "studies_abroad"]

@@ -58,6 +58,7 @@ class SchemeOut(BaseModel):
 class ChoiceOut(BaseModel):
     key: str
     label: str
+    labels: dict[str, str]
 
 
 class FactSpecOut(BaseModel):
@@ -65,6 +66,8 @@ class FactSpecOut(BaseModel):
     label: str
     description: str | None
     kind: Literal["boolean", "number", "date", "choice"]
+    question: dict[str, str]
+    help: dict[str, str] | None
     choices: list[ChoiceOut]
 
     @classmethod
@@ -74,7 +77,11 @@ class FactSpecOut(BaseModel):
             label=spec.label,
             description=spec.description,
             kind=spec.kind.value,
-            choices=[ChoiceOut(key=c.key, label=c.label) for c in spec.choices],
+            question=dict(spec.question),
+            help=dict(spec.help) if spec.help else None,
+            choices=[
+                ChoiceOut(key=c.key, label=c.label, labels=dict(c.labels)) for c in spec.choices
+            ],
         )
 
 
