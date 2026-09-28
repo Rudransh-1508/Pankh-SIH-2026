@@ -19,7 +19,10 @@ from fontTools.varLib import instancer
 OUT = Path(__file__).resolve().parent.parent / "assets" / "fonts"
 REPO = "https://github.com/google/fonts/raw/main/ofl"
 
-LATIN = "U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20B9,U+2122,U+2190-2193,U+2212,U+2215"
+LATIN = (
+    "U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20B9,U+2122,"
+    "U+2190-2193,U+2212,U+2215"
+)
 DEVANAGARI = "U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+25CC,U+A830-A839,U+A8E0-A8FF"
 
 FONTS = [

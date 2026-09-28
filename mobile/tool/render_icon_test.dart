@@ -11,7 +11,12 @@ import 'package:pankh/widgets/feather_mark.dart';
 
 const _size = 1024.0;
 
-Future<void> _render(WidgetTester tester, String path, {required bool withBackground, required double featherScale}) async {
+Future<void> _render(
+  WidgetTester tester,
+  String path, {
+  required bool withBackground,
+  required double featherScale,
+}) async {
   final key = GlobalKey();
   await tester.pumpWidget(
     Directionality(
