@@ -1,0 +1,13 @@
+{
+  "identity": {"name": "Sunita Murmu", "date_of_birth": "2006-03-14", "gender": "F", "linked_at": "2026-09-29T04:10:00Z"},
+  "facts": {
+    "is_scheduled_tribe": {"value": true, "source": "digilocker", "verified": true, "proof_id": "0b8c1d4e-0000-4000-8000-000000000001"},
+    "family_income": {"value": 180000, "source": "digilocker", "verified": false, "proof_id": null}
+  },
+  "documents": [
+    {"id": "0b8c1d4e-0000-4000-8000-000000000011", "doctype": "CSCER", "name": "Caste Certificate", "issuer": "e-District, Jharkhand", "uri": "in.gov.jharkhand.edistrict-CSCER-1A2B3C4D5E", "fetched_at": "2026-09-29T04:10:00Z"}
+  ],
+  "exceptions": [
+    {"id": "0b8c1d4e-0000-4000-8000-000000000021", "fact_name": "family_income", "kind": "stale_document", "message": "The income certificate is for 2023-24; 2026-27 needs one for 2025-26.", "remedy": "Apply for a new income certificate from your tehsil or e-District portal.", "status": "open", "created_at": "2026-09-29T04:10:00Z"}
+  ]
+}

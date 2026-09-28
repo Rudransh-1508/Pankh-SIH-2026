@@ -2,6 +2,18 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<!-- DigiLocker sends the Student back to pankh://digilocker/callback. -->
+			<key>CFBundleURLName</key>
+			<string>in.pankh.digilocker</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>pankh</string>
+			</array>
+		</dict>
+	</array>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<!-- Lets debug builds reach the API on this machine over http://localhost. -->

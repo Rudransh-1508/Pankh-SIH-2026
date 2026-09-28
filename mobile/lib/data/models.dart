@@ -205,3 +205,75 @@ class Institute {
   final String name;
   final String location;
 }
+
+class DocumentRef {
+  const DocumentRef({required this.doctype, required this.name, required this.issuer});
+
+  factory DocumentRef.fromJson(Json json) => DocumentRef(
+    doctype: json['doctype'] as String,
+    name: json['name'] as String,
+    issuer: json['issuer'] as String,
+  );
+
+  final String doctype;
+  final String name;
+  final String issuer;
+}
+
+class VerificationIssue {
+  const VerificationIssue({
+    required this.factName,
+    required this.kind,
+    required this.message,
+    required this.remedy,
+  });
+
+  factory VerificationIssue.fromJson(Json json) => VerificationIssue(
+    factName: json['fact_name'] as String?,
+    kind: json['kind'] as String,
+    message: json['message'] as String,
+    remedy: json['remedy'] as String?,
+  );
+
+  final String? factName;
+  final String kind;
+  final String message;
+  final String? remedy;
+}
+
+class FactVerification {
+  const FactVerification({required this.source, required this.verified});
+
+  factory FactVerification.fromJson(Json json) =>
+      FactVerification(source: json['source'] as String, verified: json['verified'] as bool);
+
+  final String source;
+  final bool verified;
+}
+
+class Verification {
+  const Verification({
+    required this.identityName,
+    required this.facts,
+    required this.documents,
+    required this.issues,
+  });
+
+  factory Verification.fromJson(Json json) => Verification(
+    identityName: (json['identity'] as Json?)?['name'] as String?,
+    facts: {
+      for (final entry in (json['facts'] as Json).entries)
+        entry.key: FactVerification.fromJson(entry.value as Json),
+    },
+    documents: [for (final d in json['documents'] as List) DocumentRef.fromJson(d as Json)],
+    issues: [for (final e in json['exceptions'] as List) VerificationIssue.fromJson(e as Json)],
+  );
+
+  /// The Student's name as DigiLocker confirmed it, or null before DigiLocker is linked.
+  final String? identityName;
+  final Map<String, FactVerification> facts;
+  final List<DocumentRef> documents;
+  final List<VerificationIssue> issues;
+
+  bool get linked => identityName != null;
+}

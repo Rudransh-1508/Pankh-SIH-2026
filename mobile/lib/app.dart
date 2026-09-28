@@ -6,10 +6,12 @@ import 'package:go_router/go_router.dart';
 import 'data/api.dart';
 import 'l10n/generated/app_localizations.dart';
 import 'screens/answers_screen.dart';
+import 'screens/digilocker_callback_screen.dart';
 import 'screens/discover_screen.dart';
 import 'screens/questions_screen.dart';
 import 'screens/scheme_screen.dart';
 import 'screens/sign_in_screens.dart';
+import 'screens/wallet_screen.dart';
 import 'screens/welcome_screen.dart';
 import 'state/providers.dart';
 import 'theme.dart';
@@ -32,6 +34,15 @@ final routerProvider = Provider((ref) {
       ),
       GoRoute(path: '/discover', builder: (_, _) => const DiscoverScreen()),
       GoRoute(path: '/answers', builder: (_, _) => const AnswersScreen()),
+      GoRoute(path: '/wallet', builder: (_, _) => const WalletScreen()),
+      // DigiLocker returns to pankh://digilocker/callback; the router sees the path.
+      GoRoute(
+        path: '/callback',
+        builder: (_, state) => DigiLockerCallbackScreen(
+          code: state.uri.queryParameters['code'],
+          state: state.uri.queryParameters['state'],
+        ),
+      ),
       GoRoute(
         path: '/schemes/:id',
         builder: (_, state) => SchemeScreen(schemeId: state.pathParameters['id']!),

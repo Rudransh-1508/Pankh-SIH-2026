@@ -91,6 +91,23 @@ class PankhApi {
   Future<Json> eligibility(Json facts) =>
       _send(() => _dio.post('/eligibility', data: {'facts': facts}));
 
+  /// Starts linking DigiLocker. Open the returned address; DigiLocker returns to the app.
+  Future<String> startDigiLocker() async =>
+      (await _send(() => _dio.post('/me/digilocker/start')))['authorization_url'] as String;
+
+  Future<Json> completeDigiLocker(String code, String state) =>
+      _send(() => _dio.post('/me/digilocker/complete', data: {'code': code, 'state': state}));
+
+  Future<Json> verification() => _send(() => _dio.get('/me/verification'));
+
+  Future<void> verifyInstitution(String code) =>
+      _sendList(() => _dio.post('/me/verifications/institution', data: {'code': code}));
+
+  Future<void> verifyNet(String rollNumber) =>
+      _sendList(() => _dio.post('/me/verifications/net', data: {'roll_number': rollNumber}));
+
+  Future<void> verifyBank() => _sendList(() => _dio.post('/me/verifications/bank'));
+
   Future<List<Institute>> searchTopClass(String query) async {
     final json = await _sendList(
       () => _dio.get('/institutes/top-class', queryParameters: {'q': query, 'limit': 30}),

@@ -19,8 +19,37 @@ class FakeApi extends PankhApi {
 
   final requests = <Json>[];
 
+  /// What /me/verification returns; null means DigiLocker is not linked yet.
+  Json? verificationJson;
+
   @override
   Future<List<dynamic>> factSchema() async => fixture('fact_schema') as List<dynamic>;
+
+  /// Facts held by the fake server for a signed-in Student.
+  final serverFacts = <String, dynamic>{};
+
+  @override
+  Future<void> saveFacts(Json facts) async {
+    for (final entry in facts.entries) {
+      entry.value == null ? serverFacts.remove(entry.key) : serverFacts[entry.key] = entry.value;
+    }
+  }
+
+  @override
+  Future<Json> myFacts() async => Json.of(serverFacts);
+
+  @override
+  Future<Json> myEligibility() => eligibility(serverFacts);
+
+  @override
+  Future<Json> verification() async =>
+      verificationJson ??
+      {
+        'identity': null,
+        'facts': <String, dynamic>{},
+        'documents': <dynamic>[],
+        'exceptions': <dynamic>[],
+      };
 
   @override
   Future<Json> eligibility(Json facts) async {
@@ -31,10 +60,17 @@ class FakeApi extends PankhApi {
   }
 }
 
-Future<(Widget, FakeApi, SharedPreferences)> buildApp({Json facts = const {}}) async {
-  SharedPreferences.setMockInitialValues({if (facts.isNotEmpty) 'facts': jsonEncode(facts)});
+Future<(Widget, FakeApi, SharedPreferences)> buildApp({
+  Json facts = const {},
+  String? phone,
+  Json? verification,
+}) async {
+  SharedPreferences.setMockInitialValues({
+    if (facts.isNotEmpty) 'facts': jsonEncode(facts),
+    'phone': ?phone,
+  });
   final preferences = await SharedPreferences.getInstance();
-  final api = FakeApi();
+  final api = FakeApi()..verificationJson = verification;
   final app = ProviderScope(
     overrides: [
       sharedPreferencesProvider.overrideWithValue(preferences),

@@ -122,5 +122,54 @@
         "type": "int"
       }
     }
-  }
+  },
+  "walletTitle": "My documents",
+  "walletLinkTitle": "Confirm your details with DigiLocker",
+  "walletLinkBody": "We read your Aadhaar, caste, income and education certificates from DigiLocker, so you don't need to upload them.",
+  "linkDigiLocker": "Link DigiLocker",
+  "linkingDigiLocker": "Reading your documents from DigiLocker…",
+  "linkedAs": "Linked to DigiLocker as {name}",
+  "@linkedAs": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "documentsTitle": "Documents in DigiLocker",
+  "confirmedTitle": "Confirmed details",
+  "confirmedBy": "Confirmed by {source}",
+  "@confirmedBy": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "givenByYou": "Your answer, not confirmed yet",
+  "needsAttention": "Needs attention",
+  "confirmMore": "Confirm more details",
+  "institutionCode": "School or college code (U-DISE or AISHE)",
+  "netRollNumber": "UGC NET roll number",
+  "checkBank": "Check my bank account is linked to Aadhaar",
+  "check": "Check",
+  "signInToLink": "Sign in with your mobile number to link DigiLocker.",
+  "digiLockerDone": "{count, plural, =0{No details could be confirmed yet} =1{1 detail confirmed} other{{count} details confirmed}}",
+  "@digiLockerDone": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "digiLockerIssues": "{count, plural, =1{1 thing needs attention} other{{count} things need attention}}",
+  "@digiLockerIssues": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "done": "Done",
+  "confirmed": "Confirmed"
 }

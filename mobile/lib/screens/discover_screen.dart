@@ -122,6 +122,16 @@ class _Results extends ConsumerWidget {
             ),
             const SizedBox(height: PankhSpace.md),
           ],
+          if (signedIn && ref.watch(verificationProvider).value?.linked == false) ...[
+            _Prompt(
+              background: PankhColors.peacockMist,
+              title: l10n.walletLinkTitle,
+              body: l10n.walletLinkBody,
+              action: l10n.linkDigiLocker,
+              onPressed: () => context.push('/wallet'),
+            ),
+            const SizedBox(height: PankhSpace.md),
+          ],
           for (final result in eligibility.schemes) ...[
             _SchemeCard(result: result),
             const SizedBox(height: PankhSpace.md - 4),
@@ -311,6 +321,7 @@ class _AccountButton extends ConsumerWidget {
       icon: const Icon(Icons.account_circle_rounded, color: PankhColors.peacockDeep),
       itemBuilder: (context) => [
         PopupMenuItem(enabled: false, child: Text(l10n.signedInAs(phone))),
+        PopupMenuItem(onTap: () => context.push('/wallet'), child: Text(l10n.walletTitle)),
         PopupMenuItem(
           onTap: () async {
             await ref.read(sessionProvider.notifier).signOut();

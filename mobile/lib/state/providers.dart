@@ -172,3 +172,9 @@ class ProfileController extends AsyncNotifier<ProfileState> {
 final profileProvider = AsyncNotifierProvider<ProfileController, ProfileState>(
   ProfileController.new,
 );
+
+/// What DigiLocker and the registers have confirmed. Null when not signed in.
+final verificationProvider = FutureProvider<Verification?>((ref) async {
+  if (ref.watch(sessionProvider) == null) return null;
+  return Verification.fromJson(await ref.read(apiProvider).verification());
+});
