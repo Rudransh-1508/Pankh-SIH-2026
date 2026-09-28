@@ -1,8 +1,8 @@
 import uuid
-from datetime import datetime
+from datetime import date, datetime
 from typing import Any
 
-from sqlalchemy import JSON, DateTime, ForeignKey, Index, Integer, String, func
+from sqlalchemy import JSON, Date, DateTime, Float, ForeignKey, Index, Integer, String, Text, func
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -66,6 +66,118 @@ class FactRecord(Base):
         JSON(none_as_null=True).with_variant(JSONB(none_as_null=True), "postgresql"), nullable=True
     )
     source: Mapped[str] = mapped_column(String(32), nullable=False)
+    proof_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("proofs.id", ondelete="SET NULL"))
     recorded_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )
+
+
+def _json():
+    return JSON(none_as_null=True).with_variant(JSONB(none_as_null=True), "postgresql")
+
+
+class Identity(Base):
+    """Who a Student is, as confirmed by DigiLocker (from their Aadhaar record)."""
+
+    __tablename__ = "identities"
+
+    student_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("students.id", ondelete="CASCADE"), primary_key=True
+    )
+    digilocker_id: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
+    name: Mapped[str] = mapped_column(String(200), nullable=False)
+    date_of_birth: Mapped[date | None] = mapped_column(Date)
+    gender: Mapped[str | None] = mapped_column(String(8))
+    reference_key: Mapped[str] = mapped_column(String(128), nullable=False)
+    """DigiLocker's reference for the Aadhaar record. The Aadhaar number itself is never held."""
+    linked_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+
+
+class DigiLockerRequest(CreatedAt, Base):
+    """An authorisation started on the phone, waiting for DigiLocker to send the Student back."""
+
+    __tablename__ = "digilocker_requests"
+
+    state: Mapped[str] = mapped_column(String(64), primary_key=True)
+    student_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("students.id", ondelete="CASCADE"), nullable=False
+    )
+    code_verifier: Mapped[str] = mapped_column(String(128), nullable=False)
+
+
+class ReferencedDocument(Base):
+    """A Document held by DigiLocker. Only its reference and a fingerprint are kept."""
+
+    __tablename__ = "referenced_documents"
+    __table_args__ = (
+        Index("uq_referenced_documents_student_uri", "student_id", "uri", unique=True),
+    )
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    student_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("students.id", ondelete="CASCADE"), nullable=False
+    )
+    uri: Mapped[str] = mapped_column(String(255), nullable=False)
+    doctype: Mapped[str] = mapped_column(String(16), nullable=False)
+    name: Mapped[str] = mapped_column(String(200), nullable=False)
+    issuer: Mapped[str] = mapped_column(String(200), nullable=False)
+    sha256: Mapped[str] = mapped_column(String(64), nullable=False)
+    fetched_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+
+
+class Proof(Base):
+    """A signed record that a Fact was confirmed by a named source at a stated time."""
+
+    __tablename__ = "proofs"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    student_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("students.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    fact_name: Mapped[str] = mapped_column(String(64), nullable=False)
+    payload: Mapped[dict[str, Any]] = mapped_column(_json(), nullable=False)
+    signature: Mapped[str] = mapped_column(String(128), nullable=False)
+    key_id: Mapped[str] = mapped_column(String(32), nullable=False)
+    issued_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+
+
+class VerificationException(CreatedAt, Base):
+    """A Fact that could not be confirmed, sent to a Reviewer instead of blocking anything."""
+
+    __tablename__ = "verification_exceptions"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    student_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("students.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    fact_name: Mapped[str | None] = mapped_column(String(64))
+    kind: Mapped[str] = mapped_column(String(32), nullable=False)
+    message: Mapped[str] = mapped_column(Text, nullable=False)
+    remedy: Mapped[str | None] = mapped_column(Text)
+    evidence: Mapped[dict[str, Any]] = mapped_column(_json(), nullable=False, default=dict)
+    match_score: Mapped[float | None] = mapped_column(Float)
+    level: Mapped[str] = mapped_column(String(16), nullable=False, default="institute")
+    status: Mapped[str] = mapped_column(String(16), nullable=False, default="open", index=True)
+    resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    resolution: Mapped[str | None] = mapped_column(Text)
+
+
+class Consent(Base):
+    """A Student's recorded permission for one pull of Facts or one action on their behalf."""
+
+    __tablename__ = "consents"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    student_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("students.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    source: Mapped[str] = mapped_column(String(32), nullable=False)
+    scope: Mapped[str] = mapped_column(String(200), nullable=False)
+    purpose: Mapped[str] = mapped_column(Text, nullable=False)
+    granted_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+    withdrawn_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))

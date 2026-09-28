@@ -13,13 +13,18 @@ dependencies = [
     "alembic>=1.16",
     "pyjwt>=2.10",
     "phonenumbers>=9",
+    "httpx>=0.28.1",
+    "rapidfuzz>=3.14.6",
+    "indic-transliteration>=2.3.82",
+    "cryptography>=50.0.1",
 ]
 
 [dependency-groups]
-dev = ["httpx>=0.28"]
+dev = ["pankh-simulators"]
 
 [tool.uv.sources]
 pankh-rules = { workspace = true }
+pankh-simulators = { workspace = true }
 
 [build-system]
 requires = ["hatchling"]

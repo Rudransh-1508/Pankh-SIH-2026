@@ -6,6 +6,7 @@ from app.config import get_settings
 from app.eligibility.router import router as eligibility_router
 from app.facts.router import router as facts_router
 from app.schemes.router import router as schemes_router
+from app.verification.router import router as verification_router
 
 
 def create_app() -> FastAPI:
@@ -21,7 +22,13 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    for router in (auth_router, facts_router, schemes_router, eligibility_router):
+    for router in (
+        auth_router,
+        facts_router,
+        schemes_router,
+        eligibility_router,
+        verification_router,
+    ):
         app.include_router(router, prefix="/v1")
 
     @app.get("/health", tags=["ops"])

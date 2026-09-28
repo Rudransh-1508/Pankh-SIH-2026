@@ -18,6 +18,7 @@ from sqlalchemy import text
 from app.auth.sms import get_sms_sender
 from app.db import Base, get_engine
 from app.main import app
+from app.sources.http import get_source_http
 
 BACKEND_DIR = Path(__file__).resolve().parent.parent
 PHONE = "+919876543210"
@@ -57,6 +58,20 @@ def sms() -> AsyncIterator[CapturingSmsSender]:
     app.dependency_overrides[get_sms_sender] = lambda: sender
     yield sender
     app.dependency_overrides.pop(get_sms_sender, None)
+
+
+@pytest.fixture(autouse=True)
+def simulators() -> AsyncIterator[None]:
+    """Source Systems and Data Sources are answered in-process by the simulators."""
+    from pankh_simulators.app import app as simulator_app
+
+    async def source_http() -> AsyncIterator[AsyncClient]:
+        async with AsyncClient(transport=ASGITransport(app=simulator_app)) as http:
+            yield http
+
+    app.dependency_overrides[get_source_http] = source_http
+    yield
+    app.dependency_overrides.pop(get_source_http, None)
 
 
 @pytest.fixture

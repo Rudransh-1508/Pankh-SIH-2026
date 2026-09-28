@@ -25,6 +25,18 @@ class Settings(BaseSettings):
     otp_max_per_hour: int = 5
     sms_sender: Literal["console"] = "console"
 
+    # Source Systems and Data Sources. Defaults point at the local simulators.
+    digilocker_url: str = "http://localhost:8100/digilocker"
+    digilocker_client_id: str = "PANKH-SIM"
+    digilocker_client_secret: str = "pankh-simulator-secret"
+    digilocker_redirect_uri: str = "pankh://digilocker/callback"
+    registers_url: str = "http://localhost:8100"
+    registers_api_key: str = "pankh-simulator-key"
+
+    # Proofs are signed with an Ed25519 key. Unset, a key is derived from secret_key.
+    proof_signing_key: str | None = None
+    proof_ttl: timedelta = timedelta(days=365)
+
     @model_validator(mode="after")
     def _require_real_secret_outside_development(self) -> "Settings":
         if self.environment == "production" and self.secret_key == DEVELOPMENT_SECRET:
