@@ -1,0 +1,17 @@
+[project]
+name = "pankh-simulators"
+version = "0.1.0"
+description = "Stand-ins for government registers and scholarship systems, built from their published interfaces"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "fastapi>=0.116",
+    "uvicorn[standard]>=0.35",
+    "python-multipart>=0.0.20",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["pankh_simulators"]

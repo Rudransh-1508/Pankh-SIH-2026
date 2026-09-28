@@ -7,7 +7,7 @@ requires-python = ">=3.13,<3.14"
 package = false
 
 [tool.uv.workspace]
-members = ["rules", "backend"]
+members = ["rules", "backend", "simulators"]
 
 [dependency-groups]
 dev = [
