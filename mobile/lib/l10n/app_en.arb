@@ -405,5 +405,18 @@
         "type": "String"
       }
     }
+  },
+  "letterWrite": "Write the request",
+  "letterTitle": "Request letter",
+  "letterCopy": "Copy the letter",
+  "letterCopied": "Copied. Paste it in a message, or print it.",
+  "letterBlanks": "Fill in the blanks (________) before you send it.",
+  "letterSubject": "Subject: {subject}",
+  "@letterSubject": {
+    "placeholders": {
+      "subject": {
+        "type": "String"
+      }
+    }
   }
 }

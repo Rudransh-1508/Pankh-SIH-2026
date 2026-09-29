@@ -201,5 +201,11 @@
   "grievanceCancel": "अभी नहीं",
   "grievanceFiled": "दर्ज हो गई। आपका पंजीकरण नंबर {number} है।",
   "grievanceStatus": "{number} · {status}",
-  "grievanceReply": "जवाब: {reply}"
+  "grievanceReply": "जवाब: {reply}",
+  "letterWrite": "आवेदन लिखें",
+  "letterTitle": "आवेदन पत्र",
+  "letterCopy": "पत्र कॉपी करें",
+  "letterCopied": "कॉपी हो गया। संदेश में चिपकाएँ या प्रिंट करें।",
+  "letterBlanks": "भेजने से पहले खाली जगह (________) भरें।",
+  "letterSubject": "विषय: {subject}"
 }

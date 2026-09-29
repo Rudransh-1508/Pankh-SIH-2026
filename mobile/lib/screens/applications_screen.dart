@@ -182,7 +182,7 @@ class _ApplicationCard extends StatelessWidget {
               _WaitingLine(application: application),
               if (problem != null) ...[
                 const SizedBox(height: PankhSpace.sm + 2),
-                ProblemBox(problem: problem),
+                ProblemBox(problem: problem, application: application.externalId),
               ],
               if (application.received > 0) ...[
                 const SizedBox(height: PankhSpace.sm + 2),
@@ -283,9 +283,12 @@ class _WaitingLine extends StatelessWidget {
 }
 
 class ProblemBox extends StatelessWidget {
-  const ProblemBox({super.key, required this.problem});
+  const ProblemBox({super.key, required this.problem, this.application});
 
   final Problem problem;
+
+  /// The application the problem is on, named in any request letter.
+  final String? application;
 
   @override
   Widget build(BuildContext context) {
@@ -306,6 +309,18 @@ class ProblemBox extends StatelessWidget {
           Text(l10n.whatYouCanDo, style: text.labelMedium?.copyWith(color: PankhColors.ink)),
           const SizedBox(height: 2),
           Text(problem.fix, style: text.bodyMedium?.copyWith(color: PankhColors.ink)),
+          if (problem.letter != null)
+            TextButton.icon(
+              style: TextButton.styleFrom(padding: EdgeInsets.zero),
+              onPressed: () => context.push(
+                Uri(
+                  path: '/letter/${problem.letter}',
+                  queryParameters: {'reason': problem.reason, 'application': ?application},
+                ).toString(),
+              ),
+              icon: const Icon(Icons.edit_note_rounded),
+              label: Text(l10n.letterWrite),
+            ),
         ],
       ),
     );
@@ -365,7 +380,7 @@ class ApplicationScreen extends StatelessWidget {
           _WaitingLine(application: application),
           if (application.deficiency != null) ...[
             const SizedBox(height: PankhSpace.md),
-            ProblemBox(problem: application.deficiency!),
+            ProblemBox(problem: application.deficiency!, application: application.externalId),
           ],
           if (application.instalments.isNotEmpty) ...[
             _Section(l10n.paymentsTitle),

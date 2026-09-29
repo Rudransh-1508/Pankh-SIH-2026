@@ -49,4 +49,27 @@ void main() {
     expect(find.text('Sign in with your mobile number to link DigiLocker.'), findsOneWidget);
     expect(GoRouter.of(tester.element(find.byType(Scaffold).last)), isNotNull);
   });
+
+  testWidgets('an old income certificate offers a letter to the tehsildar', (tester) async {
+    final verification = fixture('verification_linked') as Json;
+    for (final issue in verification['exceptions'] as List) {
+      if ((issue as Json)['kind'] == 'stale_document') issue['letter'] = 'income_certificate';
+    }
+    final (app, api, _) = await buildApp(
+      facts: {'is_scheduled_tribe': true, 'family_income': 180000},
+      phone: '+919876543210',
+      verification: verification,
+    );
+    await openWallet(tester, app);
+
+    await tester.tap(find.text('Write the request'));
+    await tester.pumpAndSettle();
+    expect(find.text('Request for an income certificate'), findsOneWidget);
+    expect(find.textContaining('The Tehsildar'), findsOneWidget);
+    expect(api.letters.single, startsWith('income_certificate:en:'));
+
+    await tester.tap(find.text('हिन्दी'));
+    await tester.pumpAndSettle();
+    expect(find.text('आय प्रमाण पत्र के लिए आवेदन'), findsOneWidget);
+  });
 }

@@ -157,6 +157,10 @@ class PankhApi {
 
   Future<void> deleteUpload(String id) => _call(() => _dio.delete('/me/documents/uploads/$id'));
 
+  Future<Json> letter(String kind, String language, Map<String, String> context) => _send(
+    () => _dio.get('/me/letters/$kind', queryParameters: {'language': language, ...context}),
+  );
+
   Future<Json> grievances() => _send(() => _dio.get('/me/grievances'));
 
   Future<Json> fileGrievance(String key, String note) =>

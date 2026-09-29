@@ -31,6 +31,8 @@ class InstalmentStatus(StrEnum):
 class Problem:
     reason: str
     fix: str
+    letter: str | None = None
+    """A request letter that helps with the fix (see app.letters), if one does."""
 
 
 @dataclass(frozen=True)
@@ -91,15 +93,18 @@ PAYMENT_PROBLEMS = {
         "Your bank account is not linked with your Aadhaar for direct benefit transfer.",
         "Visit your bank with your Aadhaar card and ask them to link (seed) it for DBT. "
         "The payment is sent again once it is linked.",
+        "bank_seeding",
     ),
     "ACIN": Problem(
         "Your bank account is inactive.",
         "Visit your bank to make the account active again, usually by updating your KYC.",
+        "bank_account_update",
     ),
     "NMMM": Problem(
         "Your name in the bank's records does not match your application.",
         "Ask your bank to correct your name to match your Aadhaar, or ask your institute to "
         "correct the application.",
+        "bank_account_update",
     ),
     "ACCL": Problem(
         "This bank account is closed.",
@@ -109,6 +114,7 @@ PAYMENT_PROBLEMS = {
         "Your fellowship is on hold because this quarter's continuation certificate has not "
         "been uploaded.",
         "Ask your university to upload the continuation certificate on the fellowship portal.",
+        "institute_request",
     ),
 }
 
@@ -179,6 +185,7 @@ def from_nsp(record: dict[str, Any]) -> Application:
             f"Your {level} marked the application defective: {record['defect_remarks']}",
             "Correct it on the National Scholarship Portal and resubmit before the last date. "
             f"It then goes back to your {level} for verification.",
+            "institute_request",
         )
     else:
         stage, waiting_on = _NSP_STAGES.get(status_text, (Stage.SUBMITTED, None))

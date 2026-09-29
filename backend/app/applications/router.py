@@ -17,6 +17,7 @@ router = APIRouter(prefix="/me", tags=["applications"])
 class ProblemOut(BaseModel):
     reason: str
     fix: str
+    letter: str | None = None
 
 
 class InstalmentOut(BaseModel):
@@ -62,7 +63,11 @@ class ApplicationsOut(BaseModel):
 
 
 def _problem(problem: Problem | None) -> ProblemOut | None:
-    return None if problem is None else ProblemOut(reason=problem.reason, fix=problem.fix)
+    return (
+        None
+        if problem is None
+        else ProblemOut(reason=problem.reason, fix=problem.fix, letter=problem.letter)
+    )
 
 
 def _out(application: Application, today: date) -> ApplicationOut:

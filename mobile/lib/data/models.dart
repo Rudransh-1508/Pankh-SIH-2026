@@ -291,15 +291,23 @@ class VerificationIssue {
     required this.kind,
     required this.message,
     required this.remedy,
+    this.id,
+    this.letter,
   });
 
   factory VerificationIssue.fromJson(Json json) => VerificationIssue(
+    id: json['id'] as String?,
     factName: json['fact_name'] as String?,
     kind: json['kind'] as String,
     message: json['message'] as String,
     remedy: json['remedy'] as String?,
+    letter: json['letter'] as String?,
   );
 
+  final String? id;
+
+  /// A request letter that helps fix this, if one does.
+  final String? letter;
   final String? factName;
   final String kind;
   final String message;
@@ -344,10 +352,16 @@ class Verification {
 }
 
 class Problem {
-  const Problem({required this.reason, required this.fix});
+  const Problem({required this.reason, required this.fix, this.letter});
 
-  factory Problem.fromJson(Json json) =>
-      Problem(reason: json['reason'] as String, fix: json['fix'] as String);
+  factory Problem.fromJson(Json json) => Problem(
+    reason: json['reason'] as String,
+    fix: json['fix'] as String,
+    letter: json['letter'] as String?,
+  );
+
+  /// A request letter that helps with the fix, if one does.
+  final String? letter;
 
   static Problem? maybe(Object? json) => json == null ? null : Problem.fromJson(json as Json);
 

@@ -56,6 +56,25 @@ class FakeApi extends PankhApi {
     return {'registration_number': 'MOTRA/E/2026/0000001'};
   }
 
+  /// Letters asked for, and the one returned.
+  final letters = <String>[];
+
+  @override
+  Future<Json> letter(String kind, String language, Map<String, String> context) async {
+    letters.add('$kind:$language:${context['issue'] ?? ''}');
+    return {
+      'kind': kind,
+      'language': language,
+      'title': language == 'hi'
+          ? 'आय प्रमाण पत्र के लिए आवेदन'
+          : 'Request for an income certificate',
+      'to': 'The Tehsildar,\nTehsil office, Ranchi, Jharkhand',
+      'subject': 'Request for an income certificate for the financial year 2025-26',
+      'body': 'I, Sunita Murmu, resident of Ranchi, Jharkhand, request an income certificate.',
+      'closing': 'Yours faithfully,\n\nSunita Murmu\nMobile: +919876543210\nDate: 29/09/2026',
+    };
+  }
+
   /// What /me/renewals returns.
   List<dynamic> renewalsJson = const [];
 

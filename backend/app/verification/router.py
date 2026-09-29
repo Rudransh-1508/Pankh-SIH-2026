@@ -19,6 +19,9 @@ from app.verification.service import VerificationError, Verifier
 
 router = APIRouter(tags=["verification"])
 
+# Issues a written request to the issuing office helps with.
+ISSUE_LETTERS = {"stale_document": "income_certificate", "name_mismatch": "certificate_correction"}
+
 
 def get_verifier(session: SessionDep, settings: SettingsDep, http: SourceHttp) -> Verifier:
     return Verifier(
@@ -47,6 +50,8 @@ class ExceptionOut(BaseModel):
     status: str
     reviewer_note: str | None = None
     created_at: datetime
+    letter: str | None = None
+    """A request letter that helps fix this (see app.letters), if one does."""
 
 
 class ProofOut(BaseModel):
@@ -131,6 +136,7 @@ def _exception(e: VerificationException) -> ExceptionOut:
         status=e.status,
         reviewer_note=e.resolution,
         created_at=e.created_at,
+        letter=ISSUE_LETTERS.get(e.kind),
     )
 
 

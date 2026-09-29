@@ -239,6 +239,19 @@ class _IssueCard extends StatelessWidget {
               ),
             ),
           ],
+          if (issue.letter != null) ...[
+            const SizedBox(height: PankhSpace.xs),
+            TextButton.icon(
+              onPressed: () => context.push(
+                Uri(
+                  path: '/letter/${issue.letter}',
+                  queryParameters: {'issue': ?issue.id},
+                ).toString(),
+              ),
+              icon: const Icon(Icons.edit_note_rounded),
+              label: Text(l10n.letterWrite),
+            ),
+          ],
         ],
       ),
     );
