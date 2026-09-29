@@ -419,3 +419,25 @@ class OutreachLink(Base):
         ForeignKey("campaigns.id", ondelete="CASCADE"), index=True, nullable=False
     )
     udise_code: Mapped[str] = mapped_column(String(32), nullable=False)
+
+
+class Grievance(CreatedAt, Base):
+    """A grievance filed on CPGRAMS for the Student, with their approval, and its progress."""
+
+    __tablename__ = "grievances"
+    __table_args__ = (Index("uq_grievances_subject", "student_id", "subject_key", unique=True),)
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    student_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("students.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    subject_key: Mapped[str] = mapped_column(String(200), nullable=False)
+    """What the grievance is about, so the same problem is never filed twice."""
+    kind: Mapped[str] = mapped_column(String(32), nullable=False)
+    registration_number: Mapped[str] = mapped_column(String(40), unique=True, nullable=False)
+    subject: Mapped[str] = mapped_column(String(200), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False)
+    status: Mapped[str] = mapped_column(String(32), nullable=False)
+    reply: Mapped[str | None] = mapped_column(Text)
+    closed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    checked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))

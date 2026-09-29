@@ -190,5 +190,16 @@
   "renewCheckIncome": "{year} का आय प्रमाण पत्र",
   "renewCheckBank": "आधार से जुड़ा बैंक खाता",
   "renewCheckInstitution": "अगले साल का प्रवेश और संस्थान का कोड",
-  "renewOpen": "आवेदन: {portal}"
+  "renewOpen": "आवेदन: {portal}",
+  "grievanceHeading": "शिकायतें",
+  "grievanceDraftTitle": "आप CPGRAMS पर शिकायत कर सकते हैं",
+  "grievanceDraftAction": "शिकायत देखें",
+  "grievanceSheetTitle": "जनजातीय कार्य मंत्रालय को शिकायत",
+  "grievanceSheetBody": "यह सरकार के शिकायत पोर्टल CPGRAMS पर आपके नाम, मोबाइल नंबर, राज्य और ज़िले के साथ दर्ज होगी। मंत्रालय को जवाब देना होता है।",
+  "grievanceNote": "कुछ और जोड़ना हो तो (वैकल्पिक)",
+  "grievanceFile": "शिकायत दर्ज करें",
+  "grievanceCancel": "अभी नहीं",
+  "grievanceFiled": "दर्ज हो गई। आपका पंजीकरण नंबर {number} है।",
+  "grievanceStatus": "{number} · {status}",
+  "grievanceReply": "जवाब: {reply}"
 }

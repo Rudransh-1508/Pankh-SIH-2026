@@ -190,6 +190,13 @@ final uploadsProvider = FutureProvider<List<UploadedDocument>>((ref) async {
 
 final documentCaptureProvider = Provider((ref) => DocumentCapture());
 
+/// Grievances the Student could file on CPGRAMS, and those filed. Null when not signed in.
+final grievancesProvider = FutureProvider<Json?>((ref) async {
+  if (ref.watch(sessionProvider) == null) return null;
+  ref.watch(verificationProvider);
+  return ref.read(apiProvider).grievances();
+});
+
 /// Next year's applications for Schemes held now. Empty when not signed in.
 final renewalsProvider = FutureProvider<List<RenewalPlan>>((ref) async {
   if (ref.watch(sessionProvider) == null) return const [];

@@ -8,6 +8,7 @@ import '../state/providers.dart';
 import '../theme.dart';
 import '../widgets/answer_text.dart';
 import '../widgets/error_view.dart';
+import 'grievance_section.dart';
 import 'renewal_card.dart';
 
 String rupees(int amount) => '₹ ${indianDigits(amount)}';
@@ -94,6 +95,7 @@ class _List extends ConsumerWidget {
       onRefresh: () async {
         ref.invalidate(applicationsProvider);
         ref.invalidate(renewalsProvider);
+        ref.invalidate(grievancesProvider);
       },
       child: ListView(
         padding: const EdgeInsets.fromLTRB(
@@ -120,6 +122,7 @@ class _List extends ConsumerWidget {
               padding: const EdgeInsets.only(bottom: PankhSpace.md - 4),
               child: _ApplicationCard(application: application),
             ),
+          const GrievanceSection(),
           if (renewals.isNotEmpty) ...[
             Padding(
               padding: const EdgeInsets.only(top: PankhSpace.lg, bottom: PankhSpace.sm + 2),

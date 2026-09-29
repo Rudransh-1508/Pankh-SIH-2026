@@ -118,8 +118,8 @@ void main() {
       200,
       scrollable: find.byType(Scrollable).last,
     );
-    // Bring the row clear of the navigation bar before tapping it.
-    await tester.drag(find.byType(Scrollable).last, const Offset(0, -300));
+    // scrollUntilVisible stops once the widget is built, which can be in the list's cache area.
+    await tester.ensureVisible(find.text('With an officer'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('With an officer'));
     await tester.pumpAndSettle();

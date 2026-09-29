@@ -35,6 +35,8 @@ class Settings(BaseSettings):
     digilocker_redirect_uri: str = "pankh://digilocker/callback"
     registers_url: str = "http://localhost:8100"
     registers_api_key: str = "pankh-simulator-key"
+    cpgrams_url: str = "http://localhost:8100/cpgrams"
+    cpgrams_api_key: str = "pankh-simulator-key"
 
     # JAGO's language model: any provider with an OpenAI-compatible chat completions API.
     # Unset, JAGO answers with its own grounded intents and needs no model at all.

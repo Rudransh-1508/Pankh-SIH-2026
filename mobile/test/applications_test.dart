@@ -99,4 +99,51 @@ void main() {
     expect(find.text('Income certificate for 2026-27'), findsOneWidget);
     expect(find.text('Bank account linked to Aadhaar'), findsOneWidget);
   });
+
+  testWidgets('a stuck payment can be taken to CPGRAMS after reading the complaint', (
+    tester,
+  ) async {
+    final (app, api, _) = await buildApp(
+      facts: {'is_scheduled_tribe': true},
+      phone: '+919876543210',
+      verification: fixture('verification_linked') as Json,
+    );
+    api.applicationsJson = fixture('applications_failed_payment') as Json;
+    api.grievancesJson = {
+      'linked': true,
+      'filed': <dynamic>[],
+      'drafts': [
+        {
+          'key': 'payment:NSP:NSPJH1:2',
+          'kind': 'payment_stuck',
+          'scheme': 'Post-Matric Scholarship for ST Students',
+          'reason':
+              'Instalment 2 was sent to your bank 45 days ago and has still not been credited.',
+          'subject':
+              'Post-Matric Scholarship for ST Students: instalment 2 not credited after 45 days',
+          'description':
+              'Application NSPJH1 on the NSP. Instalment 2 of Rs. 9,250 was initiated '
+              'through PFMS and has shown as pending at the bank for 45 days.',
+        },
+      ],
+    };
+    await openApplications(tester, app);
+
+    await tester.scrollUntilVisible(
+      find.text('See the complaint'),
+      200,
+      scrollable: find.byType(Scrollable).last,
+    );
+    expect(find.text('You can complain on CPGRAMS'), findsOneWidget);
+    // scrollUntilVisible stops once the widget is built, which can be in the list's cache area.
+    await tester.ensureVisible(find.text('See the complaint'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('See the complaint'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('pending at the bank for 45 days'), findsOneWidget);
+    await tester.tap(find.text('File the complaint'));
+    await tester.pumpAndSettle();
+    expect(api.filedGrievances, ['payment:NSP:NSPJH1:2']);
+    expect(find.text('Filed. Your registration number is MOTRA/E/2026/0000001.'), findsOneWidget);
+  });
 }

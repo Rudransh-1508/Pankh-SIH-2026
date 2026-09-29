@@ -157,6 +157,11 @@ class PankhApi {
 
   Future<void> deleteUpload(String id) => _call(() => _dio.delete('/me/documents/uploads/$id'));
 
+  Future<Json> grievances() => _send(() => _dio.get('/me/grievances'));
+
+  Future<Json> fileGrievance(String key, String note) =>
+      _send(() => _dio.post('/me/grievances', data: {'key': key, 'note': note}));
+
   Future<List<dynamic>> renewals() => _sendList(() => _dio.get('/me/renewals'));
 
   Future<List<dynamic>> reminders() => _sendList(() => _dio.get('/me/nudges'));

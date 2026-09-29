@@ -370,5 +370,40 @@
         "type": "String"
       }
     }
+  },
+  "grievanceHeading": "Complaints",
+  "grievanceDraftTitle": "You can complain on CPGRAMS",
+  "grievanceDraftAction": "See the complaint",
+  "grievanceSheetTitle": "Complaint to the Ministry of Tribal Affairs",
+  "grievanceSheetBody": "This is filed on CPGRAMS, the government's grievance portal, with your name, mobile number, state and district. The ministry must reply.",
+  "grievanceNote": "Anything to add (optional)",
+  "grievanceFile": "File the complaint",
+  "grievanceCancel": "Not now",
+  "grievanceFiled": "Filed. Your registration number is {number}.",
+  "@grievanceFiled": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "grievanceStatus": "{number} · {status}",
+  "@grievanceStatus": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "grievanceReply": "Reply: {reply}",
+  "@grievanceReply": {
+    "placeholders": {
+      "reply": {
+        "type": "String"
+      }
+    }
   }
 }

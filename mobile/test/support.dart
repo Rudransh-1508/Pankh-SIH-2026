@@ -43,6 +43,19 @@ class FakeApi extends PankhApi {
   @override
   Future<List<dynamic>> reminders() async => const [];
 
+  /// What /me/grievances returns, and the keys filed through the app.
+  Json grievancesJson = {'drafts': <dynamic>[], 'filed': <dynamic>[], 'linked': true};
+  final filedGrievances = <String>[];
+
+  @override
+  Future<Json> grievances() async => grievancesJson;
+
+  @override
+  Future<Json> fileGrievance(String key, String note) async {
+    filedGrievances.add(key);
+    return {'registration_number': 'MOTRA/E/2026/0000001'};
+  }
+
   /// What /me/renewals returns.
   List<dynamic> renewalsJson = const [];
 
