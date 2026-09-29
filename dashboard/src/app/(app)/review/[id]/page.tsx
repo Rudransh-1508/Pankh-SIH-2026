@@ -16,7 +16,27 @@ const SOURCES: Record<string, string> = {
   udise: "UDISE+",
   nta: "NTA",
   npci: "NPCI",
+  edistrict: "e-District",
+  uploaded: "student's photo",
 };
+
+const READ_LABELS: Record<string, string> = {
+  certificate_number: "Certificate number",
+  holder_name: "Name",
+  state: "State",
+  district: "District",
+  category: "Category",
+  annual_income: "Annual income",
+  financial_year: "Financial year",
+  percent: "Percentage",
+};
+
+/** Fields in reading order: the stored JSON does not keep the order they were read in. */
+function orderedFields(fields: Record<string, unknown>): [string, unknown][] {
+  const known = Object.keys(READ_LABELS).filter((name) => name in fields);
+  const rest = Object.keys(fields).filter((name) => !(name in READ_LABELS));
+  return [...known, ...rest].map((name) => [name, fields[name]]);
+}
 
 function display(value: unknown): string {
   if (typeof value === "boolean") return value ? "Yes" : "No";
@@ -42,7 +62,7 @@ export default async function CasePage({ params }: { params: Promise<{ id: strin
           <KindBadge kind={item.kind} />
         </div>
         <p className="text-ink-soft">
-          {[item.district, item.state].filter(Boolean).join(", ")} · {FACT_LABELS[item.fact_name ?? ""] ?? item.fact_name} ·
+          {[item.district, item.state].filter(Boolean).join(", ")} · {FACT_LABELS[item.fact_name ?? ""] ?? item.fact_name} ·{" "}
           {item.days_open === 0 ? "waiting since today" : `waiting ${item.days_open} ${item.days_open === 1 ? "day" : "days"}`}
         </p>
       </header>
@@ -53,6 +73,40 @@ export default async function CasePage({ params }: { params: Promise<{ id: strin
             <p className="text-lg">{item.message}</p>
             {item.remedy && <p className="mt-3 rounded-lg bg-paper p-3 text-sm text-ink-soft">Told the student: {item.remedy}</p>}
           </Card>
+          {item.photo && (
+            <Card>
+              <h2 className="mb-1 font-display text-xl font-bold">Photo of the {item.photo.name}</h2>
+              <p className="mb-4 text-sm text-ink-soft">Your viewing is recorded. The photo is deleted after its retention period.</p>
+              {item.photo.url === null ? (
+                <p className="rounded-lg bg-paper p-4 text-ink-soft">The photo has been deleted.</p>
+              ) : item.photo.content_type === "application/pdf" ? (
+                <a href={`/review/${item.id}/photo`} target="_blank" className="font-semibold text-peacock-deep hover:underline">
+                  Open the PDF
+                </a>
+              ) : (
+                <a href={`/review/${item.id}/photo`} target="_blank" title="Open full size">
+                  {/* eslint-disable-next-line @next/next/no-img-element -- a private, signed image that must not be cached or optimised */}
+                  <img
+                    src={`/review/${item.id}/photo`}
+                    alt={`Photo of the student's ${item.photo.name}`}
+                    className="max-h-[560px] w-full rounded-xl border border-line bg-paper object-contain"
+                  />
+                </a>
+              )}
+              {Object.keys(item.photo.fields).length > 0 && (
+                <dl className="mt-4 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
+                  {orderedFields(item.photo.fields).map(([name, value]) => (
+                    <div key={name} className="flex justify-between gap-3 border-b border-line py-1.5">
+                      <dt className="text-ink-soft">{READ_LABELS[name] ?? name.replaceAll("_", " ")}</dt>
+                      <dd className="font-semibold tabular">
+                        {name === "annual_income" && typeof value === "number" ? `₹${value.toLocaleString("en-IN")}` : display(value)}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
+            </Card>
+          )}
           {comparison && (
             <Card>
               <h2 className="mb-4 font-display text-xl font-bold">Names side by side</h2>
@@ -68,8 +122,11 @@ export default async function CasePage({ params }: { params: Promise<{ id: strin
                   <dd className="mt-1 font-mono text-xs text-ink-soft">sounds like: {comparison.keys[1]}</dd>
                 </div>
               </dl>
-              <p className="mt-4 flex items-center gap-3 text-sm text-ink-soft">
-                Match <ScoreMeter score={comparison.score} /> · automatic confirmation needs 90%
+              <p className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-ink-soft">
+                <span className="inline-flex items-center gap-3">
+                  Match <ScoreMeter score={comparison.score} />
+                </span>
+                <span>Automatic confirmation needs 90%</span>
               </p>
             </Card>
           )}

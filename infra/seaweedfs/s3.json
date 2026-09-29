@@ -1,0 +1,9 @@
+{
+  "identities": [
+    {
+      "name": "pankh",
+      "credentials": [{ "accessKey": "pankh", "secretKey": "pankh-s3-secret" }],
+      "actions": ["Admin", "Read", "Write", "List", "Tagging"]
+    }
+  ]
+}

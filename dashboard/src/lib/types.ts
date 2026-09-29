@@ -29,6 +29,7 @@ export interface Case extends QueueItem {
   facts: Record<string, { value: unknown; source: string; verified: boolean }>;
   documents: string[];
   name_comparison: { on_document: string; on_aadhaar: string; keys: [string, string]; score: number } | null;
+  photo: { id: string; name: string; content_type: string; url: string | null; fields: Record<string, unknown> } | null;
 }
 
 export interface Counts {

@@ -28,28 +28,47 @@ def _not_found(what: str) -> HTTPException:
     return HTTPException(status.HTTP_404_NOT_FOUND, f"No {what} with that identifier")
 
 
+def certificate_number(person: Person, doctype: str) -> str:
+    return hashlib.sha256(f"{person.id}:{doctype}".encode()).hexdigest()[:10].upper()
+
+
 def caste_certificate_number(person: Person) -> str:
-    return hashlib.sha256(f"{person.id}:CSCER".encode()).hexdigest()[:10].upper()
+    return certificate_number(person, "CSCER")
 
 
 @router.get("/edistrict/{state_code}/certificates/{number}", tags=["e-District"])
 async def verify_certificate(state_code: str, number: str) -> dict:
-    """Verify a caste certificate by its number, as state e-District portals allow."""
+    """Verify a caste or income certificate by its number, as state e-District portals allow.
+
+    Only certificates issued through e-District are found; older paper certificates are not.
+    """
+    number = number.upper()
     for person in population().people:
-        if (
-            person.has_caste_certificate
-            and person.state.code == state_code.upper()
-            and caste_certificate_number(person) == number.upper()
-        ):
+        if person.state.code != state_code.upper():
+            continue
+        if person.has_caste_certificate and certificate_number(person, "CSCER") == number:
             assert person.tribe is not None
             return {
-                "certificate_number": number.upper(),
+                "certificate_number": number,
                 "type": "Caste Certificate",
                 "status": "VALID",
                 "holder_name": person.caste_certificate_spelling,
                 "category": "ST",
                 "caste": person.tribe.name,
                 "pvtg": person.tribe.pvtg,
+                "district": person.district,
+                "state": person.state.name,
+            }
+        if person.has_income_certificate and certificate_number(person, "INCER") == number:
+            amount, financial_year, issued_on = person.income_certificate()
+            return {
+                "certificate_number": number,
+                "type": "Income Certificate",
+                "status": "VALID",
+                "holder_name": person.name,
+                "annual_income": amount,
+                "financial_year": financial_year,
+                "issued_on": issued_on.isoformat(),
                 "district": person.district,
                 "state": person.state.name,
             }

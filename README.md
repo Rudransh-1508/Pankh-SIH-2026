@@ -156,7 +156,7 @@ flowchart TB
 
     subgraph Storage
         PG[(PostgreSQL)]
-        OBJ[(Object storage<br/>S3, MinIO locally)]
+        OBJ[(Object storage<br/>S3, SeaweedFS locally)]
     end
 
     subgraph External
@@ -357,7 +357,7 @@ Every one of these sits behind a Source Adapter with a contract test. When real 
 | Dashboard | Next.js (TypeScript) |
 | Backend | Python, FastAPI |
 | Database | PostgreSQL |
-| Object storage | S3 in production, MinIO for local development (same interface) |
+| Object storage | S3 in production, SeaweedFS or a local directory for development (same interface) |
 | Authentication | Our own, in FastAPI: mobile number and OTP, DigiLocker link |
 | Rules engine | OpenFisca, plus our explanation, what-if and planner layers |
 | Record linkage | Splink, plus Indic name normalisation |

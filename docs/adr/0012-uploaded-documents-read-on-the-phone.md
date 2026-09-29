@@ -1,0 +1,7 @@
+# Uploaded Documents are read on the phone, checked with issuers, and encrypted before storage
+
+A Student photographs a Document that no issuer holds digitally. The phone reads the text on the device (ML Kit, Latin and Devanagari), so a readable photo never needs a server-side OCR service or a language model. The API keeps only the fields it extracts, never the raw text, and extraction is deterministic pattern matching, so no Document or identity number ever reaches a model.
+
+The document agent then checks what it read against the issuer where one exists (a state e-District register for caste and income certificates). A certificate found in the register, held by the same person as the Student's Aadhaar, gets a Proof straight away. Anything else is recorded as read from an Uploaded Document and becomes an Exception, so a Reviewer looks at the photo; a Student is never blocked. A photo the agent cannot read is never stored, and the Student is told how to take a better one.
+
+Photos are encrypted with AES-256-GCM before they reach object storage, each under its own data key wrapped by a master key, so neither the bucket nor its backups hold readable Documents. They are served only through links signed for one viewer that expire in minutes, every Reviewer view is audited, and each photo is deleted a set time after its academic session ends. Storage sits behind one small interface: a local directory in development and tests, and any S3-compatible store (S3 in production, SeaweedFS locally; MinIO no longer publishes images) otherwise.

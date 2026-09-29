@@ -276,20 +276,10 @@ def _certificate(
             },
         )
     elif doctype == "INCER":
-        # A current certificate is for the financial year before the academic session;
-        # a stale one is two years older.
-        today = date.today()
-        session = today.year if today.month >= 4 else today.year - 1
-        stale = person.stale_income_certificate
-        start = session - (3 if stale else 1)
-        issued_on = date(start + 1, 5, 2)
+        amount, financial_year, issued_on = person.income_certificate()
         data = (
             "Income",
-            {
-                "annualIncome": str(int(person.family_income * (0.8 if stale else 1))),
-                "currency": "INR",
-                "financialYear": f"{start}-{(start + 1) % 100:02d}",
-            },
+            {"annualIncome": str(amount), "currency": "INR", "financialYear": financial_year},
         )
     elif doctype == "SSCER":
         year = str(person.date_of_birth.year + 16)

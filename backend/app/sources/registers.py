@@ -14,6 +14,9 @@ class RegistersClient:
         self.base = settings.registers_url.rstrip("/")
         self.headers = {"X-API-Key": settings.registers_api_key}
 
+    async def edistrict_certificate(self, state_code: str, number: str) -> dict[str, Any] | None:
+        return await self._get(f"/edistrict/{state_code}/certificates/{number}", "e-District")
+
     async def aishe_institution(self, code: str) -> dict[str, Any] | None:
         return await self._get(f"/aishe/institutions/{code}", "AISHE")
 

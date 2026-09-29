@@ -249,6 +249,19 @@ class Person:
     def is_scheduled_tribe(self) -> bool:
         return self.tribe is not None
 
+    def income_certificate(self, today: date | None = None) -> tuple[int, str, date]:
+        """Amount, financial year and issue date of the Person's latest income certificate.
+
+        A current certificate is for the financial year before the academic session; a stale
+        one is two years older and shows the income as it was then.
+        """
+        today = today or date.today()
+        session = today.year if today.month >= 4 else today.year - 1
+        stale = self.stale_income_certificate
+        start = session - (3 if stale else 1)
+        amount = int(self.family_income * (0.8 if stale else 1))
+        return amount, f"{start}-{(start + 1) % 100:02d}", date(start + 1, 5, 2)
+
 
 @dataclass(frozen=True)
 class Population:
@@ -270,12 +283,15 @@ class Population:
     def by_apaar_id(self, apaar_id: str) -> Person | None:
         return self._by("apaar_id").get(apaar_id)
 
+    def by_phone(self, phone: str) -> Person | None:
+        return self._by("phone").get(phone)
+
     def _by(self, attribute: str) -> dict[str, Person]:
         return self._indexes[attribute]
 
     @cached_property
     def _indexes(self) -> dict[str, dict[str, Person]]:
-        attributes = ("id", "digilocker_id", "uid_token", "net_roll_number", "apaar_id")
+        attributes = ("id", "digilocker_id", "uid_token", "net_roll_number", "apaar_id", "phone")
         return {
             attribute: {getattr(p, attribute): p for p in self.people if getattr(p, attribute)}
             for attribute in attributes

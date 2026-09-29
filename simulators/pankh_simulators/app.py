@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from pankh_simulators import digilocker, registers, scholarship_systems
+from pankh_simulators import digilocker, paper, registers, scholarship_systems
 
 app = FastAPI(
     title="Pankh simulators",
@@ -11,6 +11,7 @@ app = FastAPI(
 app.include_router(digilocker.router)
 app.include_router(registers.router)
 app.include_router(scholarship_systems.router)
+app.include_router(paper.router)
 
 
 @app.get("/health", tags=["ops"])

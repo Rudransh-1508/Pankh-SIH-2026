@@ -38,6 +38,10 @@ const KIND_LABELS: Record<string, string> = {
   stale_document: "Old certificate",
   value_conflict: "Answer differs",
   unreadable_document: "Unreadable document",
+  paper_certificate: "Paper certificate",
+  unlinked_identity: "No DigiLocker yet",
+  not_scheduled_tribe: "Not an ST certificate",
+  uploaded_document: "Photo to check",
 };
 
 export function KindBadge({ kind }: { kind: string }) {
@@ -79,4 +83,6 @@ export const FACT_LABELS: Record<string, string> = {
   institution_recognised: "Recognised institution",
   institution_eligible_for_fellowship: "Fellowship-eligible university",
   has_aadhaar_seeded_bank_account: "Aadhaar-linked bank account",
+  bachelors_marks_percent: "Bachelor's percentage",
+  masters_marks_percent: "Master's percentage",
 };

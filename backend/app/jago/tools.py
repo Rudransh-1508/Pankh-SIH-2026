@@ -15,8 +15,9 @@ import pankh_rules
 from app.academic_year import current_academic_year, label
 from app.applications.service import track
 from app.config import Settings
+from app.documents.reading import KIND_NAMES, Kind
 from app.facts.service import FactSource, current_facts, record_facts
-from app.models import Identity, Student, VerificationException
+from app.models import Identity, Student, UploadedDocument, VerificationException
 from app.sources.http import SourceUnavailable
 from app.sources.scholarship_systems import ScholarshipSystemsClient
 
@@ -138,8 +139,18 @@ async def my_documents(ctx: ToolContext) -> dict[str, Any]:
             .where(VerificationException.status.in_(("open", "rejected")))
         )
     ).all()
+    uploads = (
+        await ctx.session.scalars(
+            select(UploadedDocument)
+            .where(UploadedDocument.student_id == ctx.student.id)
+            .where(UploadedDocument.status.not_in(("deleted", "replaced")))
+        )
+    ).all()
     return {
         "digilocker_linked": linked,
+        "uploaded_photos": [
+            {"document": KIND_NAMES[Kind(u.kind)], "status": u.status} for u in uploads
+        ],
         "issues": [
             {
                 "message": e.message,

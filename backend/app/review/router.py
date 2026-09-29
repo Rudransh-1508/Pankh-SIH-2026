@@ -6,12 +6,21 @@ from typing import Any, Literal
 
 from fastapi import APIRouter, HTTPException, Query, status
 from pydantic import BaseModel
-from sqlalchemy import Select, select
+from sqlalchemy import Select, func, select
 
 from app.academic_year import current_academic_year
 from app.auth.deps import CurrentOfficial, SessionDep, SettingsDep
+from app.documents.links import Viewer, create_link
+from app.documents.reading import KIND_NAMES, Kind
 from app.facts.service import FactSource, fact_statuses, record_facts
-from app.models import AuditEvent, Identity, Official, ReferencedDocument, VerificationException
+from app.models import (
+    AuditEvent,
+    Identity,
+    Official,
+    ReferencedDocument,
+    UploadedDocument,
+    VerificationException,
+)
 from app.verification.names import match_names
 from app.verification.service import issue_proof
 
@@ -49,6 +58,15 @@ class NameComparison(BaseModel):
     score: float
 
 
+class CasePhoto(BaseModel):
+    id: uuid.UUID
+    name: str
+    content_type: str
+    url: str | None
+    """A link signed for this Reviewer that expires in minutes; None once the photo is deleted."""
+    fields: dict[str, Any]
+
+
 class CaseOut(QueueItem):
     remedy: str | None
     evidence: dict[str, Any]
@@ -56,6 +74,7 @@ class CaseOut(QueueItem):
     facts: dict[str, Any]
     documents: list[str]
     name_comparison: NameComparison | None
+    photo: CasePhoto | None = None
 
 
 class DecisionIn(BaseModel):
@@ -71,9 +90,13 @@ def _scoped(query: Select, official: Official) -> Select:
     if official.level == "ministry":
         return query
     query = query.where(VerificationException.level == official.level)
-    query = query.where(Identity.state == official.state)
+    query = query.where(
+        func.coalesce(Identity.state, VerificationException.state) == official.state
+    )
     if official.level in ("district", "institute"):
-        query = query.where(Identity.district == official.district)
+        query = query.where(
+            func.coalesce(Identity.district, VerificationException.district) == official.district
+        )
     return query
 
 
@@ -81,8 +104,8 @@ def _item(exception: VerificationException, identity: Identity | None) -> dict[s
     return {
         "id": exception.id,
         "student_name": identity.name if identity else None,
-        "district": identity.district if identity else None,
-        "state": identity.state if identity else None,
+        "district": identity.district if identity else exception.district,
+        "state": identity.state if identity else exception.state,
         "fact_name": exception.fact_name,
         "kind": exception.kind,
         "message": exception.message,
@@ -126,7 +149,9 @@ async def _case(session, official: Official, exception_id: uuid.UUID):
 
 
 @router.get("/exceptions/{exception_id}")
-async def case(exception_id: uuid.UUID, official: CurrentOfficial, session: SessionDep) -> CaseOut:
+async def case(
+    exception_id: uuid.UUID, official: CurrentOfficial, session: SessionDep, settings: SettingsDep
+) -> CaseOut:
     exception, identity = await _case(session, official, exception_id)
     statuses = await fact_statuses(session, exception.student_id)
     documents = (
@@ -157,6 +182,27 @@ async def case(exception_id: uuid.UUID, official: CurrentOfficial, session: Sess
         },
         documents=list(documents),
         name_comparison=comparison,
+        photo=await _photo(session, settings, official, exception),
+    )
+
+
+async def _photo(
+    session, settings, official: Official, exception: VerificationException
+) -> CasePhoto | None:
+    if exception.uploaded_document_id is None:
+        return None
+    document = await session.get(UploadedDocument, exception.uploaded_document_id)
+    if document is None:
+        return None
+    url = None
+    if document.object_key is not None:
+        url = create_link(settings, document.id, Viewer("official", official.id)).path
+    return CasePhoto(
+        id=document.id,
+        name=KIND_NAMES[Kind(document.kind)],
+        content_type=document.content_type,
+        url=url,
+        fields=document.fields,
     )
 
 
@@ -224,6 +270,10 @@ async def decide(
     if body.decision != "escalate":
         exception.resolution = note
         exception.resolved_at = datetime.now(UTC)
+        if exception.uploaded_document_id is not None:
+            document = await session.get(UploadedDocument, exception.uploaded_document_id)
+            if document is not None and document.status == "with_reviewer":
+                document.status = "accepted" if body.decision == "confirm" else "rejected"
     session.add(
         AuditEvent(
             actor_type="official",
@@ -245,4 +295,4 @@ async def decide(
             documents=[],
             name_comparison=None,
         )
-    return await case(exception_id, official, session)
+    return await case(exception_id, official, session, settings)

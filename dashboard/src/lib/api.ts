@@ -50,3 +50,6 @@ export async function officialApi<T>(path: string, init: RequestInit = {}): Prom
 export function publicApi<T>(path: string, init: RequestInit = {}): Promise<T> {
   return call<T>(path, init);
 }
+
+/** The API's origin, for paths the API returns whole (such as signed document links). */
+export const API_ORIGIN = new URL(API_URL).origin;

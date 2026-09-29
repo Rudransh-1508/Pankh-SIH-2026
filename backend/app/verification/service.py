@@ -421,19 +421,21 @@ class Verifier:
             evidence=evidence,
             match_score=score,
             status=status,
-            level=_level_for(fact_name),
+            level=level_for(fact_name),
         )
         self.session.add(exception)
         return exception
 
 
-def _level_for(fact_name: str | None) -> str:
+def level_for(fact_name: str | None) -> str:
     """Caste, income and identity certificates are issued by district offices, so their
     District verifies them; academic and institutional Facts go to the institute."""
     if fact_name in (
         "net_jrf_qualified",
         "institution_recognised",
         "institution_eligible_for_fellowship",
+        "bachelors_marks_percent",
+        "masters_marks_percent",
     ):
         return "institute"
     return "district"

@@ -19,10 +19,14 @@ dependencies = [
     "cryptography>=50.0.1",
     "splink>=5.0.0",
     "temporalio>=1.33.0",
+    "boto3>=1.43.104",
 ]
 
 [dependency-groups]
-dev = ["pankh-simulators"]
+dev = [
+    "moto[s3]>=5.2.3",
+    "pankh-simulators",
+]
 
 [tool.uv.sources]
 pankh-rules = { workspace = true }

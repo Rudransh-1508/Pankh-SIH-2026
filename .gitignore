@@ -13,3 +13,6 @@ __pycache__/
 
 # Downloaded official source documents (fetched and checked by rules/tools/fetch_sources.py)
 rules/.cache/
+
+# Local object storage for Uploaded Documents (encrypted)
+var/

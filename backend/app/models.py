@@ -165,6 +165,39 @@ class VerificationException(CreatedAt, Base):
     status: Mapped[str] = mapped_column(String(16), nullable=False, default="open", index=True)
     resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     resolution: Mapped[str | None] = mapped_column(Text)
+    state: Mapped[str | None] = mapped_column(String(64))
+    district: Mapped[str | None] = mapped_column(String(64))
+    """Where the Student lives, when it is known from a Document but not from their Identity."""
+    uploaded_document_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("uploaded_documents.id", ondelete="SET NULL"), index=True
+    )
+
+
+class UploadedDocument(CreatedAt, Base):
+    """A Document the Student photographed. The photo is encrypted in object storage; only the
+    fields read from it are kept here, never its full text."""
+
+    __tablename__ = "uploaded_documents"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    student_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("students.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    kind: Mapped[str] = mapped_column(String(32), nullable=False)
+    content_type: Mapped[str] = mapped_column(String(64), nullable=False)
+    size: Mapped[int] = mapped_column(Integer, nullable=False)
+    sha256: Mapped[str] = mapped_column(String(64), nullable=False)
+    object_key: Mapped[str | None] = mapped_column(String(200))
+    """Where the encrypted photo is stored; None once it has been deleted."""
+    key_id: Mapped[str] = mapped_column(String(32), nullable=False)
+    fields: Mapped[dict[str, Any]] = mapped_column(_json(), nullable=False, default=dict)
+    status: Mapped[str] = mapped_column(
+        String(16), nullable=False
+    )  # verified | with_reviewer | accepted | rejected | deleted
+    delete_after: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), index=True, nullable=False
+    )
+    deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 
 class Consent(Base):

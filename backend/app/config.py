@@ -50,6 +50,23 @@ class Settings(BaseSettings):
     proof_signing_key: str | None = None
     proof_ttl: timedelta = timedelta(days=365)
 
+    # Uploaded Documents: encrypted photos in object storage. "file" keeps them in a local
+    # directory (development and tests); "s3" uses any S3-compatible store (SeaweedFS locally).
+    object_store: Literal["file", "s3"] = "file"
+    object_store_path: str = "var/objects"
+    s3_bucket: str = "pankh-documents"
+    s3_endpoint_url: str | None = None
+    s3_region: str = "ap-south-1"
+    s3_access_key_id: str | None = None
+    s3_secret_access_key: str | None = None
+    # A base64 AES-256 key wrapping each photo's own key. Unset, one is derived from secret_key.
+    document_master_key: str | None = None
+    document_link_ttl: timedelta = timedelta(minutes=5)
+    document_max_bytes: int = 8 * 1024 * 1024
+    document_uploads_per_day: int = 20
+    # Photos are deleted this long after the academic session they were uploaded for ends.
+    document_retention: timedelta = timedelta(days=365)
+
     @model_validator(mode="after")
     def _require_real_secret_outside_development(self) -> "Settings":
         if self.environment == "production" and self.secret_key == DEVELOPMENT_SECRET:

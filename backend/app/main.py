@@ -6,6 +6,7 @@ from app.auth.router import router as auth_router
 from app.chasing.router import router as chasing_router
 from app.config import get_settings
 from app.coverage.router import router as coverage_router
+from app.documents.router import router as documents_router
 from app.eligibility.router import router as eligibility_router
 from app.facts.router import router as facts_router
 from app.family.router import router as family_router
@@ -40,6 +41,7 @@ def create_app() -> FastAPI:
         jago_router,
         chasing_router,
         family_router,
+        documents_router,
     ):
         app.include_router(router, prefix="/v1")
 

@@ -19,6 +19,9 @@ class FactSource(StrEnum):
     NTA = "nta"
     NPCI = "npci"
     REVIEWER = "reviewer"
+    EDISTRICT = "edistrict"
+    UPLOADED = "uploaded"
+    """Read from a photo the Student uploaded, not yet checked with the issuer."""
 
 
 @dataclass(frozen=True)
