@@ -58,3 +58,22 @@ async def test_my_eligibility_uses_stored_facts(client, auth):
     ).json()
     assert body["schemes"][0]["scheme"]["id"] == "post_matric"
     assert body["schemes"][0]["status"] == "eligible"
+
+
+async def test_scheme_path_plans_the_years_ahead(client, auth):
+    await client.patch("/v1/me/facts", headers=auth, json={"facts": ELIGIBLE_POST_MATRIC})
+    body = (
+        await client.get("/v1/me/scheme-path", headers=auth, params={"academic_year": 2026})
+    ).json()
+    levels = [stage["level"] for stage in body["stages"]]
+    assert levels == ["undergraduate", "postgraduate", "phd"]
+    assert body["stages"][0]["recommended"]["scheme_id"] == "post_matric"
+    phd = body["stages"][-1]
+    assert any(o["scheme_id"] == "nfst" and o["condition"] for o in phd["opportunities"])
+
+
+async def test_scheme_path_without_a_course_is_empty(client):
+    body = (
+        await client.post("/v1/scheme-path", json={"facts": {"is_scheduled_tribe": True}})
+    ).json()
+    assert body == {"stages": []}

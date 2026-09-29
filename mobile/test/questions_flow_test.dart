@@ -47,6 +47,7 @@ void main() {
 
     expect(find.text('Your scholarships'), findsOneWidget);
     expect(find.text('You qualify for 1 scholarship.'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('Post-Matric'), 300);
     expect(find.text('Post-Matric'), findsOneWidget);
   });
 
@@ -57,6 +58,7 @@ void main() {
     await tester.pumpWidget(app);
     await tester.pumpAndSettle();
 
+    await tester.scrollUntilVisible(find.text('Post-Matric'), 300);
     await tester.tap(find.text('Post-Matric'));
     await tester.pumpAndSettle();
 

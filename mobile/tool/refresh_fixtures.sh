@@ -12,4 +12,7 @@ curl -sf -X POST "$API/eligibility?academic_year=2026" -H 'content-type: applica
   > "$OUT/eligibility_post_matric.json"
 curl -sf -X POST "$API/eligibility?academic_year=2026" -H 'content-type: application/json' \
   -d '{"facts": {"is_scheduled_tribe": true}}' > "$OUT/eligibility_st.json"
+curl -sf -X POST "$API/scheme-path?academic_year=2026" -H 'content-type: application/json' \
+  -d '{"facts": {"is_scheduled_tribe": true, "education_level": "class_11", "studies_abroad": false, "institution_recognised": true, "family_income": 180000, "date_of_birth": "2010-05-04", "repeating_stage_in_other_subject": false, "admitted_to_top_class_institute": false, "current_mota_award": "none", "holds_other_scholarship": false}}' \
+  > "$OUT/scheme_path.json"
 echo "Fixtures refreshed in $OUT"

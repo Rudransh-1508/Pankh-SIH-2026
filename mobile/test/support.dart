@@ -43,6 +43,12 @@ class FakeApi extends PankhApi {
   Future<List<dynamic>> reminders() async => const [];
 
   @override
+  Future<Json> schemePath(Json facts) async => fixture('scheme_path') as Json;
+
+  @override
+  Future<Json> mySchemePath() async => fixture('scheme_path') as Json;
+
+  @override
   Future<Json> talkToJago(String message, String language) async {
     jagoMessages.add(message);
     return {

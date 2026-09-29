@@ -438,3 +438,55 @@ class ChatMessage {
   final List<(String, String)> sources;
   final List<String> suggestions;
 }
+
+class PathOption {
+  const PathOption({
+    required this.scheme,
+    required this.value,
+    required this.citation,
+    required this.condition,
+  });
+
+  factory PathOption.fromJson(Json json) => PathOption(
+    scheme: json['scheme'] as String,
+    value: json['value'] as String,
+    citation: Citation(
+      sourceTitle: (json['citation'] as Json)['source_title'] as String,
+      page: (json['citation'] as Json)['page'] as int,
+      clause: (json['citation'] as Json)['clause'] as String,
+      url: (json['citation'] as Json)['url'] as String,
+    ),
+    condition: json['condition'] as String?,
+  );
+
+  final String scheme;
+  final String value;
+  final Citation citation;
+  final String? condition;
+}
+
+class PathStage {
+  const PathStage({
+    required this.level,
+    required this.label,
+    required this.recommended,
+    required this.needsAnswers,
+    required this.opportunities,
+  });
+
+  factory PathStage.fromJson(Json json) => PathStage(
+    level: json['level'] as String,
+    label: json['label'] as String,
+    recommended: json['recommended'] == null
+        ? null
+        : PathOption.fromJson(json['recommended'] as Json),
+    needsAnswers: json['needs_answers'] as bool,
+    opportunities: [for (final o in json['opportunities'] as List) PathOption.fromJson(o as Json)],
+  );
+
+  final String level;
+  final String label;
+  final PathOption? recommended;
+  final bool needsAnswers;
+  final List<PathOption> opportunities;
+}

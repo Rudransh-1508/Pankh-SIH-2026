@@ -102,6 +102,11 @@ class PankhApi {
 
   Future<Json> applications() => _send(() => _dio.get('/me/applications'));
 
+  Future<Json> schemePath(Json facts) =>
+      _send(() => _dio.post('/scheme-path', data: {'facts': facts}));
+
+  Future<Json> mySchemePath() => _send(() => _dio.get('/me/scheme-path'));
+
   Future<List<dynamic>> reminders() => _sendList(() => _dio.get('/me/nudges'));
 
   Future<List<dynamic>> jagoConversation() => _sendList(() => _dio.get('/me/jago'));

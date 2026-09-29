@@ -223,3 +223,13 @@ final remindersProvider = FutureProvider<List<(String, String)>>((ref) async {
     for (final item in raw) ((item as Json)['message'] as String, item['created_at'] as String),
   ];
 });
+
+/// The Scheme Path for the Student's answers so far.
+final schemePathProvider = FutureProvider<List<PathStage>>((ref) async {
+  final profile = await ref.watch(profileProvider.future);
+  final api = ref.read(apiProvider);
+  final json = ref.read(sessionProvider) != null
+      ? await api.mySchemePath()
+      : await api.schemePath(profile.facts);
+  return [for (final s in json['stages'] as List) PathStage.fromJson(s as Json)];
+});

@@ -133,6 +133,17 @@ class _Results extends ConsumerWidget {
             ),
             const SizedBox(height: PankhSpace.md),
           ],
+          if (state.facts.containsKey('education_level')) ...[
+            _Prompt(
+              background: PankhColors.leafMist,
+              title: l10n.pathCardTitle,
+              body: l10n.pathCardBody,
+              action: l10n.pathOpen,
+              onPressed: () => context.push('/path'),
+              outlined: true,
+            ),
+            const SizedBox(height: PankhSpace.sm),
+          ],
           _SectionLabel(l10n.motaSection),
           for (final result in eligibility.schemes.where((r) => r.scheme.isMota)) ...[
             _SchemeCard(result: result),

@@ -7,7 +7,7 @@ import pankh_rules
 from app.academic_year import current_academic_year, label
 from app.auth.deps import CurrentStudent, SessionDep
 from app.facts.service import current_facts
-from app.schemes.schemas import EligibilityOut, SchemeResultOut
+from app.schemes.schemas import CitationOut, EligibilityOut, SchemeResultOut
 
 router = APIRouter(tags=["eligibility"])
 
@@ -55,3 +55,71 @@ async def my_eligibility(
     student: CurrentStudent, session: SessionDep, academic_year: AcademicYear = None
 ) -> EligibilityOut:
     return _judge(await current_facts(session, student.id), academic_year)
+
+
+class OptionOut(BaseModel):
+    scheme_id: str
+    scheme: str
+    value: str
+    yearly_inr: int | None
+    citation: CitationOut
+    condition: str | None
+
+
+class StageOut(BaseModel):
+    level: str
+    label: str
+    years: int
+    recommended: OptionOut | None
+    needs_answers: bool
+    opportunities: list[OptionOut]
+
+
+class PathOut(BaseModel):
+    stages: list[StageOut]
+
+
+def _option(option: pankh_rules.Option | None) -> OptionOut | None:
+    if option is None:
+        return None
+    return OptionOut(
+        scheme_id=option.scheme_id,
+        scheme=option.scheme,
+        value=option.value.text,
+        yearly_inr=option.value.yearly_inr,
+        citation=CitationOut.of(option.value.citation),
+        condition=option.condition,
+    )
+
+
+def _path(facts: dict[str, Any], academic_year: int | None) -> PathOut:
+    try:
+        stages = pankh_rules.plan_path(facts, academic_year or current_academic_year())
+    except (pankh_rules.FactError, pankh_rules.UnsupportedAcademicYear) as error:
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(error)) from error
+    return PathOut(
+        stages=[
+            StageOut(
+                level=s.level,
+                label=s.label,
+                years=s.years,
+                recommended=_option(s.recommended),
+                needs_answers=s.needs_answers,
+                opportunities=[o for o in map(_option, s.opportunities) if o is not None],
+            )
+            for s in stages
+        ]
+    )
+
+
+@router.post("/scheme-path")
+async def scheme_path(body: EligibilityRequest, academic_year: AcademicYear = None) -> PathOut:
+    """Which Scheme to hold at each stage ahead, and what could unlock a better one."""
+    return _path(body.facts, academic_year)
+
+
+@router.get("/me/scheme-path")
+async def my_scheme_path(
+    student: CurrentStudent, session: SessionDep, academic_year: AcademicYear = None
+) -> PathOut:
+    return _path(await current_facts(session, student.id), academic_year)

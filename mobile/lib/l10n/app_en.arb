@@ -247,5 +247,15 @@
   "remindersOpen": "Open reminders",
   "motaSection": "Ministry of Tribal Affairs scholarships",
   "catalogueSection": "More scholarships you may get",
-  "catalogueNote": "These cannot be held together with another scholarship. Compare before you choose."
+  "catalogueNote": "These cannot be held together with another scholarship. Compare before you choose.",
+  "pathTitle": "Your scholarship path",
+  "pathCardTitle": "Plan your scholarships, year by year",
+  "pathCardBody": "See which scholarship to hold at each stage of your studies, and what could get you a better one.",
+  "pathOpen": "See my path",
+  "pathHold": "Hold",
+  "pathAimFor": "Aim for",
+  "pathNeedsAnswers": "Answer more questions to be sure about this stage.",
+  "pathNone": "No scholarship fits this stage on what we know.",
+  "pathEmpty": "Tell us what you are studying to see your path.",
+  "pathOneAtATime": "You can hold only one scholarship at a time, so this plan picks the best one for each stage."
 }
