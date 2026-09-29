@@ -65,3 +65,14 @@ def test_renewal_questions_are_about_renewal_even_when_they_mention_an_applicati
 
     assert classify("renewal application for next year") == "renewal"
     assert classify("अगले साल नवीनीकरण") == "renewal"
+
+
+def test_what_if_questions_go_to_the_scheme_path():
+    from app.jago.understanding import classify
+
+    assert classify("What if I get into an IIT?") == "path:top_class"
+    assert classify("agar main NET pass karun") == "path:nfst"
+    assert classify("अगर मैं विदेश में पढ़ूँ तो?") == "path:nos"
+    assert classify("what is my plan for the future") == "path"
+    # Naming a Scheme without asking about the future is still about that Scheme.
+    assert classify("tell me about top class") == "scheme:top_class"

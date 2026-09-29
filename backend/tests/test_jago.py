@@ -107,3 +107,27 @@ async def test_with_a_model_answers_come_from_tools(client, auth):
     assert "9876543210" not in sent and "uid-" not in sent and "reference_key" not in sent
     assert model.seen[0][0]["role"] == "system"
     assert "never decide eligibility" in model.seen[0][0]["content"]
+
+
+async def test_what_if_questions_are_answered_from_the_planner(client, auth):
+    await client.patch(
+        "/v1/me/facts",
+        headers=auth,
+        json={
+            "facts": {
+                "is_scheduled_tribe": True,
+                "education_level": "class_12",
+                "family_income": 200000,
+                "studies_abroad": False,
+                "institution_recognised": True,
+            }
+        },
+    )
+    reply = await say(client, auth, "What if I get into an IIT?")
+    assert reply["text"].startswith("Get admission (not through a management quota)")
+    assert "Top Class" in reply["text"]
+    assert any(s["title"] for s in reply["sources"])
+    path = await say(client, auth, "What is my plan for the future?")
+    assert path["text"].startswith("Your scholarships, stage by stage:")
+    assert "Class XII" in path["text"]
+    assert "What if I qualify NET?" in path["suggestions"]

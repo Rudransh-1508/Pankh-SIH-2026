@@ -125,6 +125,8 @@ class Jago:
         intent = classify(message)
         if intent.startswith("scheme:"):
             return await self._scheme(reply, intent.split(":", 1)[1])
+        if intent.startswith("path"):
+            return await self._path(reply, intent.partition(":")[2] or None)
         handler = {
             "eligibility": self._eligibility,
             "applications": self._applications,
@@ -262,6 +264,38 @@ class Jago:
                     line += " " + issue["what_to_do"]
                 lines.append(line)
             reply.text = "\n".join(lines)
+        return reply
+
+    async def _path(self, reply: Reply, what_if: str | None) -> Reply:
+        arguments = {"what_if": what_if} if what_if else {}
+        result = await self._tool(reply, "scheme_path", **arguments)
+        if not result["known"]:
+            reply.text = self.text["path_unknown"]
+            return reply
+        if what_if:
+            found = result["what_if"]
+            if not found["reachable"]:
+                reply.text = self.text["path_out_of_reach"].format(scheme=found["scheme"])
+            else:
+                reply.text = self.text["path_what_if"].format(
+                    condition=found["condition"],
+                    stage=found["stage"],
+                    years=found["years"],
+                    scheme=found["scheme"],
+                    value=found["value"],
+                    instead=found["instead_of"] or self.text["path_nothing"],
+                )
+            return reply
+        lines = [
+            self.text["path_stage"].format(
+                stage=s["stage"],
+                years=s["years"],
+                scheme=s["recommended"] or self.text["path_nothing"],
+            )
+            for s in result["stages"][:4]
+        ]
+        reply.text = self.text["path_intro"] + "\n" + "\n".join(lines)
+        reply.suggestions = self.text["path_suggest"]
         return reply
 
     async def _renewal(self, reply: Reply) -> Reply:

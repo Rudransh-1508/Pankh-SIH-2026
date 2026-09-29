@@ -271,6 +271,18 @@ _INTENTS = (
     ("greeting", ("hello", "hi", "namaste", "namaskar", "नमस्ते", "नमस्कार", "help", "मदद")),
 )
 
+# Asking about the future, or "what if": the Scheme Path.
+_PATH_CUES = ("what if", "if i", "agar", "अगर", "future", "aage", "आगे", "path", "plan", "later")
+
+# The achievable conditions the planner knows, by how Students talk about them.
+_WHAT_IF = {
+    "top_class": ("iit", "iim", "nit", "aiims", "nlu", "top class", "टॉप क्लास", "आईआईटी"),
+    "nfst": ("net", "jrf", "phd", "ph.d", "पीएचडी", "नेट"),
+    "nos": ("abroad", "videsh", "विदेश", "foreign", "overseas", "प्रवासी"),
+    "csss": ("top 20", "80th", "merit", "मेरिट"),
+    "pragati": ("aicte", "engineering", "btech", "b.tech", "इंजीनियरिंग"),
+}
+
 _SCHEME_NAMES = {
     "pre_matric": ("pre matric", "pre-matric", "prematric", "प्री-मैट्रिक", "प्री मैट्रिक"),
     "post_matric": ("post matric", "post-matric", "postmatric", "पोस्ट-मैट्रिक", "पोस्ट मैट्रिक"),
@@ -281,8 +293,8 @@ _SCHEME_NAMES = {
 
 
 def classify(text: str) -> str:
-    """One of: renewal, payments, applications, documents, scheme:<id>, eligibility, greeting,
-    unknown.
+    """One of: renewal, path, path:<scheme id>, payments, applications, documents,
+    scheme:<id>, eligibility, greeting, unknown.
 
     Questions about one's own money, applications or documents come first, so "status of my
     Post-Matric application" is about the application, not about the Scheme.
@@ -295,7 +307,14 @@ def classify(text: str) -> str:
             (cue in words) if " " not in cue and cue.isascii() else (cue in text) for cue in cues
         )
 
-    for intent, cues in _INTENTS[:4]:
+    if mentions(_INTENTS[0][1]):
+        return "renewal"
+    if mentions(_PATH_CUES):
+        for scheme_id, cues in _WHAT_IF.items():
+            if mentions(cues):
+                return f"path:{scheme_id}"
+        return "path"
+    for intent, cues in _INTENTS[1:4]:
         if mentions(cues):
             return intent
     for scheme_id, names in _SCHEME_NAMES.items():

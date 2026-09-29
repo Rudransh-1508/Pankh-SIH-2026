@@ -21,6 +21,7 @@ from app.models import Identity, Student, UploadedDocument, VerificationExceptio
 from app.renewal.service import plans
 from app.sources.http import SourceUnavailable
 from app.sources.scholarship_systems import ScholarshipSystemsClient
+from pankh_rules.planner import OPPORTUNITIES
 
 
 @dataclass
@@ -190,6 +191,52 @@ async def my_renewal(ctx: ToolContext) -> dict[str, Any]:
     }
 
 
+async def scheme_path(ctx: ToolContext, what_if: str | None = None) -> dict[str, Any]:
+    """The Scheme Path ahead, and where one achievable condition would unlock a better Scheme."""
+    facts = await current_facts(ctx.session, ctx.student.id)
+    levels = {
+        c.key: c.labels.get(ctx.language, c.label)
+        for c in pankh_rules.fact_specs()["education_level"].choices
+    }
+    stages = pankh_rules.plan_path(facts, current_academic_year())
+    if not stages:
+        return {"known": False, "missing": "education_level"}
+    result: dict[str, Any] = {
+        "known": True,
+        "stages": [
+            {
+                "stage": levels.get(s.level, s.level),
+                "years": s.label,
+                "recommended": s.recommended.scheme if s.recommended else None,
+                "value": s.recommended.value.text if s.recommended else None,
+                "needs_answers": s.needs_answers,
+                "could_unlock": [o.scheme for o in s.opportunities],
+            }
+            for s in stages
+        ],
+    }
+    if what_if in OPPORTUNITIES:
+        hit = next(
+            ((s, o) for s in stages for o in s.opportunities if o.scheme_id == what_if),
+            None,
+        )
+        result["what_if"] = (
+            {"scheme": pankh_rules.SCHEMES[what_if].short_name, "reachable": False}
+            if hit is None
+            else {
+                "scheme": hit[1].scheme,
+                "reachable": True,
+                "stage": levels.get(hit[0].level, hit[0].level),
+                "years": hit[0].label,
+                "condition": hit[1].condition,
+                "value": hit[1].value.text,
+                "instead_of": hit[0].recommended.scheme if hit[0].recommended else None,
+                "source": _citation(hit[1].value.citation),
+            }
+        )
+    return result
+
+
 async def scheme_details(ctx: ToolContext, scheme_id: str) -> dict[str, Any]:
     scheme = pankh_rules.SCHEMES.get(scheme_id)
     if scheme is None:
@@ -231,6 +278,19 @@ TOOLS = {
         "Next year's application for each Scheme the Student holds, and what to get ready.",
         {},
     ),
+    "scheme_path": (
+        scheme_path,
+        "Which Scheme to hold at each stage ahead. With what_if, whether an achievable condition "
+        "(top_class: a Top Class institute; nfst: NET; nos: study abroad; csss: top 20% in Class "
+        "XII; pragati: AICTE technical degree) would unlock a better Scheme, and when.",
+        {
+            "what_if": {
+                "type": "string",
+                "enum": list(OPPORTUNITIES),
+                "optional": True,
+            }
+        },
+    ),
     "scheme_details": (
         scheme_details,
         "Benefits, how and when to apply for one Scheme.",
@@ -246,7 +306,14 @@ def tool_schemas() -> list[dict[str, Any]]:
             "function": {
                 "name": name,
                 "description": description,
-                "parameters": {"type": "object", "properties": params, "required": list(params)},
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        name: {k: v for k, v in spec.items() if k != "optional"}
+                        for name, spec in params.items()
+                    },
+                    "required": [name for name, spec in params.items() if not spec.get("optional")],
+                },
             },
         }
         for name, (_, description, params) in TOOLS.items()
