@@ -7,9 +7,9 @@ import base64
 import httpx
 
 from app.config import Settings
+from app.languages import SPEECH, Language
 
 SARVAM_TTS_URL = "https://api.sarvam.ai/text-to-speech"
-SPEECH_LANGUAGE = {"en": "en-IN", "hi": "hi-IN"}
 
 
 class SpeechUnavailable(Exception):
@@ -17,7 +17,7 @@ class SpeechUnavailable(Exception):
 
 
 async def synthesise(
-    settings: Settings, http: httpx.AsyncClient, text: str, language: str
+    settings: Settings, http: httpx.AsyncClient, text: str, language: Language
 ) -> bytes:
     """WAV audio of the text, spoken by JAGO's voice."""
     if not settings.sarvam_api_key:
@@ -28,7 +28,7 @@ async def synthesise(
             headers={"api-subscription-key": settings.sarvam_api_key},
             json={
                 "text": text,
-                "target_language_code": SPEECH_LANGUAGE[language],
+                "target_language_code": SPEECH[language],
                 "model": settings.sarvam_tts_model,
                 "speaker": settings.sarvam_speaker,
             },

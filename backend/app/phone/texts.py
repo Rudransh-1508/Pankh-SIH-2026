@@ -23,7 +23,6 @@ TEXT = {
         "callback_repeat": "You have already asked for a callback today. Your district office will call you.",
         "callback_unavailable": "Link DigiLocker in the Pankh app first, so we know which district office to ask.",
         "goodbye": "Thank you for calling Pankh. Goodbye.",
-        "rupees": "rupees ",
         "renewal_none": "You do not hold a scholarship this year, so there is nothing to renew. To hear which scholarships you can get, press 5.",
     },
     "hi": {
@@ -36,7 +35,6 @@ TEXT = {
         "callback_repeat": "आप आज पहले ही कॉल-बैक माँग चुके हैं। आपका ज़िला कार्यालय कॉल करेगा।",
         "callback_unavailable": "पहले पंख ऐप में डिजिलॉकर जोड़ें, ताकि पता चले कि किस ज़िला कार्यालय से कहना है।",
         "goodbye": "पंख पर कॉल करने के लिए धन्यवाद। नमस्ते।",
-        "rupees": "रुपये ",
         "renewal_none": "इस साल आपके पास कोई छात्रवृत्ति नहीं है, इसलिए नवीनीकरण की ज़रूरत नहीं। आपको मिलने वाली छात्रवृत्ति सुनने के लिए 5 दबाएँ।",
     },
 }

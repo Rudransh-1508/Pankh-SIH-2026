@@ -1,3 +1,5 @@
+import type { Language } from "./languages";
+
 export type Level = "institute" | "district" | "state" | "ministry";
 
 export interface Official {
@@ -117,7 +119,7 @@ export interface Campaign {
   state: string;
   district: string | null;
   channel: "school" | "family";
-  language: "en" | "hi";
+  language: Language;
   status: "draft" | "sent" | "cancelled";
   created_at: string;
   sent_at: string | null;

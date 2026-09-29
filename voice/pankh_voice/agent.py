@@ -40,12 +40,28 @@ log = logging.getLogger("pankh.voice")
 GREETING = {
     "en": "Namaste, I am JAGO. Ask me about your scholarships, your applications or your payments.",
     "hi": "नमस्ते, मैं JAGO हूँ। अपनी छात्रवृत्ति, आवेदन या भुगतान के बारे में पूछिए।",
+    "bn": "নমস্কার, আমি JAGO। আপনার বৃত্তি, আবেদন বা টাকার বিষয়ে জিজ্ঞেস করুন।",
+    "gu": "નમસ્તે, હું JAGO છું. તમારી શિષ્યવૃત્તિ, અરજી કે ચુકવણી વિશે પૂછો.",
+    "mr": "नमस्कार, मी JAGO आहे. तुमची शिष्यवृत्ती, अर्ज किंवा पैशांबद्दल विचारा.",
+    "or": "ନମସ୍କାର, ମୁଁ JAGO। ଆପଣଙ୍କ ଛାତ୍ରବୃତ୍ତି, ଆବେଦନ ବା ଟଙ୍କା ବିଷୟରେ ପଚାରନ୍ତୁ।",
 }
 UNAVAILABLE = {
     "en": "Sorry, I cannot reach Pankh right now. Please try again in a little while.",
     "hi": "माफ़ कीजिए, अभी पंख से संपर्क नहीं हो पा रहा। थोड़ी देर बाद फिर कोशिश करें।",
+    "bn": "দুঃখিত, এখন পঙ্খের সঙ্গে যোগাযোগ করা যাচ্ছে না। একটু পরে আবার চেষ্টা করুন।",
+    "gu": "માફ કરશો, હમણાં પંખનો સંપર્ક થઈ શકતો નથી. થોડી વાર પછી ફરી પ્રયાસ કરો.",
+    "mr": "माफ करा, सध्या पंखशी संपर्क होत नाही. थोड्या वेळाने पुन्हा प्रयत्न करा.",
+    "or": "କ୍ଷମା କରନ୍ତୁ, ଏବେ ପଙ୍ଖ ସହ ଯୋଗାଯୋଗ ହୋଇପାରୁନାହିଁ। କିଛି ସମୟ ପରେ ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।",
 }
-SPEECH_LANGUAGE = {"en": "en-IN", "hi": "hi-IN"}
+# Sarvam's language codes; it writes Odia as "od" (ISO 639-1 "or" everywhere else).
+SPEECH_LANGUAGE = {
+    "en": "en-IN",
+    "hi": "hi-IN",
+    "bn": "bn-IN",
+    "gu": "gu-IN",
+    "mr": "mr-IN",
+    "or": "od-IN",
+}
 
 
 def last_thing_said(chat_ctx: llm.ChatContext) -> str | None:

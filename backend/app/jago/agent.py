@@ -177,7 +177,7 @@ class Jago:
     def _answer_suggestions(self, question: dict[str, Any]) -> list[str]:
         """Tappable answers: the choices, or yes and no. Numbers and dates are typed."""
         if question["kind"] == "boolean":
-            return ["Yes", "No"] if self.ctx.language == "en" else ["हाँ", "नहीं"]
+            return list(self.text["yes_no"])
         return question["choices"][:6]
 
     async def _eligibility(self, reply: Reply, ask: bool = True) -> Reply:

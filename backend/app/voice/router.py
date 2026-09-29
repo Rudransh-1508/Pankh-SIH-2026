@@ -5,7 +5,7 @@ agent service that listens and speaks in it.
 import json
 import secrets
 import uuid
-from typing import Annotated, Literal
+from typing import Annotated
 
 from fastapi import APIRouter, Header, HTTPException, status
 from livekit import api
@@ -15,6 +15,7 @@ from app.auth.deps import CurrentStudent, SessionDep, SettingsDep
 from app.jago.agent import Jago
 from app.jago.router import ModelDep
 from app.jago.tools import ToolContext
+from app.languages import Language
 from app.models import Student
 from app.phone.ivr import spoken
 from app.sources.http import SourceHttp
@@ -25,7 +26,7 @@ AGENT_NAME = "jago"
 
 
 class SessionIn(BaseModel):
-    language: Literal["en", "hi"] = "en"
+    language: Language = "en"
 
 
 class SessionOut(BaseModel):
@@ -36,7 +37,7 @@ class SessionOut(BaseModel):
 
 class ReplyIn(BaseModel):
     student_id: uuid.UUID
-    language: Literal["en", "hi"] = "en"
+    language: Language = "en"
     text: Annotated[str, Field(min_length=1, max_length=1000)]
 
 

@@ -17,6 +17,7 @@ from app.applications.service import track
 from app.config import Settings
 from app.documents.reading import KIND_NAMES, Kind
 from app.facts.service import FactSource, current_facts, fact_statuses, record_facts
+from app.jago.texts import TEXT
 from app.models import Identity, Student, UploadedDocument, VerificationException
 from app.renewal.service import plans
 from app.sources.http import SourceUnavailable
@@ -86,7 +87,7 @@ async def next_question(ctx: ToolContext) -> dict[str, Any]:
 
 def _spoken_answer(spec: pankh_rules.FactSpec, value: Any, language: str) -> str:
     if spec.kind is pankh_rules.FactKind.BOOLEAN:
-        return {"en": ("yes", "no"), "hi": ("हाँ", "नहीं")}[language][0 if value else 1]
+        return TEXT[language]["yes_no"][0 if value else 1].lower()
     if spec.kind is pankh_rules.FactKind.CHOICE:
         choice = next((c for c in spec.choices if c.key == value), None)
         return choice.labels.get(language, choice.label) if choice else str(value)

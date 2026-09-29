@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/models.dart';
 import '../l10n/generated/app_localizations.dart';
+import '../l10n/languages.dart';
 import '../state/providers.dart';
 import '../theme.dart';
 import '../widgets/error_view.dart';
@@ -32,7 +33,8 @@ class _LetterScreenState extends ConsumerState<LetterScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final text = Theme.of(context).textTheme;
-    final language = _language ?? Localizations.localeOf(context).languageCode;
+    final appLanguage = Localizations.localeOf(context).languageCode;
+    final language = _language ?? appLanguage;
     final request = (kind: widget.kind, language: language, context: widget.context);
     final letter = ref.watch(_letterProvider(request));
     return Scaffold(
@@ -56,10 +58,11 @@ class _LetterScreenState extends ConsumerState<LetterScreen> {
               PankhSpace.xl,
             ),
             children: [
+              // Offices read English and Hindi; the Student's own language is offered too.
               SegmentedButton<String>(
-                segments: const [
-                  ButtonSegment(value: 'en', label: Text('English')),
-                  ButtonSegment(value: 'hi', label: Text('हिन्दी')),
+                segments: [
+                  for (final code in {'en', 'hi', appLanguage})
+                    ButtonSegment(value: code, label: Text(languageNames[code]!)),
                 ],
                 selected: {language},
                 onSelectionChanged: (value) => setState(() => _language = value.first),

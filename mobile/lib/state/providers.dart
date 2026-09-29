@@ -10,6 +10,7 @@ import '../data/voice_line.dart';
 import '../data/local_store.dart';
 import '../data/models.dart';
 import '../data/sms_sign_in.dart';
+import '../l10n/languages.dart';
 
 /// Overridden in main() once SharedPreferences has loaded.
 final sharedPreferencesProvider = Provider<SharedPreferences>(
@@ -32,7 +33,7 @@ final apiProvider = Provider((ref) {
   return api;
 });
 
-const supportedLanguages = ['en', 'hi'];
+final supportedLanguages = languageNames.keys.toList();
 
 class LanguageController extends Notifier<Locale> {
   @override

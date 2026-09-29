@@ -2,16 +2,13 @@
 
 import { useActionState, useState } from "react";
 
+import { LANGUAGES } from "@/lib/languages";
+
 import { draftCampaign, type DraftState } from "./actions";
 
 const CHANNELS = [
   { value: "school", label: "Through schools", help: "One message to each school's nodal officer, with a list of its students." },
   { value: "family", label: "Directly to families", help: "One message to each student's parent, on the number the school recorded." },
-];
-
-const LANGUAGES = [
-  { value: "hi", label: "हिन्दी" },
-  { value: "en", label: "English" },
 ];
 
 /** Where the official may campaign: a state to choose (ministry), districts to choose (state),
@@ -73,14 +70,14 @@ export function DraftForm({ scope }: { scope: Scope }) {
       </fieldset>
       <fieldset>
         <legend className="mb-2 text-sm font-semibold">Language</legend>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {LANGUAGES.map((option, index) => (
             <label
               key={option.value}
               className="cursor-pointer rounded-full border-[1.5px] border-line px-4 py-1.5 text-sm font-semibold has-[:checked]:border-peacock has-[:checked]:bg-peacock-mist has-[:checked]:text-peacock-deep"
             >
               <input type="radio" name="language" value={option.value} defaultChecked={index === 0} className="sr-only" />
-              {option.label}
+              <span lang={option.value}>{option.label}</span>
             </label>
           ))}
         </div>

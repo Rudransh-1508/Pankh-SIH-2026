@@ -31,8 +31,40 @@ _YES = {
     "sahi",
     "correct",
     "है",
+    # Bengali, Gujarati, Marathi, Odia
+    "হ্যাঁ",
+    "হ্যা",
+    "হাঁ",
+    "હા",
+    "હાં",
+    "हो",
+    "होय",
+    "ହଁ",
 }
-_NO = {"no", "n", "nope", "nahi", "nahin", "nai", "na", "नहीं", "नही", "ना", "none", "कोई", "koi"}
+_NO = {
+    "no",
+    "n",
+    "nope",
+    "nahi",
+    "nahin",
+    "nai",
+    "na",
+    "नहीं",
+    "नही",
+    "ना",
+    "none",
+    "कोई",
+    "koi",
+    # Bengali, Gujarati, Marathi, Odia
+    "না",
+    "ના",
+    "નહીં",
+    "નહિ",
+    "नाही",
+    "नको",
+    "ନା",
+    "ନାହିଁ",
+}
 
 _HINDI_FRACTIONS = {"डेढ़": 1.5, "डेढ": 1.5, "dedh": 1.5, "ढाई": 2.5, "dhai": 2.5}
 _MULTIPLIERS = {
@@ -99,7 +131,11 @@ def _norm(text: str) -> str:
 
 
 def _words(text: str) -> list[str]:
-    return re.findall(r"[\wऀ-ॿ.]+", _norm(text))
+    # Indic vowel signs are not word characters to \w, so each script's block is listed:
+    # Devanagari (Hindi, Marathi), Bengali, Gujarati and Odia, with the zero-width joiners.
+    return re.findall(
+        r"[\w\u0900-\u097f\u0980-\u09ff\u0a80-\u0aff\u0b00-\u0b7f\u200c\u200d.]+", _norm(text)
+    )
 
 
 def parse_boolean(text: str) -> bool | None:
@@ -201,6 +237,14 @@ _INTENTS = (
             "नवीनीकरण",
             "रिन्यू",
             "अगले साल",
+            "নবীকরণ",
+            "পরের বছর",
+            "નવીકરણ",
+            "આવતા વર્ષ",
+            "नूतनीकरण",
+            "पुढच्या वर्षी",
+            "ନବୀକରଣ",
+            "ଆସନ୍ତା ବର୍ଷ",
         ),
     ),
     (
@@ -220,6 +264,15 @@ _INTENTS = (
             "खाते",
             "amount",
             "received",
+            "টাকা",
+            "কিস্তি",
+            "પૈસા",
+            "ચુકવણી",
+            "હપ્તો",
+            "हप्ता",
+            "रक्कम",
+            "ଟଙ୍କା",
+            "କିସ୍ତି",
         ),
     ),
     (
@@ -236,6 +289,10 @@ _INTENTS = (
             "कहाँ",
             "verification",
             "sanction",
+            "আবেদন",
+            "અરજી",
+            "अर्ज",
+            "ଆବେଦନ",
         ),
     ),
     (
@@ -250,6 +307,14 @@ _INTENTS = (
             "प्रमाण पत्र",
             "problem",
             "attention",
+            "নথি",
+            "শংসাপত্র",
+            "দস্তাবেজ",
+            "દસ્તાવેજ",
+            "પ્રમાણપત્ર",
+            "कागदपत्र",
+            "ଦଲିଲ",
+            "ପ୍ରମାଣପତ୍ର",
         ),
     ),
     (
@@ -266,27 +331,107 @@ _INTENTS = (
             "मिल सकती",
             "check",
             "छात्रवृत्ति",
+            "বৃত্তি",
+            "যোগ্য",
+            "શિષ્યવૃત્તિ",
+            "પાત્ર",
+            "शिष्यवृत्ती",
+            "ଛାତ୍ରବୃତ୍ତି",
+            "ଯୋଗ୍ୟ",
         ),
     ),
-    ("greeting", ("hello", "hi", "namaste", "namaskar", "नमस्ते", "नमस्कार", "help", "मदद")),
+    (
+        "greeting",
+        (
+            "hello",
+            "hi",
+            "namaste",
+            "namaskar",
+            "नमस्ते",
+            "नमस्कार",
+            "help",
+            "मदद",
+            "নমস্কার",
+            "નમસ્તે",
+            "ନମସ୍କାର",
+        ),
+    ),
 )
 
 # Asking about the future, or "what if": the Scheme Path.
-_PATH_CUES = ("what if", "if i", "agar", "अगर", "future", "aage", "आगे", "path", "plan", "later")
+_PATH_CUES = (
+    "what if",
+    "if i",
+    "agar",
+    "अगर",
+    "future",
+    "aage",
+    "आगे",
+    "path",
+    "plan",
+    "later",
+    # Two words where one would also match inside longer words (Gujarati "જો" in "જોડો").
+    "যদি",
+    "જો મને",
+    "જો હું",
+    "जर मी",
+    "जर मला",
+    "झालो तर",
+    "मिळाला तर",
+    "शिकलो तर",
+    "ଯଦି",
+)
 
 # The achievable conditions the planner knows, by how Students talk about them.
 _WHAT_IF = {
     "top_class": ("iit", "iim", "nit", "aiims", "nlu", "top class", "टॉप क्लास", "आईआईटी"),
     "nfst": ("net", "jrf", "phd", "ph.d", "पीएचडी", "नेट"),
-    "nos": ("abroad", "videsh", "विदेश", "foreign", "overseas", "प्रवासी"),
+    "nos": (
+        "abroad",
+        "videsh",
+        "विदेश",
+        "foreign",
+        "overseas",
+        "प्रवासी",
+        "परदेश",
+        "বিদেশ",
+        "વિદેશ",
+        "ବିଦେଶ",
+    ),
     "csss": ("top 20", "80th", "merit", "मेरिट"),
     "pragati": ("aicte", "engineering", "btech", "b.tech", "इंजीनियरिंग"),
 }
 
 _SCHEME_NAMES = {
-    "pre_matric": ("pre matric", "pre-matric", "prematric", "प्री-मैट्रिक", "प्री मैट्रिक"),
-    "post_matric": ("post matric", "post-matric", "postmatric", "पोस्ट-मैट्रिक", "पोस्ट मैट्रिक"),
-    "top_class": ("top class", "topclass", "टॉप क्लास"),
+    "pre_matric": (
+        "pre matric",
+        "pre-matric",
+        "prematric",
+        "प्री-मैट्रिक",
+        "प्री मैट्रिक",
+        "प्री-मॅट्रिक",
+        "প্রি-ম্যাট্রিক",
+        "প্রি ম্যাট্রিক",
+        "પ્રી-મેટ્રિક",
+        "પ્રી મેટ્રિક",
+        "ପ୍ରି-ମାଟ୍ରିକ",
+        "ପ୍ରି ମାଟ୍ରିକ",
+    ),
+    "post_matric": (
+        "post matric",
+        "post-matric",
+        "postmatric",
+        "पोस्ट-मैट्रिक",
+        "पोस्ट मैट्रिक",
+        "पोस्ट-मॅट्रिक",
+        "পোস্ট-ম্যাট্রিক",
+        "পোস্ট ম্যাট্রিক",
+        "પોસ્ટ-મેટ્રિક",
+        "પોસ્ટ મેટ્રિક",
+        "ପୋଷ୍ଟ-ମାଟ୍ରିକ",
+        "ପୋଷ୍ଟ ମାଟ୍ରିକ",
+    ),
+    "top_class": ("top class", "topclass", "टॉप क्लास", "টপ ক্লাস", "ટોપ ક્લાસ", "ଟପ୍ କ୍ଲାସ"),
     "nfst": ("nfst", "fellowship", "फेलोशिप"),
     "nos": ("nos", "overseas", "abroad", "videsh", "विदेश", "प्रवासी"),
 }

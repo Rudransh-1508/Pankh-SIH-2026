@@ -69,16 +69,26 @@ void main() {
     expect(find.textContaining('letter of 23 May 2013', findRichText: true), findsWidgets);
   });
 
-  testWidgets('switching to Hindi changes the interface language', (tester) async {
+  testWidgets('choosing a language changes the interface language', (tester) async {
     final (app, _, preferences) = await buildApp();
     await tester.pumpWidget(app);
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('हिन्दी'));
+    await tester.tap(find.text('English'));
+    await tester.pumpAndSettle();
+    // Six languages do not all fit in the test's small window, so the list scrolls.
+    final languages = find.descendant(
+      of: find.byType(BottomSheet),
+      matching: find.byType(Scrollable),
+    );
+    await tester.scrollUntilVisible(find.text('ଓଡ଼ିଆ'), 50, scrollable: languages);
+    await tester.ensureVisible(find.text('ଓଡ଼ିଆ'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('ଓଡ଼ିଆ'));
     await tester.pumpAndSettle();
 
-    expect(find.text('मेरी छात्रवृत्तियाँ देखें'), findsOneWidget);
-    expect(preferences.getString('language'), 'hi');
+    expect(find.text('ମୋ ଛାତ୍ରବୃତ୍ତି ଦେଖନ୍ତୁ'), findsOneWidget);
+    expect(preferences.getString('language'), 'or');
     expect(find.byType(MaterialApp), findsOneWidget);
   });
 }

@@ -3,7 +3,7 @@
 import uuid
 from collections import defaultdict
 from datetime import date
-from typing import Annotated, Literal
+from typing import Annotated
 
 from fastapi import APIRouter, HTTPException, Query, status
 from pydantic import BaseModel
@@ -12,13 +12,12 @@ import pankh_rules
 from app.academic_year import current_academic_year
 from app.auth.deps import CurrentStudent, SessionDep
 from app.facts.service import current_facts
-from app.letters.texts import BLANK, CLOSING, LETTERS
+from app.languages import Language
+from app.letters.texts import BLANK, CASTE_CERTIFICATE, CLOSING, LETTERS
 from app.models import Identity, VerificationException
 from pankh_rules.engine import format_inr
 
 router = APIRouter(prefix="/me/letters", tags=["letters"])
-
-_DOCUMENTS = {"en": "caste certificate", "hi": "जाति प्रमाण पत्र"}
 
 
 class LetterOut(BaseModel):
@@ -40,7 +39,7 @@ async def letter(
     kind: str,
     student: CurrentStudent,
     session: SessionDep,
-    language: Literal["en", "hi"] = "en",
+    language: Language = "en",
     issue: uuid.UUID | None = None,
     scheme_id: Annotated[str | None, Query(max_length=32)] = None,
     application: Annotated[str | None, Query(max_length=40)] = None,
@@ -67,7 +66,7 @@ async def letter(
         "scheme": scheme.short_name if scheme else "Post-Matric",
         "application": application or "",
         "reason": (reason or "").strip(),
-        "document": _DOCUMENTS[language],
+        "document": CASTE_CERTIFICATE[language],
     }
     if isinstance(facts.get("family_income"), int | float):
         values["income"] = format_inr(facts["family_income"]).lstrip("₹")

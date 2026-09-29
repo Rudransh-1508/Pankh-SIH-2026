@@ -11,6 +11,7 @@ from app.jago.agent import Jago
 from app.jago.llm import BedrockModel, ChatModel, OpenAICompatibleModel
 from app.jago.speech import SpeechUnavailable, synthesise
 from app.jago.tools import ToolContext
+from app.languages import Language
 from app.models import JagoMessage
 from app.phone.ivr import spoken
 from app.sources.http import SourceHttp
@@ -38,12 +39,12 @@ ModelDep = Annotated[ChatModel | None, Depends(get_model)]
 
 class MessageIn(BaseModel):
     message: str = Field(min_length=1, max_length=1000)
-    language: Literal["en", "hi"] = "en"
+    language: Language = "en"
 
 
 class SpeechIn(BaseModel):
     text: str = Field(min_length=1, max_length=2500)
-    language: Literal["en", "hi"] = "en"
+    language: Language = "en"
 
 
 class Source(BaseModel):

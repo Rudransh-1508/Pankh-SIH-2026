@@ -1,3 +1,6 @@
+from app.languages import LANGUAGES
+
+
 async def test_lists_the_five_mota_schemes_then_the_catalogue(client):
     schemes = (await client.get("/v1/schemes")).json()
     assert [s["id"] for s in schemes if s["kind"] == "mota"] == [
@@ -22,7 +25,8 @@ async def test_fact_schema_describes_forms(client):
     level = specs["education_level"]
     assert level["kind"] == "choice"
     class_9 = next(c for c in level["choices"] if c["key"] == "class_9")
-    assert class_9["labels"] == {"en": "Class IX", "hi": "कक्षा 9"}
+    assert set(class_9["labels"]) == set(LANGUAGES)
+    assert (class_9["labels"]["en"], class_9["labels"]["or"]) == ("Class IX", "ନବମ ଶ୍ରେଣୀ")
     assert specs["is_scheduled_tribe"]["question"]["hi"].startswith("क्या आप")
     assert all(choice["key"] != "unknown" for choice in level["choices"])
 

@@ -155,10 +155,7 @@ class _ConversationState extends ConsumerState<_Conversation> {
     }
     setState(() => _listening = true);
     await _speech.listen(
-      listenOptions: SpeechListenOptions(
-        partialResults: true,
-        localeId: _language == 'hi' ? 'hi_IN' : 'en_IN',
-      ),
+      listenOptions: SpeechListenOptions(partialResults: true, localeId: '${_language}_IN'),
       onResult: (result) {
         _input.text = result.recognizedWords;
         if (result.finalResult) {
@@ -193,7 +190,7 @@ class _ConversationState extends ConsumerState<_Conversation> {
       await _player.play(DeviceFileSource(file.path));
     } on ApiException {
       if (!mounted || _speaking != index) return;
-      await _tts.setLanguage(language == 'hi' ? 'hi-IN' : 'en-IN');
+      await _tts.setLanguage('$language-IN');
       await _tts.setSpeechRate(0.45);
       _tts.setCompletionHandler(() {
         if (mounted && _speaking == index) setState(() => _speaking = null);
@@ -297,9 +294,11 @@ class _ConversationState extends ConsumerState<_Conversation> {
     );
   }
 
-  List<String> _starterSuggestions(AppLocalizations l10n) => _language == 'hi'
-      ? const ['मुझे कौन-सी छात्रवृत्ति मिल सकती है?', 'मेरा आवेदन कहाँ है?', 'क्या मेरा पैसा आया?']
-      : const ['Which scholarships can I get?', 'Where is my application?', 'Has my money come?'];
+  List<String> _starterSuggestions(AppLocalizations l10n) => [
+    l10n.jagoAskScholarships,
+    l10n.jagoAskApplication,
+    l10n.jagoAskMoney,
+  ];
 }
 
 class _Bubble extends StatelessWidget {

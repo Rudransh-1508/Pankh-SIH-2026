@@ -1,3 +1,4 @@
+import { languageName } from "@/lib/languages";
 import type { Campaign } from "@/lib/types";
 
 const STATUS = {
@@ -12,7 +13,7 @@ export function where(campaign: Pick<Campaign, "state" | "district">): string {
 
 export function channelLabel(campaign: Pick<Campaign, "channel" | "language">): string {
   return `${campaign.channel === "school" ? "Through schools" : "Directly to families"} · ${
-    campaign.language === "hi" ? "Hindi" : "English"
+    languageName(campaign.language)
   }`;
 }
 
