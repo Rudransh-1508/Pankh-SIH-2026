@@ -15,5 +15,6 @@ RUN uv sync --locked --all-packages --no-dev
 FROM python:3.13-slim
 WORKDIR /app
 COPY --from=build /app /app
+COPY deploy/start-api.sh deploy/start-simulators.sh /app/
 ENV PATH="/app/.venv/bin:$PATH"
 WORKDIR /app/backend

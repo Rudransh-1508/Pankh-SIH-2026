@@ -57,9 +57,7 @@ services:
     <<: *pankh
     build: { context: .., dockerfile: deploy/python.Dockerfile }
     image: pankh-python
-    command: >
-      sh -c "alembic upgrade head && python -m app.seed &&
-             uvicorn app.main:app --host 0.0.0.0 --port 8000 --proxy-headers --forwarded-allow-ips='*'"
+    command: ["/app/start-api.sh"]
     depends_on:
       postgres: { condition: service_healthy }
 
@@ -73,7 +71,7 @@ services:
   simulators:
     build: { context: .., dockerfile: deploy/python.Dockerfile }
     image: pankh-python
-    command: ["uvicorn", "pankh_simulators.app:app", "--host", "0.0.0.0", "--port", "8100"]
+    command: ["/app/start-simulators.sh"]
     depends_on: [api]
     restart: unless-stopped
 

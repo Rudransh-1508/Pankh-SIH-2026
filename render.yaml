@@ -15,10 +15,7 @@ services:
     dockerfilePath: ./deploy/python.Dockerfile
     dockerContext: .
     # Free services have no pre-deploy step, so migrations and demo seeding run at start.
-    dockerCommand: >-
-      sh -c "alembic upgrade head && python -m app.seed &&
-      uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-10000}
-      --proxy-headers --forwarded-allow-ips='*'"
+    dockerCommand: /app/start-api.sh
     healthCheckPath: /health
     envVars:
       - key: PANKH_ENVIRONMENT
@@ -76,8 +73,7 @@ services:
     region: singapore
     dockerfilePath: ./deploy/python.Dockerfile
     dockerContext: .
-    dockerCommand: >-
-      sh -c "uvicorn pankh_simulators.app:app --host 0.0.0.0 --port ${PORT:-10000}"
+    dockerCommand: /app/start-simulators.sh
     healthCheckPath: /health
 
   - type: web
