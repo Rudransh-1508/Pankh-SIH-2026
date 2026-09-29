@@ -43,6 +43,12 @@ class Settings(BaseSettings):
     llm_base_url: str | None = None
     llm_api_key: str | None = None
     llm_model: str | None = None
+    # Or AWS Bedrock, through its Converse API. Set the model (for Mumbai, a cross-region
+    # inference profile such as "apac.amazon.nova-lite-v1:0"); credentials come from the named
+    # AWS profile, or the standard AWS environment when no profile is set.
+    bedrock_model_id: str | None = None
+    aws_profile: str | None = None
+    aws_region: str = "ap-south-1"
 
     # Temporal runs long-lived Agent work such as chasing stalled applications. Unset, nothing is
     # scheduled; the ministry can still run a sweep by hand.

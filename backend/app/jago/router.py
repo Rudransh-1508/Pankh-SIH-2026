@@ -1,3 +1,4 @@
+from functools import cache
 from typing import Annotated, Any, Literal
 
 from fastapi import APIRouter, Depends
@@ -5,8 +6,9 @@ from pydantic import BaseModel, Field
 from sqlalchemy import select
 
 from app.auth.deps import CurrentStudent, SessionDep, SettingsDep
+from app.config import Settings
 from app.jago.agent import Jago
-from app.jago.llm import ChatModel, OpenAICompatibleModel
+from app.jago.llm import BedrockModel, ChatModel, OpenAICompatibleModel
 from app.jago.tools import ToolContext
 from app.models import JagoMessage
 from app.sources.http import SourceHttp
@@ -16,9 +18,17 @@ router = APIRouter(prefix="/me/jago", tags=["jago"])
 
 def get_model(settings: SettingsDep, http: SourceHttp) -> ChatModel | None:
     """The configured language model, or None to answer without one."""
+    if settings.bedrock_model_id:
+        return _bedrock(settings.bedrock_model_id, settings.aws_profile, settings.aws_region)
     if settings.llm_base_url and settings.llm_model:
         return OpenAICompatibleModel(settings, http)
     return None
+
+
+@cache
+def _bedrock(model_id: str, profile: str | None, region: str) -> BedrockModel:
+    # One client for the process: creating a boto3 session reads credentials from disk.
+    return BedrockModel(Settings(bedrock_model_id=model_id, aws_profile=profile, aws_region=region))
 
 
 ModelDep = Annotated[ChatModel | None, Depends(get_model)]

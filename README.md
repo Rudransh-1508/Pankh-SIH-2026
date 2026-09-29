@@ -483,6 +483,18 @@ photograph it in the app. Photos past their retention date are deleted daily by 
 answers aloud. In production, point an Exotel flow's Gather applet at
 `/v1/phone/exotel/<PANKH_PHONE_WEBHOOK_TOKEN>/gather`.
 
+**JAGO's language model** is optional; without one, JAGO answers from its own understanding. To use
+AWS Bedrock, put this in `backend/.env` (credentials come from the named AWS profile):
+
+```
+PANKH_BEDROCK_MODEL_ID=apac.amazon.nova-lite-v1:0
+PANKH_AWS_PROFILE=rudoneyet
+PANKH_AWS_REGION=ap-south-1
+```
+
+Any OpenAI-compatible provider works too, with `PANKH_LLM_BASE_URL`, `PANKH_LLM_API_KEY` and
+`PANKH_LLM_MODEL`.
+
 No SMS is sent in development: every sign-in code is written to the API log. The demo officials
 are `+91 90000 00001` (ministry), `…02` (Jharkhand), `…03` (Dumka) and `…04` (Mayurbhanj).
 
