@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/api.dart';
+import '../data/document_capture.dart';
 import '../data/models.dart';
 import '../l10n/generated/app_localizations.dart';
 import '../state/providers.dart';
@@ -81,8 +82,9 @@ class _PhotoSectionState extends ConsumerState<PhotoSection> {
       _busyKind = kind;
       _step = _Step.reading;
     });
+    CapturedDocument? captured;
     try {
-      final captured = await ref.read(documentCaptureProvider).capture(fromCamera: fromCamera);
+      captured = await ref.read(documentCaptureProvider).capture(fromCamera: fromCamera);
       if (captured == null) return;
       if (mounted) setState(() => _step = _Step.checking);
       final outcome = UploadOutcome.fromJson(
@@ -104,6 +106,13 @@ class _PhotoSectionState extends ConsumerState<PhotoSection> {
       if (retake == true && mounted) await _photograph(kind);
     } on ApiException catch (error) {
       if (!mounted) return;
+      if (error.isOffline && captured != null) {
+        await ref.read(uploadQueueProvider).add(kind, captured);
+        if (!mounted) return;
+        setState(() {});
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.photoQueued)));
+        return;
+      }
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(error.isOffline ? l10n.networkError : error.message)));
@@ -186,6 +195,7 @@ class _PhotoSectionState extends ConsumerState<PhotoSection> {
     final l10n = AppLocalizations.of(context);
     final text = Theme.of(context).textTheme;
     final uploads = ref.watch(uploadsProvider).value ?? const [];
+    final waiting = ref.watch(uploadQueueProvider).pending;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -230,11 +240,18 @@ class _PhotoSectionState extends ConsumerState<PhotoSection> {
             Expanded(child: Text(l10n.photoPrivacy, style: text.bodySmall)),
           ],
         ),
-        if (uploads.isNotEmpty) ...[
+        if (uploads.isNotEmpty || waiting.isNotEmpty) ...[
           Padding(
             padding: const EdgeInsets.only(top: PankhSpace.lg, bottom: PankhSpace.xs),
             child: Text(l10n.photoYours, style: text.titleMedium),
           ),
+          for (final upload in waiting)
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: const Icon(Icons.cloud_upload_outlined, color: PankhColors.inkSoft),
+              title: Text(photoKindName(l10n, upload['kind'] as String), style: text.titleSmall),
+              subtitle: Text(l10n.photoStatusWaiting, style: text.bodySmall),
+            ),
           for (final upload in uploads) _UploadTile(upload: upload),
         ],
       ],

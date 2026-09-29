@@ -53,7 +53,16 @@ class LocalStore {
   Json? get factSchema => _decode(_prefs.getString('fact_schema'));
   Future<void> setFactSchema(Json json) => _prefs.setString('fact_schema', jsonEncode(json));
 
+  /// Document photos taken offline, waiting to upload: kind, path, content type and text.
+  List<Json> get pendingUploads => [
+    for (final raw in _prefs.getStringList('pending_uploads') ?? const <String>[])
+      jsonDecode(raw) as Json,
+  ];
+  Future<void> setPendingUploads(List<Json> uploads) =>
+      _prefs.setStringList('pending_uploads', [for (final u in uploads) jsonEncode(u)]);
+
   Future<void> clearAccount() async {
+    await _prefs.remove('pending_uploads');
     await setPhone(null);
     await _prefs.remove('facts');
     await _prefs.remove('unsynced_facts');

@@ -232,5 +232,7 @@
   "helpSave": "सहेजें",
   "helpQualifies": "पात्र: {schemes}",
   "helpersTitle": "आपकी मदद कर रहे हैं",
-  "helpersStop": "रोकें"
+  "helpersStop": "रोकें",
+  "photoQueued": "कनेक्शन नहीं है। फ़ोटो सहेज ली गई है, इंटरनेट आने पर अपलोड होगी।",
+  "photoStatusWaiting": "कनेक्शन का इंतज़ार"
 }

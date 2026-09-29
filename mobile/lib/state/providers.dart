@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../config.dart';
 import '../data/api.dart';
 import '../data/document_capture.dart';
+import '../data/upload_queue.dart';
 import '../data/local_store.dart';
 import '../data/models.dart';
 
@@ -180,9 +181,17 @@ final verificationProvider = FutureProvider<Verification?>((ref) async {
   return Verification.fromJson(await ref.read(apiProvider).verification());
 });
 
-/// The Student's uploaded Document photos. Empty when not signed in.
+final uploadQueueProvider = Provider(
+  (ref) => UploadQueue(ref.watch(localStoreProvider), ref.watch(apiProvider)),
+);
+
+/// The Student's uploaded Document photos. Empty when not signed in. Photos taken offline are
+/// uploaded first, when there is a connection again.
 final uploadsProvider = FutureProvider<List<UploadedDocument>>((ref) async {
   if (ref.watch(sessionProvider) == null) return const [];
+  if (ref.read(uploadQueueProvider).pending.isNotEmpty) {
+    await ref.read(uploadQueueProvider).flush();
+  }
   return [
     for (final d in await ref.read(apiProvider).uploads()) UploadedDocument.fromJson(d as Json),
   ];

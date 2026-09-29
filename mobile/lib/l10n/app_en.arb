@@ -457,5 +457,7 @@
     }
   },
   "helpersTitle": "Helping you",
-  "helpersStop": "Stop"
+  "helpersStop": "Stop",
+  "photoQueued": "No connection. The photo is saved and will upload when you are back online.",
+  "photoStatusWaiting": "Waiting for a connection"
 }
