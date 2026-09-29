@@ -234,5 +234,14 @@
   "helpersTitle": "आपकी मदद कर रहे हैं",
   "helpersStop": "रोकें",
   "photoQueued": "कनेक्शन नहीं है। फ़ोटो सहेज ली गई है, इंटरनेट आने पर अपलोड होगी।",
-  "photoStatusWaiting": "कनेक्शन का इंतज़ार"
+  "photoStatusWaiting": "कनेक्शन का इंतज़ार",
+  "voiceTalk": "JAGO से बात करें",
+  "voiceConnecting": "जुड़ रहा है…",
+  "voiceListening": "सुन रहा हूँ। अब बोलिए।",
+  "voiceSpeaking": "JAGO बोल रहा है",
+  "voiceEnd": "समाप्त",
+  "voiceMute": "म्यूट",
+  "voiceUnmute": "अनम्यूट",
+  "voiceYou": "आप",
+  "voiceUnavailable": "अभी आवाज़ से बात नहीं हो सकती। आप JAGO को लिखकर पूछ सकते हैं।"
 }

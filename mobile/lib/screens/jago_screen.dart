@@ -33,6 +33,18 @@ class JagoScreen extends ConsumerWidget {
             Text(l10n.jagoTitle, style: Theme.of(context).textTheme.titleLarge),
           ],
         ),
+        actions: [
+          if (signedIn)
+            IconButton(
+              tooltip: l10n.voiceTalk,
+              icon: const Icon(Icons.graphic_eq_rounded, color: PankhColors.peacockDeep),
+              // The spoken conversation joins JAGO's history, so the chat shows it after.
+              onPressed: () async {
+                await context.push('/voice');
+                ref.invalidate(jagoProvider);
+              },
+            ),
+        ],
       ),
       body: !signedIn
           ? Padding(

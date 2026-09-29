@@ -2,6 +2,9 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <!-- Speaking to JAGO. -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <!-- Live voice with JAGO (LiveKit) -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
     <application
         android:label="Pankh"
         android:name="${applicationName}"

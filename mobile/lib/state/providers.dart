@@ -6,6 +6,7 @@ import '../config.dart';
 import '../data/api.dart';
 import '../data/document_capture.dart';
 import '../data/upload_queue.dart';
+import '../data/voice_line.dart';
 import '../data/local_store.dart';
 import '../data/models.dart';
 
@@ -198,6 +199,9 @@ final uploadsProvider = FutureProvider<List<UploadedDocument>>((ref) async {
 });
 
 final documentCaptureProvider = Provider((ref) => DocumentCapture());
+
+/// Makes a new voice call for each conversation. Overridden in tests.
+final voiceCallFactoryProvider = Provider<VoiceCall Function()>((ref) => LiveKitVoiceCall.new);
 
 /// The account's facilitator registration and the Students it helps. Null when not signed in.
 final facilitatorProvider = FutureProvider.autoDispose<({Json? me, List<dynamic> students})?>((

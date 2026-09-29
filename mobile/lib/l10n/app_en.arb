@@ -459,5 +459,14 @@
   "helpersTitle": "Helping you",
   "helpersStop": "Stop",
   "photoQueued": "No connection. The photo is saved and will upload when you are back online.",
-  "photoStatusWaiting": "Waiting for a connection"
+  "photoStatusWaiting": "Waiting for a connection",
+  "voiceTalk": "Talk to JAGO",
+  "voiceConnecting": "Connecting…",
+  "voiceListening": "Listening. Speak now.",
+  "voiceSpeaking": "JAGO is speaking",
+  "voiceEnd": "End",
+  "voiceMute": "Mute",
+  "voiceUnmute": "Unmute",
+  "voiceYou": "You",
+  "voiceUnavailable": "Voice is not available right now. You can still type to JAGO."
 }

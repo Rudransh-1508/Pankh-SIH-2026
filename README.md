@@ -478,6 +478,16 @@ photograph it in the app. Photos past their retention date are deleted daily by 
 (`uv run --directory backend python -m app.chasing.worker`), or by hand with
 `uv run --directory backend python -m app.documents.retention`.
 
+**Talking to JAGO** needs LiveKit Cloud and Sarvam keys in `backend/.env` (see
+`backend/.env.example`), and the voice agent running beside the API:
+
+```bash
+cd voice && uv run python -m pankh_voice.agent dev
+```
+
+It has its own environment, since LiveKit Agents and OpenFisca need different versions of a shared
+library. In the app, the sound-wave button on the JAGO tab starts a spoken conversation.
+
 **The phone line** (keypad menu, ADR 0013) can be called from a browser at
 `http://localhost:8100/phone`: enter a registered Student's number and press keys, and it reads the
 answers aloud. In production, point an Exotel flow's Gather applet at

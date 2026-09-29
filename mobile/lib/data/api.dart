@@ -193,6 +193,10 @@ class PankhApi {
 
   Future<void> removeHelper(String linkId) => _call(() => _dio.delete('/me/helpers/$linkId'));
 
+  /// A room to talk to JAGO in, with the token to join it.
+  Future<Json> voiceSession(String language) =>
+      _send(() => _dio.post('/me/voice/session', data: {'language': language}));
+
   Future<Json> grievances() => _send(() => _dio.get('/me/grievances'));
 
   Future<Json> fileGrievance(String key, String note) =>

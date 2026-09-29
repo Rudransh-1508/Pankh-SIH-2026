@@ -11,6 +11,7 @@ import 'screens/digilocker_callback_screen.dart';
 import 'screens/discover_screen.dart';
 import 'screens/family_screen.dart';
 import 'screens/help_screen.dart';
+import 'screens/voice_screen.dart';
 import 'screens/letter_screen.dart';
 import 'screens/jago_screen.dart';
 import 'screens/path_screen.dart';
@@ -61,6 +62,7 @@ final routerProvider = Provider((ref) {
       GoRoute(path: '/path', builder: (_, _) => const PathScreen()),
       GoRoute(path: '/family', builder: (_, _) => const FamilyScreen()),
       GoRoute(path: '/help', builder: (_, _) => const HelpScreen()),
+      GoRoute(path: '/voice', builder: (_, _) => const VoiceScreen()),
       GoRoute(
         path: '/letter/:kind',
         builder: (_, state) =>

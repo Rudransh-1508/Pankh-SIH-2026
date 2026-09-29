@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pankh/app.dart';
 import 'package:pankh/data/api.dart';
 import 'package:pankh/data/document_capture.dart';
+import 'package:pankh/data/voice_line.dart';
 import 'package:pankh/data/local_store.dart';
 import 'package:pankh/data/models.dart';
 import 'package:pankh/state/providers.dart';
@@ -55,6 +56,13 @@ class FakeApi extends PankhApi {
     filedGrievances.add(key);
     return {'registration_number': 'MOTRA/E/2026/0000001'};
   }
+
+  @override
+  Future<Json> voiceSession(String language) async => {
+    'url': 'wss://pankh-test.livekit.cloud',
+    'token': 'room-token',
+    'room': 'jago-test',
+  };
 
   /// The facilitator registration, and the Students it helps.
   Json? facilitatorJson;
@@ -215,6 +223,7 @@ Future<(Widget, FakeApi, SharedPreferences)> buildApp({
   String? phone,
   Json? verification,
   DocumentCapture? capture,
+  VoiceCall? voiceCall,
 }) async {
   SharedPreferences.setMockInitialValues({
     if (facts.isNotEmpty) 'facts': jsonEncode(facts),
@@ -227,6 +236,7 @@ Future<(Widget, FakeApi, SharedPreferences)> buildApp({
       sharedPreferencesProvider.overrideWithValue(preferences),
       apiProvider.overrideWithValue(api),
       if (capture != null) documentCaptureProvider.overrideWithValue(capture),
+      if (voiceCall != null) voiceCallFactoryProvider.overrideWithValue(() => voiceCall),
     ],
     child: const PankhApp(),
   );
