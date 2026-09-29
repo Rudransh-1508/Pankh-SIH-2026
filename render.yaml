@@ -1,16 +1,10 @@
-# Pankh on Render (free tier). In Render: New → Blueprint → pick this repository.
-# See deploy/RENDER.md for the steps, and for what the free tier leaves out.
+# Pankh on Render. In Render: New → Blueprint → pick this repository. See deploy/RENDER.md.
+# Everything is on free plans except the voice agent worker (Starter, about $7 a month). The
+# database is a free Neon Postgres, which does not expire; its address is asked for at setup.
 #
 # Services reach each other by their public addresses, which Render derives from the names
 # below. If Render says a name is taken, it adds a suffix: update the addresses marked
 # "public address" in each service's Environment tab to match.
-
-databases:
-  - name: pankh-sih-db
-    plan: free
-    region: singapore
-    databaseName: pankh
-    user: pankh
 
 services:
   - type: web
@@ -29,10 +23,10 @@ services:
     envVars:
       - key: PANKH_ENVIRONMENT
         value: production
+      # A free Neon database's connection string (neon.tech): it does not expire, unlike
+      # Render's free Postgres, which is deleted after 30 days.
       - key: PANKH_DATABASE_URL
-        fromDatabase:
-          name: pankh-sih-db
-          property: connectionString
+        sync: false
       - key: PANKH_SECRET_KEY
         generateValue: true
       - key: PANKH_PHONE_WEBHOOK_TOKEN
@@ -68,13 +62,14 @@ services:
         sync: false
       - key: PANKH_S3_SECRET_ACCESS_KEY
         sync: false
-      # Voice (needs the paid voice worker below) and JAGO on Bedrock: optional
+      # Voice: the LiveKit Cloud project (the voice worker below copies these)
       - key: PANKH_LIVEKIT_URL
         sync: false
       - key: PANKH_LIVEKIT_API_KEY
         sync: false
       - key: PANKH_LIVEKIT_API_SECRET
         sync: false
+      # JAGO on Bedrock: optional
       - key: PANKH_BEDROCK_MODEL_ID
         sync: false
       - key: AWS_ACCESS_KEY_ID
@@ -106,28 +101,36 @@ services:
       - key: PANKH_API_URL
         value: https://pankh-sih-api.onrender.com/v1
 
-  # The voice agent must stay on, which Render only offers on a paid plan (about $7 a month).
-  # To add it, remove the comment marks and redeploy the Blueprint.
-  # - type: worker
-  #   name: pankh-sih-voice
-  #   runtime: docker
-  #   plan: starter
-  #   region: singapore
-  #   dockerfilePath: ./voice/Dockerfile
-  #   dockerContext: ./voice
-  #   envVars:
-  #     - key: PANKH_API_URL
-  #       value: https://pankh-sih-api.onrender.com
-  #     - key: PANKH_VOICE_SERVICE_TOKEN
-  #       fromService:
-  #         name: pankh-sih-api
-  #         type: web
-  #         envVarKey: PANKH_VOICE_SERVICE_TOKEN
-  #     - key: PANKH_SARVAM_API_KEY
-  #       sync: false
-  #     - key: PANKH_LIVEKIT_URL
-  #       sync: false
-  #     - key: PANKH_LIVEKIT_API_KEY
-  #       sync: false
-  #     - key: PANKH_LIVEKIT_API_SECRET
-  #       sync: false
+  # JAGO's voice agent must stay on, which Render offers only on a paid plan.
+  - type: worker
+    name: pankh-sih-voice
+    runtime: docker
+    plan: starter
+    region: singapore
+    dockerfilePath: ./voice/Dockerfile
+    dockerContext: ./voice
+    envVars:
+      - key: PANKH_API_URL
+        value: https://pankh-sih-api.onrender.com
+      - key: PANKH_SARVAM_API_KEY
+        sync: false
+      - key: PANKH_VOICE_SERVICE_TOKEN
+        fromService:
+          name: pankh-sih-api
+          type: web
+          envVarKey: PANKH_VOICE_SERVICE_TOKEN
+      - key: PANKH_LIVEKIT_URL
+        fromService:
+          name: pankh-sih-api
+          type: web
+          envVarKey: PANKH_LIVEKIT_URL
+      - key: PANKH_LIVEKIT_API_KEY
+        fromService:
+          name: pankh-sih-api
+          type: web
+          envVarKey: PANKH_LIVEKIT_API_KEY
+      - key: PANKH_LIVEKIT_API_SECRET
+        fromService:
+          name: pankh-sih-api
+          type: web
+          envVarKey: PANKH_LIVEKIT_API_SECRET

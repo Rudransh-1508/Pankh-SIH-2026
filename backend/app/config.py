@@ -109,11 +109,22 @@ class Settings(BaseSettings):
     @field_validator("database_url")
     @classmethod
     def _use_the_async_driver(cls, url: str) -> str:
-        # Hosts such as Render give "postgres://…" or "postgresql://…"; the API needs asyncpg.
+        # Hosts such as Render and Neon give "postgres://…" or "postgresql://…" with libpq
+        # options; the API's driver, asyncpg, needs its own scheme and spells TLS as "ssl".
         for prefix in ("postgres://", "postgresql://"):
             if url.startswith(prefix):
-                return "postgresql+asyncpg://" + url.removeprefix(prefix)
-        return url
+                url = "postgresql+asyncpg://" + url.removeprefix(prefix)
+        base, _, query = url.partition("?")
+        if not query:
+            return url
+        options = []
+        for option in query.split("&"):
+            name, _, value = option.partition("=")
+            if name == "sslmode":
+                options.append(f"ssl={value}")
+            elif name != "channel_binding":  # not an asyncpg option; TLS still applies
+                options.append(option)
+        return base + ("?" + "&".join(options) if options else "")
 
     @model_validator(mode="after")
     def _public_url_from_host(self) -> "Settings":
