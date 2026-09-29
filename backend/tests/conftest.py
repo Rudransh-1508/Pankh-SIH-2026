@@ -1,9 +1,10 @@
 import os
 
 os.environ["PANKH_ENVIRONMENT"] = "test"
-# Tests never reach a real language model, whatever a local .env configures.
+# Tests never reach a real language model or LiveKit, whatever a local .env configures.
 os.environ["PANKH_BEDROCK_MODEL_ID"] = ""
 os.environ["PANKH_LLM_BASE_URL"] = ""
+os.environ["PANKH_LIVEKIT_URL"] = ""
 os.environ.setdefault(
     "PANKH_DATABASE_URL", "postgresql+asyncpg://pankh:pankh@localhost:5433/pankh_test"
 )

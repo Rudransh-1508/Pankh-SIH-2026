@@ -1,6 +1,9 @@
 import json
 
-from app.jago.llm import ModelTurn, ToolCall
+import httpx
+
+from app.config import get_settings
+from app.jago.llm import ModelTurn, OpenAICompatibleModel, ToolCall
 from app.jago.router import get_model
 from app.main import app
 
@@ -107,6 +110,40 @@ async def test_with_a_model_answers_come_from_tools(client, auth):
     assert "9876543210" not in sent and "uid-" not in sent and "reference_key" not in sent
     assert model.seen[0][0]["role"] == "system"
     assert "never decide eligibility" in model.seen[0][0]["content"]
+
+
+async def test_tool_calls_go_back_to_the_provider_exactly_as_it_sent_them(client, auth):
+    # Gemini attaches a thought signature to each tool call and refuses the next request
+    # without it, so JAGO must not rebuild the call from its name and arguments.
+    signed = {
+        "id": "c1",
+        "type": "function",
+        "function": {"name": "my_eligibility", "arguments": "{}"},
+        "extra_content": {"google": {"thought_signature": "sig"}},
+    }
+    requests: list[dict] = []
+
+    def provider(request: httpx.Request) -> httpx.Response:
+        body = json.loads(request.content)
+        requests.append(body)
+        if body["messages"][-1]["role"] == "user":
+            message = {"role": "assistant", "content": None, "tool_calls": [signed]}
+        else:
+            message = {"role": "assistant", "content": "Checked."}
+        return httpx.Response(200, json={"choices": [{"message": message}]})
+
+    settings = get_settings().model_copy(
+        update={"llm_base_url": "https://llm.test/v1", "llm_model": "m", "llm_api_key": "k"}
+    )
+    http = httpx.AsyncClient(transport=httpx.MockTransport(provider))
+    app.dependency_overrides[get_model] = lambda: OpenAICompatibleModel(settings, http)
+    try:
+        reply = await say(client, auth, "am I eligible for anything?")
+    finally:
+        app.dependency_overrides.pop(get_model, None)
+        await http.aclose()
+    assert reply["text"] == "Checked."
+    assert requests[1]["messages"][-2]["tool_calls"] == [signed]
 
 
 async def test_what_if_questions_are_answered_from_the_planner(client, auth):

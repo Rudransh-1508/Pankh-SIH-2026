@@ -49,8 +49,10 @@ On the server, `nano ~/pankh/deploy/.env`, fill in any of these, and run `bash ~
 
 - **Voice:** `PANKH_SARVAM_API_KEY` and the three `PANKH_LIVEKIT_…` values. The voice agent starts
   once all are set.
-- **JAGO on Bedrock:** `PANKH_BEDROCK_MODEL_ID` (for example `apac.amazon.nova-lite-v1:0`) and an
-  IAM access key allowed only to call Bedrock (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`).
+- **JAGO's language model:** `PANKH_LLM_BASE_URL`, `PANKH_LLM_MODEL` and `PANKH_LLM_API_KEY`
+  (Gemini's values are in `env.example`). Or Bedrock instead: `PANKH_BEDROCK_MODEL_ID` (for example
+  `apac.amazon.nova-lite-v1:0`) and an IAM access key allowed only to call Bedrock
+  (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`).
 
 ## 4. Build the app for it
 

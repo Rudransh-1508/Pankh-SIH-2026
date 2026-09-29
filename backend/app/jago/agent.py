@@ -6,6 +6,7 @@ way every fact in a reply comes from a tool, built on the engines and the Studen
 """
 
 import json
+import logging
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -17,6 +18,8 @@ from app.jago.texts import LANGUAGE_NAMES, SYSTEM_PROMPT, TEXT, WHO
 from app.jago.tools import ToolContext
 from app.jago.understanding import classify, parse_answer
 from app.models import JagoMessage
+
+logger = logging.getLogger(__name__)
 
 MAX_TOOL_ROUNDS = 6
 HISTORY_TURNS = 12
@@ -55,7 +58,8 @@ class Jago:
         if self.model is not None:
             try:
                 reply = await self._with_model(message, history)
-            except ModelUnavailable:
+            except ModelUnavailable as error:
+                logger.warning("Language model unavailable, answering without it: %s", error)
                 reply = await self._grounded(message, history)
         else:
             reply = await self._grounded(message, history)
@@ -381,20 +385,7 @@ class Jago:
             if not turn.tool_calls:
                 reply.text = (turn.text or "").strip() or self.text["unknown"]
                 return reply
-            messages.append(
-                {
-                    "role": "assistant",
-                    "content": turn.text,
-                    "tool_calls": [
-                        {
-                            "id": c.id,
-                            "type": "function",
-                            "function": {"name": c.name, "arguments": json.dumps(c.arguments)},
-                        }
-                        for c in turn.tool_calls
-                    ],
-                }
-            )
+            messages.append(turn.as_message())
             for call in turn.tool_calls:
                 result = await self._tool(reply, call.name, **call.arguments)
                 if call.name == "next_question" and not result.get("done"):

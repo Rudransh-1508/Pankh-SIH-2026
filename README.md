@@ -494,16 +494,18 @@ answers aloud. In production, point an Exotel flow's Gather applet at
 `/v1/phone/exotel/<PANKH_PHONE_WEBHOOK_TOKEN>/gather`.
 
 **JAGO's language model** is optional; without one, JAGO answers from its own understanding. To use
-AWS Bedrock, put this in `backend/.env` (credentials come from the named AWS profile):
+Gemini, put this in `backend/.env` with a key from https://aistudio.google.com/apikey:
 
 ```
-PANKH_BEDROCK_MODEL_ID=apac.amazon.nova-lite-v1:0
-PANKH_AWS_PROFILE=rudoneyet
-PANKH_AWS_REGION=ap-south-1
+PANKH_LLM_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai
+PANKH_LLM_MODEL=gemini-3.5-flash-lite
+PANKH_LLM_API_KEY=
 ```
 
-Any OpenAI-compatible provider works too, with `PANKH_LLM_BASE_URL`, `PANKH_LLM_API_KEY` and
-`PANKH_LLM_MODEL`.
+Any OpenAI-compatible provider works the same way. AWS Bedrock works too, with
+`PANKH_BEDROCK_MODEL_ID` (such as `apac.amazon.nova-lite-v1:0`), `PANKH_AWS_PROFILE` and
+`PANKH_AWS_REGION`; when set, it is used instead. Gemini's free tier may use what it is sent to
+improve Google's products, so use a paid key before real Students' records reach it.
 
 No SMS is sent in development: every sign-in code is written to the API log. The demo officials
 are `+91 90000 00001` (ministry), `…02` (Jharkhand), `…03` (Dumka) and `…04` (Mayurbhanj).

@@ -23,6 +23,26 @@ class ToolCall:
 class ModelTurn:
     text: str | None
     tool_calls: list[ToolCall] = field(default_factory=list)
+    raw: dict[str, Any] | None = None
+    """The assistant message exactly as the provider sent it. Some providers attach data to a
+    tool call (Gemini's thought signatures) and refuse the next request without it."""
+
+    def as_message(self) -> dict[str, Any]:
+        """The turn as an OpenAI-style assistant message, to send back with the tool results."""
+        if self.raw is not None:
+            return self.raw
+        return {
+            "role": "assistant",
+            "content": self.text,
+            "tool_calls": [
+                {
+                    "id": c.id,
+                    "type": "function",
+                    "function": {"name": c.name, "arguments": json.dumps(c.arguments)},
+                }
+                for c in self.tool_calls
+            ],
+        }
 
 
 class ChatModel(Protocol):
@@ -62,6 +82,8 @@ class OpenAICompatibleModel:
                 timeout=60,
             )
             response.raise_for_status()
+        except httpx.HTTPStatusError as error:
+            raise ModelUnavailable(f"{error}: {error.response.text[:500]}") from error
         except httpx.HTTPError as error:
             raise ModelUnavailable(str(error)) from error
         message = response.json()["choices"][0]["message"]
@@ -73,7 +95,7 @@ class OpenAICompatibleModel:
             )
             for call in message.get("tool_calls") or []
         ]
-        return ModelTurn(text=message.get("content"), tool_calls=calls)
+        return ModelTurn(text=message.get("content"), tool_calls=calls, raw=message)
 
 
 class BedrockModel:

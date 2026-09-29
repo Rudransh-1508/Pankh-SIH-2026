@@ -61,8 +61,9 @@ services:
       - key: PANKH_LIVEKIT_API_SECRET
         sync: false
       # Optional, added later in the Environment tab: PANKH_FIREBASE_PROJECT_ID (real SMS
-      # sign-in), and PANKH_BEDROCK_MODEL_ID with AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
-      # (JAGO on Bedrock).
+      # sign-in), and PANKH_LLM_BASE_URL, PANKH_LLM_MODEL and PANKH_LLM_API_KEY (JAGO's model;
+      # Gemini's values are in deploy/env.example), or PANKH_BEDROCK_MODEL_ID with
+      # AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY for Bedrock.
       - key: PANKH_AWS_REGION
         value: ap-south-1
 
