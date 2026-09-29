@@ -1,0 +1,12 @@
+# HTTPS for each public address, with certificates from Let's Encrypt, renewed automatically.
+{$API_DOMAIN} {
+	reverse_proxy api:8000
+}
+
+{$SIM_DOMAIN} {
+	reverse_proxy simulators:8100
+}
+
+{$DASHBOARD_DOMAIN} {
+	reverse_proxy dashboard:3000
+}
