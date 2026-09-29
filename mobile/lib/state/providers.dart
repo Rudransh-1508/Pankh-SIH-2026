@@ -190,6 +190,24 @@ final uploadsProvider = FutureProvider<List<UploadedDocument>>((ref) async {
 
 final documentCaptureProvider = Provider((ref) => DocumentCapture());
 
+/// The account's facilitator registration and the Students it helps. Null when not signed in.
+final facilitatorProvider = FutureProvider.autoDispose<({Json? me, List<dynamic> students})?>((
+  ref,
+) async {
+  if (ref.watch(sessionProvider) == null) return null;
+  final api = ref.read(apiProvider);
+  final me = await api.facilitator();
+  final language = ref.watch(languageProvider).languageCode;
+  final students = me?['status'] == 'approved' ? await api.helpedStudents(language) : const [];
+  return (me: me, students: students);
+});
+
+/// Facilitators helping the signed-in Student.
+final helpersProvider = FutureProvider.autoDispose<List<dynamic>>((ref) async {
+  if (ref.watch(sessionProvider) == null) return const [];
+  return ref.read(apiProvider).helpers();
+});
+
 /// Grievances the Student could file on CPGRAMS, and those filed. Null when not signed in.
 final grievancesProvider = FutureProvider<Json?>((ref) async {
   if (ref.watch(sessionProvider) == null) return null;

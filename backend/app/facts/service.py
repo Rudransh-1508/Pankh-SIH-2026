@@ -21,6 +21,8 @@ class FactSource(StrEnum):
     REVIEWER = "reviewer"
     EDISTRICT = "edistrict"
     APAAR = "apaar"
+    FACILITATOR = "facilitator"
+    """Given by a facilitator helping the Student, with the Student's consent."""
     UPLOADED = "uploaded"
     """Read from a photo the Student uploaded, not yet checked with the issuer."""
 

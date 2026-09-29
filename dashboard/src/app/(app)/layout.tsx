@@ -13,7 +13,12 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const items = [
     { href: "/review", label: "Review queue" },
     { href: "/reminders", label: "Reminders" },
-    ...(official.level === "institute" ? [] : [{ href: "/outreach", label: "Outreach" }]),
+    ...(official.level === "institute"
+      ? []
+      : [
+          { href: "/outreach", label: "Outreach" },
+          { href: "/facilitators", label: "Facilitators" },
+        ]),
     ...(seesCoverage
       ? [
           { href: "/coverage", label: "Coverage" },

@@ -493,3 +493,58 @@ class RuleDraft(CreatedAt, Base):
     decided_by: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("officials.id"))
     note: Mapped[str | None] = mapped_column(Text)
     patch: Mapped[str | None] = mapped_column(Text)
+
+
+class Facilitator(CreatedAt, Base):
+    """A teacher or field worker who helps Students apply, approved by their district office."""
+
+    __tablename__ = "facilitators"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    account_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("students.id", ondelete="CASCADE"), unique=True, nullable=False
+    )
+    """The facilitator's own Pankh account, which they sign in with."""
+    name: Mapped[str] = mapped_column(String(120), nullable=False)
+    organisation: Mapped[str] = mapped_column(String(200), nullable=False)
+    state: Mapped[str] = mapped_column(String(64), nullable=False)
+    district: Mapped[str] = mapped_column(String(64), nullable=False)
+    status: Mapped[str] = mapped_column(
+        String(16), nullable=False, index=True
+    )  # pending | approved | rejected
+    decided_by: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("officials.id"))
+
+
+class FacilitationRequest(CreatedAt, Base):
+    """A consent code sent to a Student's phone. Unlike a sign-in code, it can only link the
+    Student to the one facilitator who asked, never sign anyone in."""
+
+    __tablename__ = "facilitation_requests"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    facilitator_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("facilitators.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    phone: Mapped[str] = mapped_column(String(16), index=True, nullable=False)
+    code_hash: Mapped[str] = mapped_column(String(64), nullable=False)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    attempts: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    consumed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class FacilitatorLink(CreatedAt, Base):
+    """A Student helped by a facilitator, with the Student's consent. Either can end it."""
+
+    __tablename__ = "facilitator_links"
+    __table_args__ = (
+        Index("uq_facilitator_links_pair", "facilitator_id", "student_id", unique=True),
+    )
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    facilitator_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("facilitators.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    student_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("students.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    ended_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))

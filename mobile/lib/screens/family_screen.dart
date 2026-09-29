@@ -48,6 +48,7 @@ class FamilyScreen extends ConsumerWidget {
                     const _AddChild(),
                     const SizedBox(height: PankhSpace.xl),
                     const _ShareCode(),
+                    const _Helpers(),
                     if (guardians.isNotEmpty) ...[
                       const SizedBox(height: PankhSpace.lg),
                       Text(l10n.familyFollowers, style: text.titleMedium),
@@ -264,6 +265,39 @@ class _ShareCodeState extends ConsumerState<_ShareCode> {
             ),
         ],
       ),
+    );
+  }
+}
+
+/// Facilitators helping this Student, who can be stopped at any time.
+class _Helpers extends ConsumerWidget {
+  const _Helpers();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final helpers = ref.watch(helpersProvider).value ?? const [];
+    if (helpers.isEmpty) return const SizedBox.shrink();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const SizedBox(height: PankhSpace.lg),
+        Text(l10n.helpersTitle, style: Theme.of(context).textTheme.titleMedium),
+        for (final helper in helpers.cast<Json>())
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: const Icon(Icons.school_rounded, color: PankhColors.peacock),
+            title: Text(helper['name'] as String),
+            subtitle: Text(helper['organisation'] as String),
+            trailing: TextButton(
+              onPressed: () async {
+                await ref.read(apiProvider).removeHelper(helper['link_id'] as String);
+                ref.invalidate(helpersProvider);
+              },
+              child: Text(l10n.helpersStop),
+            ),
+          ),
+      ],
     );
   }
 }

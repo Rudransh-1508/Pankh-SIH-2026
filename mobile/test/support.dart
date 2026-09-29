@@ -56,6 +56,26 @@ class FakeApi extends PankhApi {
     return {'registration_number': 'MOTRA/E/2026/0000001'};
   }
 
+  /// The facilitator registration, and the Students it helps.
+  Json? facilitatorJson;
+  List<dynamic> helpedJson = const [];
+  final facilitatorAnswers = <Json>[];
+
+  @override
+  Future<Json?> facilitator() async => facilitatorJson;
+
+  @override
+  Future<List<dynamic>> helpedStudents(String language) async => helpedJson;
+
+  @override
+  Future<Json> answerFor(String studentId, Json facts, String language) async {
+    facilitatorAnswers.add(facts);
+    return {};
+  }
+
+  @override
+  Future<List<dynamic>> helpers() async => const [];
+
   /// Letters asked for, and the one returned.
   final letters = <String>[];
 

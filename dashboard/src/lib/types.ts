@@ -146,3 +146,13 @@ export interface RuleDraft {
   note: string | null;
   created_at: string;
 }
+
+export interface Facilitator {
+  id: string;
+  name: string;
+  organisation: string;
+  state: string;
+  district: string;
+  status: "pending" | "approved" | "rejected";
+  phone: string | null;
+}

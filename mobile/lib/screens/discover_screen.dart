@@ -340,6 +340,7 @@ class _AccountButton extends ConsumerWidget {
       itemBuilder: (context) => [
         PopupMenuItem(enabled: false, child: Text(l10n.signedInAs(phone))),
         PopupMenuItem(onTap: () => context.push('/family'), child: Text(l10n.familyMenu)),
+        PopupMenuItem(onTap: () => context.push('/help'), child: Text(l10n.helpMenu)),
         PopupMenuItem(
           onTap: () async {
             await ref.read(sessionProvider.notifier).signOut();

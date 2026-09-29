@@ -161,6 +161,38 @@ class PankhApi {
     () => _dio.get('/me/letters/$kind', queryParameters: {'language': language, ...context}),
   );
 
+  /// The signed-in account's facilitator registration, or null if they have none.
+  Future<Json?> facilitator() async {
+    final data = await _call(() => _dio.get('/me/facilitator'));
+    return data is Json ? data : null;
+  }
+
+  Future<Json> registerFacilitator(Json details) =>
+      _send(() => _dio.post('/me/facilitator', data: details));
+
+  Future<List<dynamic>> helpedStudents(String language) => _sendList(
+    () => _dio.get('/me/facilitator/students', queryParameters: {'language': language}),
+  );
+
+  Future<void> requestConsent(String phone) =>
+      _send(() => _dio.post('/me/facilitator/students', data: {'phone': phone}));
+
+  Future<void> confirmConsent(String phone, String code) => _send(
+    () => _dio.post('/me/facilitator/students/confirm', data: {'phone': phone, 'code': code}),
+  );
+
+  Future<Json> answerFor(String studentId, Json facts, String language) => _send(
+    () => _dio.post(
+      '/me/facilitator/students/$studentId/answers',
+      data: {'facts': facts},
+      queryParameters: {'language': language},
+    ),
+  );
+
+  Future<List<dynamic>> helpers() => _sendList(() => _dio.get('/me/helpers'));
+
+  Future<void> removeHelper(String linkId) => _call(() => _dio.delete('/me/helpers/$linkId'));
+
   Future<Json> grievances() => _send(() => _dio.get('/me/grievances'));
 
   Future<Json> fileGrievance(String key, String note) =>

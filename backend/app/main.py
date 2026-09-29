@@ -9,6 +9,7 @@ from app.config import get_settings
 from app.coverage.router import router as coverage_router
 from app.documents.router import router as documents_router
 from app.eligibility.router import router as eligibility_router
+from app.facilitators.router import router as facilitators_router
 from app.facts.router import router as facts_router
 from app.family.router import router as family_router
 from app.grievance.router import router as grievance_router
@@ -54,6 +55,7 @@ def create_app() -> FastAPI:
         phone_router,
         authoring_router,
         letters_router,
+        facilitators_router,
     ):
         app.include_router(router, prefix="/v1")
 
