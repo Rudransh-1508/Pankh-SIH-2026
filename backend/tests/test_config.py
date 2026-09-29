@@ -18,6 +18,18 @@ def test_neon_urls_keep_tls_in_asyncpgs_spelling():
     )
 
 
+def test_pasted_addresses_lose_quotes_spaces_and_the_psql_command():
+    from app.config import Settings
+
+    clean = "postgresql+asyncpg://u:p@ep-x.aws.neon.tech/neondb?ssl=require"
+    for pasted in (
+        " postgresql://u:p@ep-x.aws.neon.tech/neondb?sslmode=require \n",
+        "'postgresql://u:p@ep-x.aws.neon.tech/neondb?sslmode=require'",
+        "psql 'postgresql://u:p@ep-x.aws.neon.tech/neondb?sslmode=require&channel_binding=require'",
+    ):
+        assert Settings(database_url=pasted).database_url == clean
+
+
 def test_render_gives_the_public_address(monkeypatch):
     from app.config import Settings
 

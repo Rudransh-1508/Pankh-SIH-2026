@@ -111,6 +111,10 @@ class Settings(BaseSettings):
     def _use_the_async_driver(cls, url: str) -> str:
         # Hosts such as Render and Neon give "postgres://…" or "postgresql://…" with libpq
         # options; the API's driver, asyncpg, needs its own scheme and spells TLS as "ssl".
+        # Addresses pasted into a host's settings often keep a psql command or quotes around
+        # them, or a stray space, so those are dropped first.
+        url = url.strip()
+        url = url.removeprefix("psql").strip().strip("'\"").strip()
         for prefix in ("postgres://", "postgresql://"):
             if url.startswith(prefix):
                 url = "postgresql+asyncpg://" + url.removeprefix(prefix)
