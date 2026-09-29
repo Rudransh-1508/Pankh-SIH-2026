@@ -21,6 +21,7 @@ from app.models import Identity, Student, UploadedDocument, VerificationExceptio
 from app.renewal.service import plans
 from app.sources.http import SourceUnavailable
 from app.sources.scholarship_systems import ScholarshipSystemsClient
+from pankh_rules.engine import format_inr
 from pankh_rules.planner import OPPORTUNITIES
 
 
@@ -80,6 +81,36 @@ async def next_question(ctx: ToolContext) -> dict[str, Any]:
         "kind": spec.kind.value,
         "choices": [c.labels.get(ctx.language, c.label) for c in spec.choices],
         "remaining": len(remaining),
+    }
+
+
+def _spoken_answer(spec: pankh_rules.FactSpec, value: Any, language: str) -> str:
+    if spec.kind is pankh_rules.FactKind.BOOLEAN:
+        return {"en": ("yes", "no"), "hi": ("हाँ", "नहीं")}[language][0 if value else 1]
+    if spec.kind is pankh_rules.FactKind.CHOICE:
+        choice = next((c for c in spec.choices if c.key == value), None)
+        return choice.labels.get(language, choice.label) if choice else str(value)
+    if spec.name == "family_income" and isinstance(value, int | float):
+        return format_inr(value)
+    if spec.kind is pankh_rules.FactKind.DATE:
+        return date.fromisoformat(str(value)).strftime("%d/%m/%Y")
+    return f"{value:g}" if isinstance(value, float) else str(value)
+
+
+async def my_answers(ctx: ToolContext) -> dict[str, Any]:
+    """What the Student has told us and what records confirmed, to read back to them."""
+    statuses = await fact_statuses(ctx.session, ctx.student.id)
+    specs = pankh_rules.fact_specs()
+    return {
+        "answers": [
+            {
+                "question": spec.question.get(ctx.language, spec.question["en"]),
+                "answer": _spoken_answer(spec, status.value, ctx.language),
+                "confirmed": status.verified,
+            }
+            for name, status in statuses.items()
+            if (spec := specs.get(name)) is not None
+        ]
     }
 
 
@@ -259,6 +290,11 @@ TOOLS = {
         {},
     ),
     "next_question": (next_question, "The most useful question to ask the Student next.", {}),
+    "my_answers": (
+        my_answers,
+        "Everything the Student has told Pankh, and what records confirmed, to read back.",
+        {},
+    ),
     "record_answer": (
         record_answer,
         "Save the Student's answer to a question about themselves.",

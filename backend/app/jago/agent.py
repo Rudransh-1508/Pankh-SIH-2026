@@ -154,7 +154,15 @@ class Jago:
         question = await self._tool(reply, "next_question")
         if question.get("done"):
             summary = await self._eligibility(Reply(text=""), ask=False)
-            reply.text = " ".join(filter(None, [prefix, self.text["all_answered"], summary.text]))
+            answers = await self._tool(reply, "my_answers")
+            # Read back what was given, so a mistake is caught now, not at verification.
+            read_back = "\n".join(
+                f"- {a['question']} {a['answer']}" for a in answers["answers"] if not a["confirmed"]
+            )
+            parts = [prefix, self.text["all_answered"], summary.text]
+            if read_back:
+                parts.append("\n" + self.text["read_back"] + "\n" + read_back)
+            reply.text = " ".join(filter(None, parts))
             reply.sources = summary.sources
             return reply
         reply.text = " ".join(filter(None, [prefix, question["question"]]))

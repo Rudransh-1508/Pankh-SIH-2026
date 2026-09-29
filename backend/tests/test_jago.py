@@ -131,3 +131,21 @@ async def test_what_if_questions_are_answered_from_the_planner(client, auth):
     assert path["text"].startswith("Your scholarships, stage by stage:")
     assert "Class XII" in path["text"]
     assert "What if I qualify NET?" in path["suggestions"]
+
+
+async def test_intake_reads_the_answers_back_when_done(client, auth):
+    await client.patch(
+        "/v1/me/facts",
+        headers=auth,
+        json={"facts": {"is_scheduled_tribe": True, "education_level": "class_9"}},
+    )
+    reply = await say(client, auth, "Which scholarships can I get?")
+    for _ in range(12):
+        if not reply.get("asking"):
+            break
+        answer = reply["suggestions"][0] if reply["suggestions"] else "120000"
+        reply = await say(client, auth, answer)
+    assert (
+        'Here is what you told me. If anything is wrong, tap "Change my answers"' in reply["text"]
+    )
+    assert "Class IX" in reply["text"]

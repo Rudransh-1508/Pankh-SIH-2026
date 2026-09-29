@@ -438,11 +438,13 @@ These take weeks, so they start before the code needs them:
 
 What is built so far: the rules engine (the five MoTA Schemes and three catalogue Schemes, with
 citations, and the Scheme Path planner), the backend (sign-in, Facts, eligibility, DigiLocker
-verification with signed Proofs, the document agent for photographed Documents, application and
-payment tracking, Reviewer queues, record linkage and coverage, JAGO, the chasing agent on
-Temporal, the Family view), the simulators, the student app (questions, Discover, Scheme Path,
-scheme details, Wallet with document photos, Applications, JAGO by voice or text, reminders,
-Family) and the officials' dashboard.
+and APAAR verification with signed Proofs, the document agent for photographed Documents,
+application and payment tracking, Reviewer queues with the copilot, record linkage and coverage,
+JAGO, the chasing, outreach, renewal, grievance and deficiency agents, the phone line with
+outbound calls, the Family view, facilitators and rule authoring), the simulators, the student
+app (questions, Discover, Scheme Path, scheme details, Wallet with document photos, Applications
+with renewals, complaints and request letters, JAGO by voice or text, reminders, Family, help
+for facilitators) and the officials' dashboard.
 
 **Needs:** Docker, [uv](https://docs.astral.sh/uv/), Flutter 3.38, Node 22.
 
