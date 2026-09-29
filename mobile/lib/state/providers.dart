@@ -190,6 +190,13 @@ final uploadsProvider = FutureProvider<List<UploadedDocument>>((ref) async {
 
 final documentCaptureProvider = Provider((ref) => DocumentCapture());
 
+/// Next year's applications for Schemes held now. Empty when not signed in.
+final renewalsProvider = FutureProvider<List<RenewalPlan>>((ref) async {
+  if (ref.watch(sessionProvider) == null) return const [];
+  ref.watch(verificationProvider);
+  return [for (final r in await ref.read(apiProvider).renewals()) RenewalPlan.fromJson(r as Json)];
+});
+
 /// Applications across NSP, SFMP and the NOS Portal. Null when not signed in.
 final applicationsProvider = FutureProvider<Applications?>((ref) async {
   if (ref.watch(sessionProvider) == null) return null;

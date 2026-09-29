@@ -16,8 +16,9 @@ from app.academic_year import current_academic_year, label
 from app.applications.service import track
 from app.config import Settings
 from app.documents.reading import KIND_NAMES, Kind
-from app.facts.service import FactSource, current_facts, record_facts
+from app.facts.service import FactSource, current_facts, fact_statuses, record_facts
 from app.models import Identity, Student, UploadedDocument, VerificationException
+from app.renewal.service import plans
 from app.sources.http import SourceUnavailable
 from app.sources.scholarship_systems import ScholarshipSystemsClient
 
@@ -163,6 +164,32 @@ async def my_documents(ctx: ToolContext) -> dict[str, Any]:
     }
 
 
+async def my_renewal(ctx: ToolContext) -> dict[str, Any]:
+    try:
+        tracked = await track(
+            ctx.session, ctx.student, ScholarshipSystemsClient(ctx.http, ctx.settings)
+        )
+        applications = tracked.applications
+    except SourceUnavailable:
+        applications = []
+    statuses = await fact_statuses(ctx.session, ctx.student.id)
+    return {
+        "renewals": [
+            {
+                "scheme": p.scheme,
+                "next_year": p.next_year,
+                "income_year": f"{int(p.next_year[:4]) - 1}-{int(p.next_year[:4]) % 100:02d}",
+                "continuing": p.continuing,
+                "apply_fresh_for": p.instead,
+                "to_get_ready": [c.id for c in p.checks if not c.done],
+                "apply_on": p.apply_on,
+                "apply_url": p.apply_url,
+            }
+            for p in plans(applications, statuses)
+        ]
+    }
+
+
 async def scheme_details(ctx: ToolContext, scheme_id: str) -> dict[str, Any]:
     scheme = pankh_rules.SCHEMES.get(scheme_id)
     if scheme is None:
@@ -199,6 +226,11 @@ TOOLS = {
         {},
     ),
     "my_documents": (my_documents, "Problems found with the Student's documents, and the fix.", {}),
+    "my_renewal": (
+        my_renewal,
+        "Next year's application for each Scheme the Student holds, and what to get ready.",
+        {},
+    ),
     "scheme_details": (
         scheme_details,
         "Benefits, how and when to apply for one Scheme.",

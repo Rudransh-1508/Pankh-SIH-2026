@@ -8,6 +8,7 @@ import '../state/providers.dart';
 import '../theme.dart';
 import '../widgets/answer_text.dart';
 import '../widgets/error_view.dart';
+import 'renewal_card.dart';
 
 String rupees(int amount) => '₹ ${indianDigits(amount)}';
 
@@ -88,8 +89,12 @@ class _List extends ConsumerWidget {
         route: '/wallet',
       );
     }
+    final renewals = ref.watch(renewalsProvider).value ?? const [];
     return RefreshIndicator(
-      onRefresh: () async => ref.invalidate(applicationsProvider),
+      onRefresh: () async {
+        ref.invalidate(applicationsProvider);
+        ref.invalidate(renewalsProvider);
+      },
       child: ListView(
         padding: const EdgeInsets.fromLTRB(
           PankhSpace.gutter,
@@ -115,6 +120,17 @@ class _List extends ConsumerWidget {
               padding: const EdgeInsets.only(bottom: PankhSpace.md - 4),
               child: _ApplicationCard(application: application),
             ),
+          if (renewals.isNotEmpty) ...[
+            Padding(
+              padding: const EdgeInsets.only(top: PankhSpace.lg, bottom: PankhSpace.sm + 2),
+              child: Text(l10n.renewHeading, style: text.titleLarge),
+            ),
+            for (final plan in renewals)
+              Padding(
+                padding: const EdgeInsets.only(bottom: PankhSpace.md - 4),
+                child: RenewalCard(plan: plan),
+              ),
+          ],
         ],
       ),
     );

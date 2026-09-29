@@ -58,3 +58,10 @@ def test_ignores_what_is_not_an_answer(fact, text):
 )
 def test_recognises_what_students_ask(text, intent):
     assert classify(text) == intent
+
+
+def test_renewal_questions_are_about_renewal_even_when_they_mention_an_application():
+    from app.jago.understanding import classify
+
+    assert classify("renewal application for next year") == "renewal"
+    assert classify("अगले साल नवीनीकरण") == "renewal"

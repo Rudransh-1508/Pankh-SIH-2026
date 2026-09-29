@@ -130,6 +130,7 @@ class Jago:
             "applications": self._applications,
             "payments": self._payments,
             "documents": self._documents,
+            "renewal": self._renewal,
             "greeting": self._hello,
         }.get(intent, self._unknown)
         return await handler(reply)
@@ -261,6 +262,30 @@ class Jago:
                     line += " " + issue["what_to_do"]
                 lines.append(line)
             reply.text = "\n".join(lines)
+        return reply
+
+    async def _renewal(self, reply: Reply) -> Reply:
+        result = await self._tool(reply, "my_renewal")
+        if not result["renewals"]:
+            reply.text = self.text["renewal_none"]
+            return reply
+        checks = self.text["renewal_checks"]
+        lines = []
+        for plan in result["renewals"]:
+            todo = ", ".join(
+                checks[c].format(income_year=plan["income_year"]) for c in plan["to_get_ready"]
+            )
+            template = "renewal_continue" if plan["continuing"] else "renewal_new"
+            lines.append(
+                self.text[template].format(
+                    scheme=plan["scheme"],
+                    year=plan["next_year"],
+                    instead=plan["apply_fresh_for"] or "",
+                    todo=todo,
+                    apply_on=plan["apply_on"],
+                )
+            )
+        reply.text = "\n".join(lines)
         return reply
 
     async def _scheme(self, reply: Reply, scheme_id: str) -> Reply:

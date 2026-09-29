@@ -319,5 +319,56 @@
         "type": "String"
       }
     }
+  },
+  "renewHeading": "Next year",
+  "renewTitle": "Renew {scheme} for {year}",
+  "@renewTitle": {
+    "placeholders": {
+      "scheme": {
+        "type": "String"
+      },
+      "year": {
+        "type": "String"
+      }
+    }
+  },
+  "renewEnds": "{scheme} ends this year",
+  "@renewEnds": {
+    "placeholders": {
+      "scheme": {
+        "type": "String"
+      }
+    }
+  },
+  "renewInstead": "For {year}, apply fresh for {instead}.",
+  "@renewInstead": {
+    "placeholders": {
+      "year": {
+        "type": "String"
+      },
+      "instead": {
+        "type": "String"
+      }
+    }
+  },
+  "renewGetReady": "Get these ready:",
+  "renewCheckPromoted": "Pass this year's exams or be promoted",
+  "renewCheckIncome": "Income certificate for {year}",
+  "@renewCheckIncome": {
+    "placeholders": {
+      "year": {
+        "type": "String"
+      }
+    }
+  },
+  "renewCheckBank": "Bank account linked to Aadhaar",
+  "renewCheckInstitution": "Admission and institution code for next year",
+  "renewOpen": "Apply on {portal}",
+  "@renewOpen": {
+    "placeholders": {
+      "portal": {
+        "type": "String"
+      }
+    }
   }
 }

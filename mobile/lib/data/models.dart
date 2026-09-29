@@ -547,3 +547,56 @@ class PathStage {
   final bool needsAnswers;
   final List<PathOption> opportunities;
 }
+
+/// One thing to have ready for next year's application.
+class RenewalCheck {
+  const RenewalCheck({required this.id, required this.done});
+
+  factory RenewalCheck.fromJson(Json json) =>
+      RenewalCheck(id: json['id'] as String, done: json['done'] as bool);
+
+  /// promoted | income | bank | institution
+  final String id;
+  final bool done;
+}
+
+/// Next year's application for a Scheme the Student holds now.
+class RenewalPlan {
+  const RenewalPlan({
+    required this.scheme,
+    required this.nextYear,
+    required this.continuing,
+    required this.instead,
+    required this.checks,
+    required this.applyOn,
+    required this.applyUrl,
+  });
+
+  factory RenewalPlan.fromJson(Json json) => RenewalPlan(
+    scheme: json['scheme'] as String,
+    nextYear: json['next_year'] as String,
+    continuing: json['continuing'] as bool,
+    instead: json['instead'] as String?,
+    checks: [for (final c in json['checks'] as List) RenewalCheck.fromJson(c as Json)],
+    applyOn: json['apply_on'] as String,
+    applyUrl: json['apply_url'] as String,
+  );
+
+  final String scheme;
+
+  /// Like "2027-28".
+  final String nextYear;
+
+  /// False when the Scheme ends this year and next year needs a fresh application.
+  final bool continuing;
+  final String? instead;
+  final List<RenewalCheck> checks;
+  final String applyOn;
+  final String applyUrl;
+
+  /// The financial year an income certificate must be for, like "2026-27".
+  String get incomeYear {
+    final start = int.parse(nextYear.substring(0, 4));
+    return '${start - 1}-${(start % 100).toString().padLeft(2, '0')}';
+  }
+}

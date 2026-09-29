@@ -33,6 +33,8 @@ class FactStatus:
     verified: bool
     proof_id: uuid.UUID | None
     recorded_at: datetime
+    expires_at: datetime | None = None
+    """When the Proof behind a verified value expires."""
 
 
 def _stored(value: Any) -> Any:
@@ -59,7 +61,12 @@ async def fact_statuses(session: AsyncSession, student_id: uuid.UUID) -> dict[st
     for record, expires_at in rows:
         verified = record.proof_id is not None and expires_at is not None and expires_at > now
         status = FactStatus(
-            record.value, record.source, verified, record.proof_id, record.recorded_at
+            record.value,
+            record.source,
+            verified,
+            record.proof_id,
+            record.recorded_at,
+            expires_at if verified else None,
         )
         newest.setdefault(record.name, status)
         if verified:

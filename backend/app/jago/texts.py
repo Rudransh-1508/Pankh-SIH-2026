@@ -39,6 +39,15 @@ TEXT = {
         "scheme": "{name}: {summary} You get: {benefits}. Apply on {apply_on}.",
         "when": " When: {when}",
         "unknown": "I can help with scholarships, applications, payments and documents. Try one of these.",
+        "renewal_none": "You do not hold a scholarship this year, so there is nothing to renew. Ask me which scholarships you can get.",
+        "renewal_continue": "To renew {scheme} for {year}, get these ready: {todo}. Apply on {apply_on}.",
+        "renewal_new": "{scheme} ends with this year. For {year}, apply fresh for {instead}. Get these ready: {todo}.",
+        "renewal_checks": {
+            "promoted": "pass this year's exams or be promoted",
+            "income": "an income certificate for {income_year}",
+            "bank": "a bank account linked to Aadhaar",
+            "institution": "your admission and institution code for next year",
+        },
     },
     "hi": {
         "hello": "नमस्ते! मैं JAGO हूँ। मैं बता सकता हूँ कि आपको कौन-सी छात्रवृत्ति मिल सकती है, "
@@ -74,6 +83,15 @@ TEXT = {
         "scheme": "{name}: {summary} आपको मिलेगा: {benefits}। आवेदन: {apply_on}।",
         "when": " कब: {when}",
         "unknown": "मैं छात्रवृत्ति, आवेदन, भुगतान और दस्तावेज़ों में मदद कर सकता हूँ। इनमें से कुछ पूछें।",
+        "renewal_none": "इस साल आपके पास कोई छात्रवृत्ति नहीं है, इसलिए नवीनीकरण की ज़रूरत नहीं। पूछें कि आपको कौन-सी छात्रवृत्ति मिल सकती है।",
+        "renewal_continue": "{year} के लिए {scheme} का नवीनीकरण करने को ये तैयार रखें: {todo}। आवेदन: {apply_on}।",
+        "renewal_new": "{scheme} इसी साल खत्म होती है। {year} के लिए {instead} में नया आवेदन करें। ये तैयार रखें: {todo}।",
+        "renewal_checks": {
+            "promoted": "इस साल की परीक्षा पास करना या अगली कक्षा में जाना",
+            "income": "{income_year} का आय प्रमाण पत्र",
+            "bank": "आधार से जुड़ा बैंक खाता",
+            "institution": "अगले साल का प्रवेश और संस्थान का कोड",
+        },
     },
 }
 

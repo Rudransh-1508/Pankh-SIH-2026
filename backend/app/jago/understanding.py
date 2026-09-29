@@ -192,6 +192,18 @@ def parse_answer(fact: str, text: str) -> Any | None:
 
 _INTENTS = (
     (
+        "renewal",
+        (
+            "renew",
+            "renewal",
+            "next year",
+            "agle saal",
+            "नवीनीकरण",
+            "रिन्यू",
+            "अगले साल",
+        ),
+    ),
+    (
         "payments",
         (
             "payment",
@@ -269,7 +281,8 @@ _SCHEME_NAMES = {
 
 
 def classify(text: str) -> str:
-    """One of: payments, applications, documents, scheme:<id>, eligibility, greeting, unknown.
+    """One of: renewal, payments, applications, documents, scheme:<id>, eligibility, greeting,
+    unknown.
 
     Questions about one's own money, applications or documents come first, so "status of my
     Post-Matric application" is about the application, not about the Scheme.
@@ -282,13 +295,13 @@ def classify(text: str) -> str:
             (cue in words) if " " not in cue and cue.isascii() else (cue in text) for cue in cues
         )
 
-    for intent, cues in _INTENTS[:3]:
+    for intent, cues in _INTENTS[:4]:
         if mentions(cues):
             return intent
     for scheme_id, names in _SCHEME_NAMES.items():
         if any(name in text for name in names):
             return f"scheme:{scheme_id}"
-    for intent, cues in _INTENTS[3:]:
+    for intent, cues in _INTENTS[4:]:
         if mentions(cues):
             return intent
     return "unknown"

@@ -180,5 +180,15 @@
   "photoDeleteConfirm": "यह फ़ोटो हटाएँ? अगर अधिकारी ने अभी तक नहीं देखी है, तो वे इसे नहीं देख पाएँगे।",
   "photoCancel": "रद्द करें",
   "photoPrivacy": "फ़ोटो एन्क्रिप्ट रहती हैं, केवल जाँच करने वाले अधिकारी देखते हैं, और शैक्षणिक वर्ष के बाद हटा दी जाती हैं।",
-  "photoOfficerNote": "अधिकारी की टिप्पणी: {note}"
+  "photoOfficerNote": "अधिकारी की टिप्पणी: {note}",
+  "renewHeading": "अगला साल",
+  "renewTitle": "{year} के लिए {scheme} का नवीनीकरण",
+  "renewEnds": "{scheme} इसी साल खत्म होती है",
+  "renewInstead": "{year} के लिए {instead} में नया आवेदन करें।",
+  "renewGetReady": "ये तैयार रखें:",
+  "renewCheckPromoted": "इस साल की परीक्षा पास करें या अगली कक्षा में जाएँ",
+  "renewCheckIncome": "{year} का आय प्रमाण पत्र",
+  "renewCheckBank": "आधार से जुड़ा बैंक खाता",
+  "renewCheckInstitution": "अगले साल का प्रवेश और संस्थान का कोड",
+  "renewOpen": "आवेदन: {portal}"
 }

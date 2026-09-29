@@ -43,6 +43,12 @@ class FakeApi extends PankhApi {
   @override
   Future<List<dynamic>> reminders() async => const [];
 
+  /// What /me/renewals returns.
+  List<dynamic> renewalsJson = const [];
+
+  @override
+  Future<List<dynamic>> renewals() async => renewalsJson;
+
   @override
   Future<Json> family() async => {
     'children': [

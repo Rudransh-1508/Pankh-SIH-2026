@@ -157,6 +157,8 @@ class PankhApi {
 
   Future<void> deleteUpload(String id) => _call(() => _dio.delete('/me/documents/uploads/$id'));
 
+  Future<List<dynamic>> renewals() => _sendList(() => _dio.get('/me/renewals'));
+
   Future<List<dynamic>> reminders() => _sendList(() => _dio.get('/me/nudges'));
 
   Future<List<dynamic>> jagoConversation() => _sendList(() => _dio.get('/me/jago'));
