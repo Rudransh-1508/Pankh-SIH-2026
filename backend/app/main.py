@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.applications.router import router as applications_router
 from app.auth.router import router as auth_router
+from app.authoring.router import router as authoring_router
 from app.chasing.router import router as chasing_router
 from app.config import get_settings
 from app.coverage.router import router as coverage_router
@@ -50,6 +51,7 @@ def create_app() -> FastAPI:
         renewal_router,
         grievance_router,
         phone_router,
+        authoring_router,
     ):
         app.include_router(router, prefix="/v1")
 

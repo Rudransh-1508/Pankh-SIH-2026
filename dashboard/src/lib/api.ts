@@ -21,7 +21,8 @@ async function call<T>(path: string, init: RequestInit & { token?: string } = {}
     ...rest,
     cache: "no-store",
     headers: {
-      "Content-Type": "application/json",
+      // A FormData body sets its own multipart content type, with the boundary.
+      ...(rest.body instanceof FormData ? {} : { "Content-Type": "application/json" }),
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...rest.headers,
     },
@@ -31,7 +32,9 @@ async function call<T>(path: string, init: RequestInit & { token?: string } = {}
     const detail = typeof body.detail === "string" ? body.detail : `Request failed (${response.status})`;
     throw new ApiError(detail, response.status);
   }
-  return response.status === 204 ? (undefined as T) : ((await response.json()) as T);
+  if (response.status === 204) return undefined as T;
+  const json = response.headers.get("content-type")?.includes("application/json");
+  return (json ? await response.json() : await response.text()) as T;
 }
 
 /** An API call as the signed-in official. Sends them to sign in if their session has ended. */

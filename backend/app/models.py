@@ -463,3 +463,33 @@ class PhoneCall(CreatedAt, Base):
     )
     topic: Mapped[str | None] = mapped_column(String(16))
     """For a call Pankh places: what it is about (payments, applications or documents)."""
+
+
+class RuleDraft(CreatedAt, Base):
+    """A figure found in a new Guideline, set against the Parameter it would change.
+
+    Drafts change nothing: an approved draft yields the new Parameter file, which is reviewed
+    and tested like any other code before it takes effect.
+    """
+
+    __tablename__ = "rule_drafts"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    created_by: Mapped[uuid.UUID] = mapped_column(ForeignKey("officials.id"), nullable=False)
+    scheme_id: Mapped[str] = mapped_column(String(32), nullable=False)
+    parameter: Mapped[str] = mapped_column(String(100), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False)
+    unit: Mapped[str] = mapped_column(String(32), nullable=False)
+    current_value: Mapped[float] = mapped_column(Float, nullable=False)
+    found_value: Mapped[float] = mapped_column(Float, nullable=False)
+    source_title: Mapped[str] = mapped_column(String(200), nullable=False)
+    source_sha256: Mapped[str] = mapped_column(String(64), nullable=False)
+    page: Mapped[int] = mapped_column(Integer, nullable=False)
+    excerpt: Mapped[str] = mapped_column(Text, nullable=False)
+    status: Mapped[str] = mapped_column(
+        String(16), nullable=False, index=True
+    )  # proposed | matches | approved | rejected
+    effective_from: Mapped[date | None] = mapped_column(Date)
+    decided_by: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("officials.id"))
+    note: Mapped[str | None] = mapped_column(Text)
+    patch: Mapped[str | None] = mapped_column(Text)

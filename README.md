@@ -206,7 +206,7 @@ flowchart TB
   - **What-if answers:** the smallest change of Facts that would flip a failing Rule.
   - **The Scheme Path planner:** searches sequences of schemes across the student's future years under the Exclusivity Rule, ranked by total benefit and likelihood.
 - **Source material:** the official Guidelines, amendments, income revisions, fellowship rate revisions and the Top Class institute list published on [tribal.nic.in](https://tribal.nic.in/ScholarshiP.aspx). Catalogue Schemes are curated by hand in the same format.
-- **Rule authoring tool:** an AI drafts Rules from a Guideline PDF, a person approves each Rule against its cited page and paragraph, and nothing goes live without sign-off.
+- **Rule authoring tool:** Pankh reads a new Guideline PDF, finds the figures Rules depend on (income ceilings, minimum marks, age limits) with the sentence each came from, and sets them against the Parameters in force. A ministry official approves each change against its cited page; an approved change becomes a new Parameter file that is reviewed and tested like code before it goes live. Drafting is pattern-based today, so it never invents a figure; a language model can later widen what it finds, with every figure still required to appear in the cited text.
 - **Versioning:** Rule Versions are keyed by academic year, with effective dates for each amendment.
 
 ### 6.2 Verification layer
@@ -301,7 +301,7 @@ JAGO is the only door the student sees. Behind it, each agent has one job, a fix
 - **Coverage map:** Unreached Students by state, district and school, next to official beneficiary and fund figures.
 - **Pipeline health:** how long each Verification Level takes, where Applications stall, and why Instalments fail.
 - **Outreach console:** start and track campaigns for Unreached Students.
-- **Rule authoring:** review AI-drafted Rules from new Guidelines and approve them against their cited paragraphs.
+- **Rule authoring:** check a new Guideline against the Rules, and approve each drafted change against its cited sentence.
 
 ---
 

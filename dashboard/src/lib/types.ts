@@ -128,3 +128,21 @@ export interface Campaign {
   preview: { to: "school" | "family"; school: string | null; students: number; text: string }[];
   skipped_recent: number;
 }
+
+export interface RuleDraft {
+  id: string;
+  scheme_id: string;
+  scheme: string;
+  parameter: string;
+  description: string;
+  unit: "currency-INR" | "percent" | "year" | string;
+  current_value: number;
+  found_value: number;
+  source_title: string;
+  page: number;
+  excerpt: string;
+  status: "proposed" | "matches" | "approved" | "rejected";
+  effective_from: string | null;
+  note: string | null;
+  created_at: string;
+}
