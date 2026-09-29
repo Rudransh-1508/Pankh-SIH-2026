@@ -20,6 +20,7 @@ dependencies = [
     "splink>=5.0.0",
     "temporalio>=1.33.0",
     "boto3>=1.43.104",
+    "pdfplumber>=0.11",
 ]
 
 [dependency-groups]
