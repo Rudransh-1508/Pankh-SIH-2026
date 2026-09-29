@@ -141,3 +141,35 @@ async def test_expired_or_foreign_digilocker_state_is_refused(client, auth):
         "/v1/me/digilocker/complete", headers=auth, json={"code": "x", "state": "never-started"}
     )
     assert response.status_code == 409
+
+
+async def test_linking_digilocker_brings_course_and_marks_from_apaar(
+    client, sign_in, link_digilocker
+):
+    from pankh_simulators.population import population
+
+    # P00008 is a postgraduate student whose APAAR record holds their Bachelor's result.
+    person = population().by_id("P00008")
+    tokens = await sign_in(f"+91{person.phone}")
+    auth = {"Authorization": f"Bearer {tokens['access_token']}"}
+    linked = await link_digilocker(auth, person)
+    assert "APAAR ID" in [d["name"] for d in linked["documents"]]
+
+    facts = (await client.get("/v1/me/verification", headers=auth)).json()["facts"]
+    assert facts["education_level"] == {
+        "value": "postgraduate",
+        "source": "apaar",
+        "verified": True,
+        "proof_id": facts["education_level"]["proof_id"],
+    }
+    assert facts["bachelors_marks_percent"]["value"] == person.bachelors_percent
+    assert facts["institution_recognised"]["verified"] is True
+    # JAGO does not ask for what APAAR already confirmed.
+    question = (
+        await client.post(
+            "/v1/me/jago",
+            headers=auth,
+            json={"message": "which scholarships can i get", "language": "en"},
+        )
+    ).json()
+    assert question.get("asking") not in ("education_level", "bachelors_marks_percent")

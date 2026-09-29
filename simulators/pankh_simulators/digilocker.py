@@ -77,6 +77,8 @@ def _doc_types(person: Person) -> list[tuple[str, str, str, str]]:
                 f"{person.state.name} Board of Secondary Education",
             )
         )
+    if person.institution is not None:
+        docs.append(("APAAR", "APAAR ID", "in.gov.apaar", "Ministry of Education (APAAR)"))
     if person.net_result:
         docs.append(("NETSC", "UGC NET Scorecard", "in.gov.nta", "National Testing Agency"))
     if person.disability_percent:
@@ -300,6 +302,8 @@ def _certificate(
                 "category": person.net_result or "",
             },
         )
+    elif doctype == "APAAR":
+        data = ("Identity", {"apaarId": person.apaar_id})
     elif doctype == "UDIDC":
         data = ("Disability", {"percentage": str(person.disability_percent), "udid": number})
 

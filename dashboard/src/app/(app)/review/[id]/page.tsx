@@ -17,6 +17,7 @@ const SOURCES: Record<string, string> = {
   nta: "NTA",
   npci: "NPCI",
   edistrict: "e-District",
+  apaar: "APAAR",
   uploaded: "student's photo",
 };
 

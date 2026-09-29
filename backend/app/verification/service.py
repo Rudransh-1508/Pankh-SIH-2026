@@ -4,6 +4,7 @@ Nothing here ever blocks a Student. A Fact that cannot be confirmed is still rec
 given, and an Exception explains what is wrong, how to fix it, and goes to a Reviewer.
 """
 
+import contextlib
 import hashlib
 import uuid
 from dataclasses import dataclass, field
@@ -13,6 +14,7 @@ from typing import Any
 from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+import pankh_rules
 from app.academic_year import current_academic_year, label
 from app.config import Settings
 from app.facts.service import FactSource, fact_statuses, record_facts
@@ -26,6 +28,7 @@ from app.models import (
     VerificationException,
 )
 from app.sources.digilocker import DigiLockerAccount, DigiLockerClient
+from app.sources.http import SourceUnavailable
 from app.sources.registers import RegistersClient
 from app.verification import proofs
 from app.verification.certificates import (
@@ -37,7 +40,10 @@ from app.verification.names import match_names
 from pankh_rules.engine import format_inr
 
 DIGILOCKER_REQUEST_TTL = timedelta(minutes=15)
-READ_DOCTYPES = ("ADHAR", "CSCER", "INCER", "SSCER", "NETSC")
+READ_DOCTYPES = ("ADHAR", "CSCER", "INCER", "SSCER", "NETSC", "APAAR")
+
+# APAAR results, by the Fact each proves.
+APAAR_RESULTS = {"bachelors": "bachelors_marks_percent", "masters": "masters_marks_percent"}
 
 
 class VerificationError(Exception):
@@ -114,7 +120,10 @@ class Verifier:
                 continue
             xml = await self.digilocker.document_xml(account.access_token, document.uri)
             result.documents.append(await self._remember_document(student, document, xml))
-            await self._verify_certificate(student, account, document.uri, xml, result)
+            if document.doctype == "APAAR":
+                await self._pull_apaar(student, account, xml, result)
+            else:
+                await self._verify_certificate(student, account, document.uri, xml, result)
         await self.session.flush()
         return result
 
@@ -245,6 +254,53 @@ class Verifier:
             await record_facts(
                 self.session, student.id, {fact_name: value}, FactSource.DIGILOCKER, proof.id
             )
+
+    async def _pull_apaar(
+        self, student: Student, account: DigiLockerAccount, xml: str, result: LinkResult
+    ) -> None:
+        """Take the course and results APAAR holds, so the Student is not asked for them."""
+        try:
+            apaar_id = parse_certificate(xml).data.get("apaarId")
+        except CertificateError:
+            return
+        if not apaar_id:
+            return
+        try:
+            record = await self.registers.apaar_student(apaar_id)
+        except SourceUnavailable:
+            return
+        if record is None or not match_names(record["name"], account.name).is_match:
+            return
+        facts: dict[str, Any] = {}
+        enrolment = record.get("current_enrolment") or {}
+        levels = {c.key for c in pankh_rules.fact_specs()["education_level"].choices}
+        if enrolment.get("level") in levels:
+            facts["education_level"] = enrolment["level"]
+        for entry in record.get("results", []):
+            if entry["level"] in APAAR_RESULTS and entry.get("percentage") is not None:
+                facts[APAAR_RESULTS[entry["level"]]] = float(entry["percentage"])
+        evidence = {"uri": f"apaar:{apaar_id}", "doctype": "APAAR", "issuer": "APAAR"}
+        await self._flag_conflicts(student, facts, evidence)
+        for fact_name, value in facts.items():
+            proof = self._proof(
+                student,
+                fact_name,
+                value,
+                source="apaar",
+                issuer="APAAR, Ministry of Education",
+                evidence=apaar_id,
+                match={"name_score": match_names(record["name"], account.name).score},
+                expires_at=_session_end(self.academic_year),
+            )
+            result.proofs.append(proof)
+            await self.session.flush()
+            await record_facts(
+                self.session, student.id, {fact_name: value}, FactSource.APAAR, proof.id
+            )
+        if code := enrolment.get("institution_code"):
+            # An institution no register knows is left for the Student to confirm.
+            with contextlib.suppress(VerificationError):
+                result.proofs += await self.verify_institution(student, code)
 
     async def _flag_conflicts(
         self, student: Student, confirmed: dict[str, Any], evidence: dict[str, Any]
@@ -492,6 +548,7 @@ _DOCUMENT_NAMES = {
     "INCER": "income certificate",
     "SSCER": "Class X marksheet",
     "NETSC": "NET scorecard",
+    "APAAR": "APAAR record",
 }
 
 

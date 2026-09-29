@@ -20,6 +20,7 @@ class FactSource(StrEnum):
     NPCI = "npci"
     REVIEWER = "reviewer"
     EDISTRICT = "edistrict"
+    APAAR = "apaar"
     UPLOADED = "uploaded"
     """Read from a photo the Student uploaded, not yet checked with the issuer."""
 
