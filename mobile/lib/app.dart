@@ -123,6 +123,10 @@ class _Tabs extends StatelessWidget {
             shell.goBranch(index, initialLocation: index == shell.currentIndex),
         backgroundColor: PankhColors.card,
         indicatorColor: PankhColors.peacockMist,
+        // Four labels share a phone's width, and some languages need more letters than English.
+        labelTextStyle: WidgetStatePropertyAll(
+          Theme.of(context).textTheme.labelMedium?.copyWith(fontSize: 12),
+        ),
         destinations: [
           NavigationDestination(
             icon: const Icon(Icons.school_outlined),

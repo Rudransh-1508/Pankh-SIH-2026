@@ -86,6 +86,7 @@ class _ConversationState extends ConsumerState<_Conversation> {
   bool _listening = false;
   int? _speaking;
   bool _fetchingSpeech = false;
+  bool _openedAtLatest = false;
 
   @override
   void dispose() {
@@ -118,17 +119,17 @@ class _ConversationState extends ConsumerState<_Conversation> {
     }
   }
 
-  void _scrollToEnd() {
+  void _scrollToEnd({bool animate = true}) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scroll.hasClients) {
-        unawaited(
-          _scroll.animateTo(
-            _scroll.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 250),
-            curve: Curves.easeOut,
-          ),
-        );
+      if (!_scroll.hasClients) return;
+      final end = _scroll.position.maxScrollExtent;
+      if (!animate) {
+        _scroll.jumpTo(end);
+        return;
       }
+      unawaited(
+        _scroll.animateTo(end, duration: const Duration(milliseconds: 250), curve: Curves.easeOut),
+      );
     });
   }
 
@@ -221,6 +222,11 @@ class _ConversationState extends ConsumerState<_Conversation> {
       error: (error, _) => ErrorView(error: error, onRetry: () => ref.invalidate(jagoProvider)),
       loading: () => const Center(child: CircularProgressIndicator()),
       data: (messages) {
+        // Open where the conversation left off, not at its first message.
+        if (!_openedAtLatest && messages.isNotEmpty) {
+          _openedAtLatest = true;
+          _scrollToEnd(animate: false);
+        }
         final suggestions = messages.isEmpty
             ? _starterSuggestions(l10n)
             : (messages.last.fromStudent ? const <String>[] : messages.last.suggestions);
