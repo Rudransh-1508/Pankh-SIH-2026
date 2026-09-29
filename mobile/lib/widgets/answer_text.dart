@@ -37,5 +37,8 @@ String sourceName(String source) => switch (source) {
   'udise' => 'UDISE+',
   'nta' => 'National Testing Agency',
   'npci' => 'NPCI',
+  'edistrict' => 'e-District',
+  'reviewer' => 'an officer',
+  'uploaded' => 'your photo',
   _ => source,
 };

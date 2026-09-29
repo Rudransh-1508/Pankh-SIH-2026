@@ -10,8 +10,10 @@ import '../state/providers.dart';
 import '../theme.dart';
 import '../widgets/answer_text.dart';
 import '../widgets/error_view.dart';
+import 'wallet_uploads.dart';
 
-/// Documents from DigiLocker, what they confirm, and what still needs attention.
+/// Documents from DigiLocker and photographed ones, what they confirm, and what still needs
+/// attention.
 class WalletScreen extends ConsumerWidget {
   const WalletScreen({super.key});
 
@@ -70,7 +72,10 @@ class _Wallet extends ConsumerWidget {
     ];
 
     return RefreshIndicator(
-      onRefresh: () async => ref.invalidate(verificationProvider),
+      onRefresh: () async {
+        ref.invalidate(verificationProvider);
+        ref.invalidate(uploadsProvider);
+      },
       child: ListView(
         padding: const EdgeInsets.fromLTRB(
           PankhSpace.gutter,
@@ -113,6 +118,7 @@ class _Wallet extends ConsumerWidget {
                 subtitle: Text(document.issuer, style: text.bodySmall),
               ),
           ],
+          const PhotoSection(),
           _Heading(l10n.confirmMore),
           _CheckField(
             label: l10n.institutionCode,

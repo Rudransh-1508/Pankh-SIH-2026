@@ -42,3 +42,9 @@ android {
 flutter {
     source = "../.."
 }
+
+dependencies {
+    // On-device text recognition for Hindi and other Devanagari documents. The Latin model
+    // comes with google_mlkit_text_recognition; other scripts must be added by the app.
+    implementation("com.google.mlkit:text-recognition-devanagari:16.0.1")
+}

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 
@@ -116,6 +117,45 @@ class PankhApi {
       _send(() => _dio.post('/me/family/accept', data: {'code': code}));
 
   Future<void> endFamilyLink(String linkId) => _call(() => _dio.delete('/me/family/$linkId'));
+
+  /// Uploads a photo of a Document with the text the phone read from it.
+  Future<Json> uploadDocument({
+    required String kind,
+    required String path,
+    required String contentType,
+    required String text,
+  }) async {
+    final form = FormData.fromMap({
+      'kind': kind,
+      'text': text,
+      'file': await MultipartFile.fromFile(
+        path,
+        filename: path.split('/').last,
+        contentType: DioMediaType.parse(contentType),
+      ),
+    });
+    return _send(
+      () => _dio.post(
+        '/me/documents/uploads',
+        data: form,
+        options: Options(sendTimeout: const Duration(minutes: 2)),
+      ),
+    );
+  }
+
+  Future<List<dynamic>> uploads() => _sendList(() => _dio.get('/me/documents/uploads'));
+
+  /// The photo itself, fetched through a link that expires in minutes. It is never cached.
+  Future<Uint8List> uploadPhoto(String id) async {
+    final link = await _send(() => _dio.get('/me/documents/uploads/$id/link'));
+    final path = (link['url'] as String).replaceFirst('/v1', '');
+    final bytes = await _call(
+      () => _dio.get<List<int>>(path, options: Options(responseType: ResponseType.bytes)),
+    );
+    return Uint8List.fromList(bytes as List<int>);
+  }
+
+  Future<void> deleteUpload(String id) => _call(() => _dio.delete('/me/documents/uploads/$id'));
 
   Future<List<dynamic>> reminders() => _sendList(() => _dio.get('/me/nudges'));
 

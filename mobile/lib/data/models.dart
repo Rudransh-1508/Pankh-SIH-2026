@@ -228,6 +228,63 @@ class DocumentRef {
   final String issuer;
 }
 
+/// A photo of a Document the Student uploaded, and what became of it.
+class UploadedDocument {
+  const UploadedDocument({
+    required this.id,
+    required this.kind,
+    required this.status,
+    required this.fields,
+    this.message,
+    this.remedy,
+    this.reviewerNote,
+  });
+
+  factory UploadedDocument.fromJson(Json json) => UploadedDocument(
+    id: json['id'] as String,
+    kind: json['kind'] as String,
+    status: json['status'] as String,
+    fields: json['fields'] as Json,
+    message: json['message'] as String?,
+    remedy: json['remedy'] as String?,
+    reviewerNote: json['reviewer_note'] as String?,
+  );
+
+  final String id;
+  final String kind;
+
+  /// verified | with_reviewer | accepted | rejected
+  final String status;
+  final Json fields;
+  final String? message;
+  final String? remedy;
+  final String? reviewerNote;
+}
+
+/// What happened to one upload: confirmed, sent to an officer, or not readable.
+class UploadOutcome {
+  const UploadOutcome({
+    required this.readable,
+    required this.message,
+    required this.problems,
+    required this.document,
+  });
+
+  factory UploadOutcome.fromJson(Json json) => UploadOutcome(
+    readable: json['readable'] as bool,
+    message: json['message'] as String,
+    problems: [for (final p in json['problems'] as List) p as String],
+    document: json['document'] == null ? null : UploadedDocument.fromJson(json['document'] as Json),
+  );
+
+  final bool readable;
+  final String message;
+  final List<String> problems;
+  final UploadedDocument? document;
+
+  bool get verified => document?.status == 'verified';
+}
+
 class VerificationIssue {
   const VerificationIssue({
     required this.factName,

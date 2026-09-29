@@ -286,5 +286,38 @@
         "type": "int"
       }
     }
+  },
+  "photoTitle": "Photograph a document",
+  "photoIntro": "No digital copy? Take a photo. We read it on your phone and check it with the office that issued it.",
+  "photoKindCaste": "Caste certificate",
+  "photoKindIncome": "Income certificate",
+  "photoKindBachelors": "Bachelor's marksheet",
+  "photoKindMasters": "Master's marksheet",
+  "photoCamera": "Take a photo",
+  "photoGallery": "Choose from gallery",
+  "photoReading": "Reading your document…",
+  "photoChecking": "Checking it…",
+  "photoVerifiedTitle": "Confirmed",
+  "photoReviewerTitle": "Sent to an officer",
+  "photoUnreadableTitle": "We could not read it",
+  "photoRetake": "Take it again",
+  "photoDone": "Done",
+  "photoYours": "Your photos",
+  "photoStatusVerified": "Confirmed",
+  "photoStatusWithReviewer": "With an officer",
+  "photoStatusAccepted": "Accepted by an officer",
+  "photoStatusRejected": "Returned to you",
+  "photoView": "View photo",
+  "photoDelete": "Delete photo",
+  "photoDeleteConfirm": "Delete this photo? If an officer has not checked it yet, they will not see it.",
+  "photoCancel": "Cancel",
+  "photoPrivacy": "Photos are encrypted, seen only by the officer who checks them, and deleted after the academic year.",
+  "photoOfficerNote": "Officer's note: {note}",
+  "@photoOfficerNote": {
+    "placeholders": {
+      "note": {
+        "type": "String"
+      }
+    }
   }
 }

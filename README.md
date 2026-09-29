@@ -436,10 +436,13 @@ These take weeks, so they start before the code needs them:
 
 ## 17. Running it locally
 
-What is built so far: the rules engine (all five MoTA Schemes, with citations), the backend
-(sign-in, Facts, eligibility, DigiLocker verification with signed Proofs, application and
-payment tracking, Reviewer queues, record linkage and coverage), the simulators, the student
-app (questions, Discover, scheme details, Wallet, Applications) and the officials' dashboard.
+What is built so far: the rules engine (the five MoTA Schemes and three catalogue Schemes, with
+citations, and the Scheme Path planner), the backend (sign-in, Facts, eligibility, DigiLocker
+verification with signed Proofs, the document agent for photographed Documents, application and
+payment tracking, Reviewer queues, record linkage and coverage, JAGO, the chasing agent on
+Temporal, the Family view), the simulators, the student app (questions, Discover, Scheme Path,
+scheme details, Wallet with document photos, Applications, JAGO by voice or text, reminders,
+Family) and the officials' dashboard.
 
 **Needs:** Docker, [uv](https://docs.astral.sh/uv/), Flutter 3.38, Node 22.
 
@@ -463,6 +466,14 @@ cd dashboard && npm ci && npm run dev
 adb reverse tcp:8000 tcp:8000 && adb reverse tcp:8100 tcp:8100
 cd mobile && flutter run --dart-define=PANKH_API_URL=http://localhost:8000
 ```
+
+**Photographed Documents** are stored encrypted in `backend/var/objects` by default. To use the
+S3-compatible store in the compose file instead, start the API with `PANKH_OBJECT_STORE=s3
+PANKH_S3_ENDPOINT_URL=http://localhost:8333 PANKH_S3_ACCESS_KEY_ID=pankh
+PANKH_S3_SECRET_ACCESS_KEY=pankh-s3-secret`. To try the document agent, open a synthetic
+person's paper certificate at `http://localhost:8100/paper/<phone>/caste` (or `/income`) and
+photograph it in the app. Photos past their retention date are deleted by
+`uv run --directory backend python -m app.documents.retention`, run daily.
 
 No SMS is sent in development: every sign-in code is written to the API log. The demo officials
 are `+91 90000 00001` (ministry), `…02` (Jharkhand), `…03` (Dumka) and `…04` (Mayurbhanj).

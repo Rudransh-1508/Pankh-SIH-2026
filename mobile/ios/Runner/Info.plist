@@ -4,6 +4,10 @@
 <dict>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Pankh listens when you speak a question to JAGO.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Pankh photographs a certificate or marksheet you want checked.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Pankh uses a photo of a certificate or marksheet you choose.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Pankh turns your spoken question to JAGO into text.</string>
 	<key>CFBundleURLTypes</key>

@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../config.dart';
 import '../data/api.dart';
+import '../data/document_capture.dart';
 import '../data/local_store.dart';
 import '../data/models.dart';
 
@@ -178,6 +179,16 @@ final verificationProvider = FutureProvider<Verification?>((ref) async {
   if (ref.watch(sessionProvider) == null) return null;
   return Verification.fromJson(await ref.read(apiProvider).verification());
 });
+
+/// The Student's uploaded Document photos. Empty when not signed in.
+final uploadsProvider = FutureProvider<List<UploadedDocument>>((ref) async {
+  if (ref.watch(sessionProvider) == null) return const [];
+  return [
+    for (final d in await ref.read(apiProvider).uploads()) UploadedDocument.fromJson(d as Json),
+  ];
+});
+
+final documentCaptureProvider = Provider((ref) => DocumentCapture());
 
 /// Applications across NSP, SFMP and the NOS Portal. Null when not signed in.
 final applicationsProvider = FutureProvider<Applications?>((ref) async {

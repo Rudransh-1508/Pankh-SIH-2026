@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pankh/app.dart';
 import 'package:pankh/data/api.dart';
+import 'package:pankh/data/document_capture.dart';
 import 'package:pankh/data/local_store.dart';
 import 'package:pankh/data/models.dart';
 import 'package:pankh/state/providers.dart';
@@ -69,6 +70,30 @@ class FakeApi extends PankhApi {
   @override
   Future<String> familyInvite() async => 'ABCD 2345';
 
+  /// What /me/documents/uploads returns, and what the next upload is answered with.
+  final uploadsJson = <Json>[];
+  Json? nextUploadOutcome;
+  final uploadedTexts = <String>[];
+
+  @override
+  Future<List<dynamic>> uploads() async => uploadsJson;
+
+  @override
+  Future<Json> uploadDocument({
+    required String kind,
+    required String path,
+    required String contentType,
+    required String text,
+  }) async {
+    uploadedTexts.add(text);
+    final outcome = nextUploadOutcome!;
+    if (outcome['document'] case final Json document) uploadsJson.insert(0, document);
+    return outcome;
+  }
+
+  @override
+  Future<void> deleteUpload(String id) async => uploadsJson.removeWhere((d) => d['id'] == id);
+
   @override
   Future<Json> schemePath(Json facts) async => fixture('scheme_path') as Json;
 
@@ -131,6 +156,7 @@ Future<(Widget, FakeApi, SharedPreferences)> buildApp({
   Json facts = const {},
   String? phone,
   Json? verification,
+  DocumentCapture? capture,
 }) async {
   SharedPreferences.setMockInitialValues({
     if (facts.isNotEmpty) 'facts': jsonEncode(facts),
@@ -142,8 +168,20 @@ Future<(Widget, FakeApi, SharedPreferences)> buildApp({
     overrides: [
       sharedPreferencesProvider.overrideWithValue(preferences),
       apiProvider.overrideWithValue(api),
+      if (capture != null) documentCaptureProvider.overrideWithValue(capture),
     ],
     child: const PankhApp(),
   );
   return (app, api, preferences);
+}
+
+/// Stands in for the camera and on-device text recognition.
+class FakeCapture extends DocumentCapture {
+  FakeCapture(this.text);
+
+  final String text;
+
+  @override
+  Future<CapturedDocument?> capture({required bool fromCamera}) async =>
+      CapturedDocument(path: '/tmp/photo.jpg', contentType: 'image/jpeg', text: text);
 }
