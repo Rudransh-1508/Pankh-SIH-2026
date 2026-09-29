@@ -241,5 +241,8 @@
   "jagoMic": "Speak your question",
   "jagoSignIn": "Sign in with your mobile number to talk to JAGO about your scholarships.",
   "jagoNoMic": "Voice input is not available on this phone. Please type.",
-  "jagoIntro": "Ask about scholarships, your applications, payments or documents. You can speak in Hindi or English."
+  "jagoIntro": "Ask about scholarships, your applications, payments or documents. You can speak in Hindi or English.",
+  "remindersTitle": "Reminders",
+  "remindersNone": "No reminders. We tell you here when something needs your attention.",
+  "remindersOpen": "Open reminders"
 }

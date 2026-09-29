@@ -85,3 +85,14 @@ export interface Rules {
     rules: { id: string; title: string; citation: Citation }[];
   }[];
 }
+
+export interface Reminder {
+  id: string;
+  kind: string;
+  message: string;
+  level: Level | null;
+  district: string | null;
+  state: string | null;
+  status: "proposed" | "sent" | "dismissed";
+  created_at: string;
+}

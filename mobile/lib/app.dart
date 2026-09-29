@@ -11,6 +11,7 @@ import 'screens/digilocker_callback_screen.dart';
 import 'screens/discover_screen.dart';
 import 'screens/jago_screen.dart';
 import 'screens/questions_screen.dart';
+import 'screens/reminders_screen.dart';
 import 'screens/scheme_screen.dart';
 import 'screens/sign_in_screens.dart';
 import 'screens/wallet_screen.dart';
@@ -52,6 +53,7 @@ final routerProvider = Provider((ref) {
         ],
       ),
       GoRoute(path: '/answers', builder: (_, _) => const AnswersScreen()),
+      GoRoute(path: '/reminders', builder: (_, _) => const RemindersScreen()),
       // DigiLocker returns to pankh://digilocker/callback; the router sees the path.
       GoRoute(
         path: '/callback',

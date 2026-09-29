@@ -214,3 +214,12 @@ class JagoController extends AsyncNotifier<List<ChatMessage>> {
 }
 
 final jagoProvider = AsyncNotifierProvider<JagoController, List<ChatMessage>>(JagoController.new);
+
+/// Reminders the chasing agent sent to the Student, newest first.
+final remindersProvider = FutureProvider<List<(String, String)>>((ref) async {
+  if (ref.watch(sessionProvider) == null) return const [];
+  final raw = await ref.read(apiProvider).reminders();
+  return [
+    for (final item in raw) ((item as Json)['message'] as String, item['created_at'] as String),
+  ];
+});

@@ -39,6 +39,7 @@ class DiscoverScreen extends ConsumerWidget {
         ),
         actions: const [
           LanguageButton(),
+          _RemindersButton(),
           _AccountButton(),
           SizedBox(width: PankhSpace.xs),
         ],
@@ -329,6 +330,26 @@ class _AccountButton extends ConsumerWidget {
           child: Text(l10n.signOut),
         ),
       ],
+    );
+  }
+}
+
+class _RemindersButton extends ConsumerWidget {
+  const _RemindersButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (ref.watch(sessionProvider) == null) return const SizedBox.shrink();
+    final count = ref.watch(remindersProvider).value?.length ?? 0;
+    return IconButton(
+      tooltip: AppLocalizations.of(context).remindersOpen,
+      onPressed: () => context.push('/reminders'),
+      icon: Badge(
+        isLabelVisible: count > 0,
+        label: Text('$count'),
+        backgroundColor: PankhColors.laterite,
+        child: const Icon(Icons.notifications_none_rounded),
+      ),
     );
   }
 }

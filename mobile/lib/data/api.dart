@@ -102,6 +102,8 @@ class PankhApi {
 
   Future<Json> applications() => _send(() => _dio.get('/me/applications'));
 
+  Future<List<dynamic>> reminders() => _sendList(() => _dio.get('/me/nudges'));
+
   Future<List<dynamic>> jagoConversation() => _sendList(() => _dio.get('/me/jago'));
 
   Future<Json> talkToJago(String message, String language) =>

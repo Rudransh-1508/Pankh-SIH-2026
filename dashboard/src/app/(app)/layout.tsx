@@ -12,6 +12,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const seesCoverage = official.level === "ministry" || official.level === "state";
   const items = [
     { href: "/review", label: "Review queue" },
+    { href: "/reminders", label: "Reminders" },
     ...(seesCoverage
       ? [
           { href: "/coverage", label: "Coverage" },
