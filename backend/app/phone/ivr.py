@@ -41,6 +41,7 @@ class Prompt:
 def spoken(text: str, language: str) -> str:
     """Text as it should be read aloud: no symbols a voice would stumble on."""
     text = re.sub(r"https?://\S+", "", text)
+    text = re.sub(r"[*#`]+", "", text)  # Markdown emphasis and headings
     text = text.replace("₹", TEXT[language]["rupees"])
     text = re.sub(r"\s*\n+\s*", ". ", text)
     return re.sub(r"\s{2,}", " ", text).strip()

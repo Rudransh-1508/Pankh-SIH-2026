@@ -79,6 +79,9 @@ class Settings(BaseSettings):
     livekit_api_key: str | None = None
     livekit_api_secret: str | None = None
     sarvam_api_key: str | None = None
+    # One voice for JAGO everywhere it speaks: calls and replies read aloud in the app.
+    sarvam_tts_model: str = "bulbul:v3"
+    sarvam_speaker: str = "shubh"
     voice_service_token: str = "development-voice-token"
     voice_session_ttl: timedelta = timedelta(minutes=15)
 

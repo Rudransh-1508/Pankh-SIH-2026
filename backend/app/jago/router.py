@@ -1,7 +1,7 @@
 from functools import cache
 from typing import Annotated, Any, Literal
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from pydantic import BaseModel, Field
 from sqlalchemy import select
 
@@ -9,8 +9,10 @@ from app.auth.deps import CurrentStudent, SessionDep, SettingsDep
 from app.config import Settings
 from app.jago.agent import Jago
 from app.jago.llm import BedrockModel, ChatModel, OpenAICompatibleModel
+from app.jago.speech import SpeechUnavailable, synthesise
 from app.jago.tools import ToolContext
 from app.models import JagoMessage
+from app.phone.ivr import spoken
 from app.sources.http import SourceHttp
 
 router = APIRouter(prefix="/me/jago", tags=["jago"])
@@ -36,6 +38,11 @@ ModelDep = Annotated[ChatModel | None, Depends(get_model)]
 
 class MessageIn(BaseModel):
     message: str = Field(min_length=1, max_length=1000)
+    language: Literal["en", "hi"] = "en"
+
+
+class SpeechIn(BaseModel):
+    text: str = Field(min_length=1, max_length=2500)
     language: Literal["en", "hi"] = "en"
 
 
@@ -73,6 +80,42 @@ async def talk(
         sources=[Source(**s) for s in reply.sources],
         suggestions=reply.suggestions,
         asking=reply.asking,
+    )
+
+
+@router.post(
+    "/speech",
+    response_class=Response,
+    responses={200: {"content": {"audio/wav": {}}}},
+)
+async def speech(
+    body: SpeechIn,
+    student: CurrentStudent,
+    session: SessionDep,
+    settings: SettingsDep,
+    http: SourceHttp,
+) -> Response:
+    """One of JAGO's replies to this Student, read aloud in JAGO's voice. Only what JAGO said
+    to them can be read, so this is not a general text to speech service."""
+    said = await session.scalar(
+        select(JagoMessage.id)
+        .where(
+            JagoMessage.student_id == student.id,
+            JagoMessage.role == "assistant",
+            JagoMessage.content == body.text,
+        )
+        .limit(1)
+    )
+    if said is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "JAGO did not say that")
+    try:
+        audio = await synthesise(settings, http, spoken(body.text, body.language), body.language)
+    except SpeechUnavailable as error:
+        raise HTTPException(
+            status.HTTP_503_SERVICE_UNAVAILABLE, "Speech is not available"
+        ) from error
+    return Response(
+        audio, media_type="audio/wav", headers={"Cache-Control": "private, max-age=86400"}
     )
 
 

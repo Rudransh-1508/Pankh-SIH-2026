@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:go_router/go_router.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -74,16 +77,23 @@ class _ConversationState extends ConsumerState<_Conversation> {
   final _input = TextEditingController();
   final _scroll = ScrollController();
   final _speech = SpeechToText();
+  final _player = AudioPlayer();
+  // The phone's own voice, only for when JAGO's voice cannot be fetched (offline, say).
   final _tts = FlutterTts();
+  final _spokenFiles = <String, File>{};
+  StreamSubscription<void>? _playerDone;
   bool _sending = false;
   bool _listening = false;
   int? _speaking;
+  bool _fetchingSpeech = false;
 
   @override
   void dispose() {
     _input.dispose();
     _scroll.dispose();
     unawaited(_speech.cancel());
+    unawaited(_playerDone?.cancel());
+    unawaited(_player.dispose());
     unawaited(_tts.stop());
     super.dispose();
   }
@@ -158,19 +168,49 @@ class _ConversationState extends ConsumerState<_Conversation> {
     );
   }
 
+  /// Reads a reply aloud in JAGO's voice, the same one as on calls, whatever the phone has.
   Future<void> _readAloud(int index, String text) async {
-    if (_speaking == index) {
-      await _tts.stop();
-      setState(() => _speaking = null);
-      return;
+    final stopping = _speaking == index;
+    await _player.stop();
+    await _tts.stop();
+    setState(() => _speaking = stopping ? null : index);
+    if (stopping) return;
+    final language = _language;
+    try {
+      setState(() => _fetchingSpeech = true);
+      final File file;
+      try {
+        file = await _speechFile(text, language);
+      } finally {
+        if (mounted) setState(() => _fetchingSpeech = false);
+      }
+      if (!mounted || _speaking != index) return;
+      await _playerDone?.cancel();
+      _playerDone = _player.onPlayerComplete.listen((_) {
+        if (mounted && _speaking == index) setState(() => _speaking = null);
+      });
+      await _player.play(DeviceFileSource(file.path));
+    } on ApiException {
+      if (!mounted || _speaking != index) return;
+      await _tts.setLanguage(language == 'hi' ? 'hi-IN' : 'en-IN');
+      await _tts.setSpeechRate(0.45);
+      _tts.setCompletionHandler(() {
+        if (mounted && _speaking == index) setState(() => _speaking = null);
+      });
+      await _tts.speak(text);
     }
-    await _tts.setLanguage(_language == 'hi' ? 'hi-IN' : 'en-IN');
-    await _tts.setSpeechRate(0.45);
-    _tts.setCompletionHandler(() {
-      if (mounted) setState(() => _speaking = null);
-    });
-    setState(() => _speaking = index);
-    await _tts.speak(text);
+  }
+
+  /// The reply's audio, fetched once and kept for this conversation.
+  Future<File> _speechFile(String text, String language) async {
+    final key = '$language:$text';
+    final cached = _spokenFiles[key];
+    if (cached != null && cached.existsSync()) return cached;
+    final audio = await ref.read(apiProvider).jagoSpeech(text, language);
+    final directory = await getTemporaryDirectory();
+    final file = File('${directory.path}/jago-${key.hashCode.toUnsigned(32)}.wav');
+    await file.writeAsBytes(audio, flush: true);
+    return _spokenFiles[key] = file;
   }
 
   @override
@@ -202,6 +242,7 @@ class _ConversationState extends ConsumerState<_Conversation> {
                     _Bubble(
                       message: message,
                       speaking: _speaking == index,
+                      loading: _speaking == index && _fetchingSpeech,
                       onReadAloud: message.fromStudent
                           ? null
                           : () => _readAloud(index, message.text),
@@ -256,11 +297,17 @@ class _ConversationState extends ConsumerState<_Conversation> {
 }
 
 class _Bubble extends StatelessWidget {
-  const _Bubble({required this.message, this.onReadAloud, this.speaking = false});
+  const _Bubble({
+    required this.message,
+    this.onReadAloud,
+    this.speaking = false,
+    this.loading = false,
+  });
 
   final ChatMessage message;
   final VoidCallback? onReadAloud;
   final bool speaking;
+  final bool loading;
 
   @override
   Widget build(BuildContext context) {
@@ -286,8 +333,8 @@ class _Bubble extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              message.text,
+            Text.rich(
+              _emphasised(message.text),
               style: text.bodyLarge?.copyWith(color: mine ? Colors.white : PankhColors.ink),
             ),
             for (final (title, url) in message.sources.take(3))
@@ -327,10 +374,15 @@ class _Bubble extends StatelessWidget {
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
                   onPressed: onReadAloud,
-                  icon: Icon(
-                    speaking ? Icons.stop_circle_outlined : Icons.volume_up_rounded,
-                    size: 20,
-                  ),
+                  icon: loading
+                      ? const SizedBox.square(
+                          dimension: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : Icon(
+                          speaking ? Icons.stop_circle_outlined : Icons.volume_up_rounded,
+                          size: 20,
+                        ),
                   label: Text(speaking ? l10n.jagoStop : l10n.jagoSpeak),
                 ),
               )
@@ -341,6 +393,22 @@ class _Bubble extends StatelessWidget {
       ),
     );
   }
+}
+
+/// JAGO marks key words with Markdown's **bold**; show them bold instead of the asterisks.
+TextSpan _emphasised(String text) {
+  final parts = text.split('**');
+  // An unmatched ** is shown as written.
+  if (parts.length.isEven) return TextSpan(text: text);
+  return TextSpan(
+    children: [
+      for (final (index, part) in parts.indexed)
+        TextSpan(
+          text: part,
+          style: index.isOdd ? const TextStyle(fontWeight: FontWeight.w700) : null,
+        ),
+    ],
+  );
 }
 
 class _Composer extends StatelessWidget {

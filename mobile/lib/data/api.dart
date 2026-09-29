@@ -239,6 +239,18 @@ class PankhApi {
   Future<Json> talkToJago(String message, String language) =>
       _send(() => _dio.post('/me/jago', data: {'message': message, 'language': language}));
 
+  /// One of JAGO's replies, spoken in JAGO's own voice (WAV audio).
+  Future<Uint8List> jagoSpeech(String text, String language) async {
+    final bytes = await _call(
+      () => _dio.post<List<int>>(
+        '/me/jago/speech',
+        data: {'text': text, 'language': language},
+        options: Options(responseType: ResponseType.bytes),
+      ),
+    );
+    return Uint8List.fromList(bytes as List<int>);
+  }
+
   Future<void> verifyInstitution(String code) =>
       _sendList(() => _dio.post('/me/verifications/institution', data: {'code': code}));
 

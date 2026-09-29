@@ -31,6 +31,9 @@ for ours, theirs in {
 
 API_URL = os.environ.get("PANKH_API_URL", "http://localhost:8000").rstrip("/")
 SERVICE_TOKEN = os.environ.get("PANKH_VOICE_SERVICE_TOKEN", "development-voice-token")
+# The same voice the app uses to read JAGO's replies aloud (the backend's settings).
+TTS_MODEL = os.environ.get("PANKH_SARVAM_TTS_MODEL", "bulbul:v3")
+SPEAKER = os.environ.get("PANKH_SARVAM_SPEAKER", "shubh")
 
 log = logging.getLogger("pankh.voice")
 
@@ -117,7 +120,7 @@ async def conversation(ctx: JobContext) -> None:
     session = AgentSession(
         stt=sarvam.STT(language=speech),
         llm=JagoReplies(),
-        tts=sarvam.TTS(target_language_code=speech),
+        tts=sarvam.TTS(target_language_code=speech, model=TTS_MODEL, speaker=SPEAKER),
         vad=silero.VAD.load(),
     )
     await session.start(Jago(student_id, language, http), room=ctx.room)
