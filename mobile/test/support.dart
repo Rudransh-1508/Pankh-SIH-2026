@@ -43,6 +43,33 @@ class FakeApi extends PankhApi {
   Future<List<dynamic>> reminders() async => const [];
 
   @override
+  Future<Json> family() async => {
+    'children': [
+      {
+        'link_id': 'l1',
+        'name': 'Sunita Murmu',
+        'eligible': ['Pre-Matric'],
+        'answers_needed': false,
+        'applications': [
+          {
+            'scheme': 'Pre-Matric',
+            'stage': 'disbursing',
+            'waiting_on': null,
+            'received': 1625,
+            'needs_action': false,
+          },
+        ],
+        'issues': 1,
+        'applications_available': true,
+      },
+    ],
+    'guardians': <dynamic>[],
+  };
+
+  @override
+  Future<String> familyInvite() async => 'ABCD 2345';
+
+  @override
   Future<Json> schemePath(Json facts) async => fixture('scheme_path') as Json;
 
   @override

@@ -339,6 +339,7 @@ class _AccountButton extends ConsumerWidget {
       icon: const Icon(Icons.account_circle_rounded, color: PankhColors.peacockDeep),
       itemBuilder: (context) => [
         PopupMenuItem(enabled: false, child: Text(l10n.signedInAs(phone))),
+        PopupMenuItem(onTap: () => context.push('/family'), child: Text(l10n.familyMenu)),
         PopupMenuItem(
           onTap: () async {
             await ref.read(sessionProvider.notifier).signOut();

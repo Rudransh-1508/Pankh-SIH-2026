@@ -257,5 +257,34 @@
   "pathNeedsAnswers": "Answer more questions to be sure about this stage.",
   "pathNone": "No scholarship fits this stage on what we know.",
   "pathEmpty": "Tell us what you are studying to see your path.",
-  "pathOneAtATime": "You can hold only one scholarship at a time, so this plan picks the best one for each stage."
+  "pathOneAtATime": "You can hold only one scholarship at a time, so this plan picks the best one for each stage.",
+  "familyTitle": "Family",
+  "familyMenu": "Family",
+  "familyChildren": "Children you follow",
+  "familyNoChildren": "You are not following anyone yet. Ask your child for their family code.",
+  "familyAdd": "Add with a family code",
+  "familyCodeLabel": "Family code from your child",
+  "familyAddButton": "Follow",
+  "familyShareTitle": "Let a parent follow your scholarships",
+  "familyShareBody": "Give this code to your parent or guardian. It works once, for 24 hours.",
+  "familyShareButton": "Get a family code",
+  "familyFollowers": "Following you",
+  "familyStop": "Stop sharing",
+  "familyQualifies": "Qualifies for: {schemes}",
+  "@familyQualifies": {
+    "placeholders": {
+      "schemes": {
+        "type": "String"
+      }
+    }
+  },
+  "familyNeedsAnswers": "More answers needed to know all scholarships.",
+  "familyIssues": "{count, plural, =1{1 thing needs attention} other{{count} things need attention}}",
+  "@familyIssues": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

@@ -233,3 +233,9 @@ final schemePathProvider = FutureProvider<List<PathStage>>((ref) async {
       : await api.schemePath(profile.facts);
   return [for (final s in json['stages'] as List) PathStage.fromJson(s as Json)];
 });
+
+/// The children this account follows, and who follows it. Raw API data.
+final familyProvider = FutureProvider<Json>((ref) async {
+  if (ref.watch(sessionProvider) == null) return const {'children': [], 'guardians': []};
+  return ref.read(apiProvider).family();
+});

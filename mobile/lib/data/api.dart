@@ -107,6 +107,16 @@ class PankhApi {
 
   Future<Json> mySchemePath() => _send(() => _dio.get('/me/scheme-path'));
 
+  Future<Json> family() => _send(() => _dio.get('/me/family'));
+
+  Future<String> familyInvite() async =>
+      (await _send(() => _dio.post('/me/family/invite')))['code'] as String;
+
+  Future<void> acceptFamilyInvite(String code) =>
+      _send(() => _dio.post('/me/family/accept', data: {'code': code}));
+
+  Future<void> endFamilyLink(String linkId) => _call(() => _dio.delete('/me/family/$linkId'));
+
   Future<List<dynamic>> reminders() => _sendList(() => _dio.get('/me/nudges'));
 
   Future<List<dynamic>> jagoConversation() => _sendList(() => _dio.get('/me/jago'));

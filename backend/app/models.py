@@ -303,3 +303,31 @@ class Nudge(CreatedAt, Base):
     dedupe_key: Mapped[str] = mapped_column(String(200), unique=True, nullable=False)
     decided_by: Mapped[uuid.UUID | None] = mapped_column()
     sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class FamilyInvite(CreatedAt, Base):
+    """A short-lived code a Student gives a Guardian to let them follow the Student's progress."""
+
+    __tablename__ = "family_invites"
+
+    code_hash: Mapped[str] = mapped_column(String(64), primary_key=True)
+    student_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("students.id", ondelete="CASCADE"), nullable=False
+    )
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+
+
+class GuardianLink(CreatedAt, Base):
+    """A Guardian following a Student, with the Student's consent. Either can end it."""
+
+    __tablename__ = "guardian_links"
+    __table_args__ = (Index("uq_guardian_links_pair", "guardian_id", "student_id", unique=True),)
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    guardian_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("students.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    student_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("students.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    ended_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
