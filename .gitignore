@@ -16,3 +16,4 @@ rules/.cache/
 
 # Local object storage for Uploaded Documents (encrypted)
 var/
+dist/
