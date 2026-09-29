@@ -9,6 +9,7 @@ import 'screens/answers_screen.dart';
 import 'screens/applications_screen.dart';
 import 'screens/digilocker_callback_screen.dart';
 import 'screens/discover_screen.dart';
+import 'screens/jago_screen.dart';
 import 'screens/questions_screen.dart';
 import 'screens/scheme_screen.dart';
 import 'screens/sign_in_screens.dart';
@@ -44,6 +45,9 @@ final routerProvider = Provider((ref) {
           ),
           StatefulShellBranch(
             routes: [GoRoute(path: '/wallet', builder: (_, _) => const WalletScreen())],
+          ),
+          StatefulShellBranch(
+            routes: [GoRoute(path: '/jago', builder: (_, _) => const JagoScreen())],
           ),
         ],
       ),
@@ -118,6 +122,11 @@ class _Tabs extends StatelessWidget {
             icon: const Icon(Icons.folder_outlined),
             selectedIcon: const Icon(Icons.folder_rounded, color: PankhColors.peacockDeep),
             label: l10n.tabDocuments,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.forum_outlined),
+            selectedIcon: const Icon(Icons.forum_rounded, color: PankhColors.peacockDeep),
+            label: l10n.tabJago,
           ),
         ],
       ),

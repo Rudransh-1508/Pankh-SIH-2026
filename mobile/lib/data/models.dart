@@ -406,3 +406,27 @@ class Applications {
   final String? warning;
   final List<TrackedApplication> items;
 }
+
+class ChatMessage {
+  const ChatMessage({
+    required this.fromStudent,
+    required this.text,
+    this.sources = const [],
+    this.suggestions = const [],
+  });
+
+  factory ChatMessage.fromJson(Json json) => ChatMessage(
+    fromStudent: json['role'] == 'user',
+    text: json['text'] as String,
+    sources: [
+      for (final s in json['sources'] as List? ?? const [])
+        ((s as Json)['title'] as String, s['url'] as String),
+    ],
+    suggestions: [for (final s in json['suggestions'] as List? ?? const []) s as String],
+  );
+
+  final bool fromStudent;
+  final String text;
+  final List<(String, String)> sources;
+  final List<String> suggestions;
+}

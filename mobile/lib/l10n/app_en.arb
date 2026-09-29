@@ -230,5 +230,16 @@
   "whoState": "state office",
   "whoSanctioning": "sanctioning office",
   "whoUniversity": "university",
-  "whoMinistry": "Ministry"
+  "whoMinistry": "Ministry",
+  "tabJago": "JAGO",
+  "jagoTitle": "Ask JAGO",
+  "jagoHint": "Type or tap the microphone",
+  "jagoListening": "Listening… speak now",
+  "jagoSpeak": "Read aloud",
+  "jagoStop": "Stop reading",
+  "jagoSend": "Send",
+  "jagoMic": "Speak your question",
+  "jagoSignIn": "Sign in with your mobile number to talk to JAGO about your scholarships.",
+  "jagoNoMic": "Voice input is not available on this phone. Please type.",
+  "jagoIntro": "Ask about scholarships, your applications, payments or documents. You can speak in Hindi or English."
 }

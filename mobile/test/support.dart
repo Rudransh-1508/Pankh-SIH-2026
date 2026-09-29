@@ -33,6 +33,26 @@ class FakeApi extends PankhApi {
   @override
   Future<Json> applications() async => applicationsJson;
 
+  /// Every message sent to JAGO, and a scripted reply.
+  final jagoMessages = <String>[];
+
+  @override
+  Future<List<dynamic>> jagoConversation() async => const [];
+
+  @override
+  Future<Json> talkToJago(String message, String language) async {
+    jagoMessages.add(message);
+    return {
+      'role': 'assistant',
+      'text': 'Do you belong to a Scheduled Tribe (ST) of your state?',
+      'sources': [
+        {'title': 'para 3.2 (I), page 3', 'url': 'https://tribal.nic.in/x.pdf#page=3'},
+      ],
+      'suggestions': ['Yes', 'No'],
+      'asking': 'is_scheduled_tribe',
+    };
+  }
+
   @override
   Future<List<dynamic>> factSchema() async => fixture('fact_schema') as List<dynamic>;
 

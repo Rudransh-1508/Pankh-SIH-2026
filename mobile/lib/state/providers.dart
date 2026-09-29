@@ -185,3 +185,32 @@ final applicationsProvider = FutureProvider<Applications?>((ref) async {
   ref.watch(verificationProvider);
   return Applications.fromJson(await ref.read(apiProvider).applications());
 });
+
+/// The conversation with JAGO. Replies are appended as they arrive.
+class JagoController extends AsyncNotifier<List<ChatMessage>> {
+  @override
+  Future<List<ChatMessage>> build() async {
+    if (ref.watch(sessionProvider) == null) return const [];
+    final raw = await ref.read(apiProvider).jagoConversation();
+    return [for (final item in raw) ChatMessage.fromJson(item as Json)];
+  }
+
+  Future<void> say(String text) async {
+    final message = text.trim();
+    if (message.isEmpty) return;
+    final before = state.value ?? const <ChatMessage>[];
+    state = AsyncData([...before, ChatMessage(fromStudent: true, text: message)]);
+    final language = ref.read(languageProvider).languageCode;
+    try {
+      final reply = await ref.read(apiProvider).talkToJago(message, language);
+      state = AsyncData([...state.value!, ChatMessage.fromJson(reply)]);
+      // JAGO may have saved an answer; results elsewhere should reflect it.
+      await ref.read(profileProvider.notifier).refresh();
+    } on ApiException {
+      state = AsyncData(before);
+      rethrow;
+    }
+  }
+}
+
+final jagoProvider = AsyncNotifierProvider<JagoController, List<ChatMessage>>(JagoController.new);
