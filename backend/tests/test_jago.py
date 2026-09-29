@@ -101,7 +101,7 @@ async def test_with_a_model_answers_come_from_tools(client, auth):
         reply = await say(client, auth, "am I eligible for anything?")
     finally:
         app.dependency_overrides.pop(get_model, None)
-    assert reply["text"] == "I need a few answers to check 5 schemes."
+    assert reply["text"] == "I need a few answers to check 8 schemes."
     # Nothing identifying the Student reaches the model: no phone number, no identifiers.
     sent = json.dumps([m for turn in model.seen for m in turn if m["role"] != "system"])
     assert "9876543210" not in sent and "uid-" not in sent and "reference_key" not in sent

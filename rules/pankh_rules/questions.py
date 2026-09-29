@@ -9,6 +9,39 @@ LANGUAGES = ("en", "hi")
 GATING_FACTS = ("is_scheduled_tribe", "education_level", "studies_abroad")
 
 QUESTIONS: dict[str, dict[str, str]] = {
+    "gender": {
+        "en": "What is your gender?",
+        "hi": "आपका लिंग क्या है?",
+    },
+    "studies_by_distance": {
+        "en": "Are you studying by correspondence or distance learning?",
+        "hi": "क्या आप पत्राचार या दूरस्थ शिक्षा से पढ़ रहे हैं?",
+    },
+    "class_12_top_20_percent": {
+        "en": "In Class XII, were you in the top 20% of students who passed in your stream on your "
+        "board?",
+        "hi": "क्या कक्षा 12 में आप अपने बोर्ड और स्ट्रीम के पास हुए छात्रों में शीर्ष 20% में थे?",
+    },
+    "aicte_technical_first_year": {
+        "en": "Are you in the first year of a technical degree (such as B.Tech) at an AICTE-approved "
+        "college, or the second year by lateral entry?",
+        "hi": "क्या आप AICTE से मान्यता प्राप्त कॉलेज में तकनीकी डिग्री (जैसे B.Tech) के पहले साल में हैं, "
+        "या लेटरल एंट्री से दूसरे साल में?",
+    },
+    "joined_within_two_years_of_class_12": {
+        "en": "Did you join your degree within two years of passing Class XII?",
+        "hi": "क्या आपने कक्षा 12 पास करने के दो साल के भीतर डिग्री में दाखिला लिया?",
+    },
+    "selected_in_nmms_exam": {
+        "en": "Were you selected in the NMMS scholarship exam in Class VIII?",
+        "hi": "क्या कक्षा 8 में NMMS छात्रवृत्ति परीक्षा में आपका चयन हुआ था?",
+    },
+    "school_government_aided_or_local_body": {
+        "en": "Is your school a government, government-aided or local body school? (Not a Kendriya "
+        "Vidyalaya, Navodaya, residential or private school.)",
+        "hi": "क्या आपका स्कूल सरकारी, सरकारी सहायता प्राप्त या स्थानीय निकाय का है? (केंद्रीय "
+        "विद्यालय, नवोदय, आवासीय या निजी स्कूल नहीं।)",
+    },
     "is_scheduled_tribe": {
         "en": "Do you belong to a Scheduled Tribe (ST) of your state?",
         "hi": "क्या आप अपने राज्य की अनुसूचित जनजाति (ST) से हैं?",
@@ -115,6 +148,11 @@ HELP: dict[str, dict[str, str]] = {
 }
 
 CHOICE_LABELS: dict[str, dict[str, dict[str, str]]] = {
+    "gender": {
+        "female": {"en": "Female", "hi": "महिला"},
+        "male": {"en": "Male", "hi": "पुरुष"},
+        "other": {"en": "Other", "hi": "अन्य"},
+    },
     "education_level": {
         "class_9": {"en": "Class IX", "hi": "कक्षा 9"},
         "class_10": {"en": "Class X", "hi": "कक्षा 10"},

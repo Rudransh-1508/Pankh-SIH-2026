@@ -1,0 +1,6 @@
+description: Maximum parental income from all sources per year (INR)
+reference: nmmss-guidelines-2022, page 4, para 1.1 (raised from 1.5 lakh from FY 2022-23)
+unit: currency-INR
+values:
+  2022-04-01:
+    value: 350000

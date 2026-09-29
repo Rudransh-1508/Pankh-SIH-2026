@@ -44,6 +44,8 @@ class Benefit {
 class Scheme {
   const Scheme({
     required this.id,
+    required this.isMota,
+    required this.provider,
     required this.name,
     required this.shortName,
     required this.summary,
@@ -55,6 +57,8 @@ class Scheme {
 
   factory Scheme.fromJson(Json json) => Scheme(
     id: json['id'] as String,
+    isMota: json['kind'] == 'mota',
+    provider: json['provider'] as String,
     name: json['name'] as String,
     shortName: json['short_name'] as String,
     summary: json['summary'] as String,
@@ -65,6 +69,10 @@ class Scheme {
   );
 
   final String id;
+
+  /// One of the five Ministry of Tribal Affairs Schemes, rather than a Catalogue Scheme.
+  final bool isMota;
+  final String provider;
   final String name;
   final String shortName;
   final String summary;

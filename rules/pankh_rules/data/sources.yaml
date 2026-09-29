@@ -79,3 +79,27 @@ top-class-institutes-2023:
   url: https://tribal.nic.in/downloads/guidelines/Top-Class/Revised265-InstituteListTopClassScholarship2023-24onwards.pdf
   sha256: 86aff95eee9599dfb5ebf06ad5e0e85b66c6a3c42afecbc53801901b7e98e804
   pages: 21
+
+# Catalogue Schemes: central schemes open to ST students, shown for discovery.
+
+csss-guidelines-2022:
+  title: Guidelines, PM-USP Central Sector Scheme of Scholarship for College and University Students (2022-23 onwards), Ministry of Education
+  url: https://scholarships.gov.in/public/schemeGuidelines/Guidelines_DOHE_CSSS.pdf
+  sha256: f886bd7254df75b5dd2cb201bb2dc9f71afee416fba1167e0f57e3285a804d79
+  pages: 4
+  effective: 2022-07-01
+
+pragati-degree-guidelines-2021:
+  title: Guidelines, AICTE Pragati Scholarship Scheme for Girl Students (Degree), All India Council for Technical Education
+  url: https://www.aicte.gov.in/sites/default/files/stdc/Pragati/AICTE%20Pragati%20Scheme%20Guidelines_Degree.pdf
+  sha256: 13c5554d6263be11a823c67aa4138894b5191de2b143a6400baa7748c24bcd16
+  pages: 5
+  effective: 2021-07-01
+
+nmmss-guidelines-2022:
+  title: Revised guidelines, Central Sector National Means-cum-Merit Scholarship Scheme, Ministry of Education
+  effective: 2022-04-01
+  url: https://scholarships.gov.in/public/schemeGuidelines/NMMSSGuidelines.pdf
+  sha256: f4b231cdd472fe724f3ee27fce1135892fb1e3bf7704539bc393a7cb93127fbd
+  pages: 9
+  scanned: true

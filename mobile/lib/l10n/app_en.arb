@@ -244,5 +244,8 @@
   "jagoIntro": "Ask about scholarships, your applications, payments or documents. You can speak in Hindi or English.",
   "remindersTitle": "Reminders",
   "remindersNone": "No reminders. We tell you here when something needs your attention.",
-  "remindersOpen": "Open reminders"
+  "remindersOpen": "Open reminders",
+  "motaSection": "Ministry of Tribal Affairs scholarships",
+  "catalogueSection": "More scholarships you may get",
+  "catalogueNote": "These cannot be held together with another scholarship. Compare before you choose."
 }

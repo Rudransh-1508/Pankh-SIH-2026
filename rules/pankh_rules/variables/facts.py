@@ -27,6 +27,13 @@ class EducationLevel(Enum):
     postdoc = "Post-doctoral research"
 
 
+class Gender(Enum):
+    unknown = "Not given"
+    female = "Female"
+    male = "Male"
+    other = "Other"
+
+
 class MotaAward(Enum):
     none = "None"
     pre_matric = "Pre-Matric Scholarship"
@@ -163,3 +170,46 @@ class holds_other_scholarship(_Fact):
 class has_aadhaar_seeded_bank_account(_Fact):
     value_type = bool
     label = "Has a bank account in a scheduled bank, linked with Aadhaar and mobile number"
+
+
+class gender(_Fact):
+    value_type = Enum
+    possible_values = Gender
+    default_value = Gender.unknown
+    label = "Gender"
+
+
+class studies_by_distance(_Fact):
+    value_type = bool
+    label = "Studying by correspondence or distance learning"
+
+
+class class_12_top_20_percent(_Fact):
+    value_type = bool
+    label = "Above the 80th percentile of Class XII passes in their stream and board"
+
+
+class aicte_technical_first_year(_Fact):
+    value_type = bool
+    label = (
+        "In the first year of a technical degree at an AICTE-approved institution, or the "
+        "second year by lateral entry"
+    )
+
+
+class joined_within_two_years_of_class_12(_Fact):
+    value_type = bool
+    label = "Joined the degree course within two years of passing Class XII"
+
+
+class selected_in_nmms_exam(_Fact):
+    value_type = bool
+    label = "Selected in the National Means-cum-Merit Scholarship exam at Class VIII"
+
+
+class school_government_aided_or_local_body(_Fact):
+    value_type = bool
+    label = (
+        "School is a government, government-aided or local body school (not a Kendriya "
+        "Vidyalaya, Navodaya, residential or private school)"
+    )

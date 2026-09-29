@@ -30,6 +30,8 @@ class BenefitOut(BaseModel):
 
 class SchemeOut(BaseModel):
     id: str
+    kind: Literal["mota", "catalogue"]
+    provider: str
     name: str
     short_name: str
     summary: str
@@ -42,6 +44,8 @@ class SchemeOut(BaseModel):
     def of(cls, scheme: pankh_rules.Scheme) -> "SchemeOut":
         return cls(
             id=scheme.id,
+            kind=scheme.kind,
+            provider=scheme.provider,
             name=scheme.name,
             short_name=scheme.short_name,
             summary=scheme.summary,

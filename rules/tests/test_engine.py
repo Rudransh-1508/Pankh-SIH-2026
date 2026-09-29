@@ -53,7 +53,8 @@ def test_rules_start_in_2021_22():
 
 
 def test_next_facts_skips_schemes_already_ruled_out():
-    results = evaluate({"is_scheduled_tribe": False}, 2026)
+    # Not ST rules out the MoTA Schemes; another scholarship rules out the catalogue ones.
+    results = evaluate({"is_scheduled_tribe": False, "holds_other_scholarship": True}, 2026)
     assert all(result.status is Status.NOT_ELIGIBLE for result in results)
     assert next_facts(results) == []
 

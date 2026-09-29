@@ -52,6 +52,9 @@ class Scheme:
     application_window: str | None
     benefits: tuple[Benefit, ...]
     rules: tuple[Rule, ...]
+    kind: str = "mota"
+    """"mota" for the five Ministry of Tribal Affairs Schemes, "catalogue" for the others."""
+    provider: str = "Ministry of Tribal Affairs"
 
 
 # Shared Rule builders. Each Scheme cites its own Guideline for the same kind of condition.
@@ -488,6 +491,174 @@ NOS = Scheme(
 )
 
 
+def _catalogue_no_other(scheme: str, citation: Citation) -> Rule:
+    return Rule(
+        id=f"{scheme}.no_other_scholarship",
+        title="Not receiving any other scholarship, including a Ministry of Tribal Affairs one",
+        citation=citation,
+        requires=("holds_other_scholarship", "current_mota_award"),
+        fail_reason="This scholarship cannot be held together with any other scholarship.",
+        remedy="Compare the two and keep the one that gives you more. Your institution can help "
+        "you switch.",
+    )
+
+
+def _catalogue_income(scheme: str, citation: Citation) -> Rule:
+    return Rule(
+        id=f"{scheme}.income_within_ceiling",
+        title="Family income is at most {ceiling} a year",
+        citation=citation,
+        requires=("family_income",),
+        values={"ceiling": f"{scheme}.income_ceiling"},
+        fail_reason="Your family income of {family_income} is above the limit of {ceiling}.",
+    )
+
+
+CSSS = Scheme(
+    id="csss",
+    name="Central Sector Scheme of Scholarship for College and University Students (PM-USP)",
+    short_name="PM-USP (CSSS)",
+    summary="Scholarships for meritorious students from poor families in regular degree courses, "
+    "chosen on Class XII results.",
+    system_of_record="National Scholarship Portal",
+    apply_url="https://scholarships.gov.in",
+    application_window="Announced each year on the National Scholarship Portal.",
+    kind="catalogue",
+    provider="Ministry of Education",
+    benefits=(
+        Benefit(
+            "₹12,000 a year for the first three years of a degree, ₹20,000 a year after",
+            cite("csss-guidelines-2022", 3, "para 7"),
+        ),
+    ),
+    rules=(
+        Rule(
+            id="csss.class_12_top_20_percent",
+            title="In the top 20% of Class XII passes in your stream and board",
+            citation=cite("csss-guidelines-2022", 1, "para 4 (i)"),
+            requires=("class_12_top_20_percent",),
+            fail_reason="Selection needs results above the 80th percentile of your board's Class "
+            "XII passes in your stream.",
+        ),
+        Rule(
+            id="csss.regular_degree_course",
+            title="Studying a regular degree course in India, not by distance",
+            citation=cite("csss-guidelines-2022", 2, "para 4 (ii)"),
+            requires=("education_level", "studies_by_distance", "studies_abroad"),
+            fail_reason="The scholarship is for regular degree courses, not correspondence, "
+            "distance or diploma courses.",
+        ),
+        Rule(
+            id="csss.recognised_institution",
+            title="College is recognised by AICTE or the relevant regulator",
+            citation=cite("csss-guidelines-2022", 2, "para 4 (iii)"),
+            requires=("institution_recognised",),
+            fail_reason="The college must be recognised by AICTE or its regulatory body.",
+        ),
+        _catalogue_income("csss", cite("csss-guidelines-2022", 2, "para 4 (v)")),
+        _catalogue_no_other("csss", cite("csss-guidelines-2022", 2, "para 4 (iv)")),
+    ),
+)
+
+
+PRAGATI = Scheme(
+    id="pragati",
+    name="AICTE Pragati Scholarship for Girl Students (Degree)",
+    short_name="AICTE Pragati",
+    summary="Support for girls starting a technical degree at an AICTE-approved institution.",
+    system_of_record="National Scholarship Portal",
+    apply_url="https://scholarships.gov.in",
+    application_window="Announced each year by AICTE on the National Scholarship Portal.",
+    kind="catalogue",
+    provider="All India Council for Technical Education",
+    benefits=(
+        Benefit(
+            "₹50,000 a year for every year of the degree, for fees, a computer, books and "
+            "equipment",
+            cite("pragati-degree-guidelines-2021", 2, "para 4.0"),
+        ),
+    ),
+    rules=(
+        Rule(
+            id="pragati.girl_student",
+            title="A girl student",
+            citation=cite("pragati-degree-guidelines-2021", 2, "para 2.0 (1)"),
+            requires=("gender",),
+            fail_reason="This scholarship is for girl students.",
+        ),
+        Rule(
+            id="pragati.first_year_technical_degree",
+            title="In the first year of a technical degree at an AICTE-approved institution",
+            citation=cite("pragati-degree-guidelines-2021", 2, "para 2.0 (1)"),
+            requires=("aicte_technical_first_year", "education_level"),
+            fail_reason="Apply in the first year of a technical degree, or the second year if you "
+            "joined by lateral entry, at an AICTE-approved institution.",
+        ),
+        _catalogue_income("pragati", cite("pragati-degree-guidelines-2021", 2, "para 2.0 (3)")),
+        Rule(
+            id="pragati.joined_within_two_years",
+            title="Joined within two years of passing Class XII",
+            citation=cite("pragati-degree-guidelines-2021", 4, "para 11.0 (1)"),
+            requires=("joined_within_two_years_of_class_12",),
+            fail_reason="The gap between passing the qualifying exam and joining the degree must "
+            "be at most two years.",
+        ),
+        _catalogue_no_other("pragati", cite("pragati-degree-guidelines-2021", 4, "para 11.0 (6)")),
+    ),
+)
+
+
+NMMSS = Scheme(
+    id="nmmss",
+    name="National Means-cum-Merit Scholarship (NMMSS)",
+    short_name="NMMSS",
+    summary="A monthly scholarship from Class IX to XII for students selected in the NMMS exam "
+    "in Class VIII.",
+    system_of_record="National Scholarship Portal",
+    apply_url="https://scholarships.gov.in",
+    application_window="The selection exam is held by your State in Class VIII.",
+    kind="catalogue",
+    provider="Ministry of Education",
+    benefits=(
+        Benefit(
+            "₹12,000 a year (₹1,000 a month), Class IX to XII",
+            cite("nmmss-guidelines-2022", 4, "para 1.3"),
+        ),
+    ),
+    rules=(
+        Rule(
+            id="nmmss.selected_in_exam",
+            title="Selected in the NMMS exam in Class VIII",
+            citation=cite("nmmss-guidelines-2022", 5, "paras 3.1 and 3.2"),
+            requires=("selected_in_nmms_exam",),
+            fail_reason="The scholarship goes to students selected in their State's NMMS exam in "
+            "Class VIII.",
+            remedy="If you are in Class VIII now, ask your school about the NMMS exam. ST students "
+            "need 32% in the exam and 50% in Class VII.",
+        ),
+        Rule(
+            id="nmmss.class_ix_to_xii",
+            title="Studying in Class IX to XII in India",
+            citation=cite("nmmss-guidelines-2022", 4, "para 1.2"),
+            requires=("education_level", "studies_abroad"),
+            fail_reason="The scholarship is paid from Class IX to Class XII only.",
+        ),
+        Rule(
+            id="nmmss.eligible_school",
+            title="At a government, government-aided or local body school",
+            citation=cite("nmmss-guidelines-2022", 4, "para 1.2"),
+            requires=("school_government_aided_or_local_body",),
+            fail_reason="Students in Kendriya Vidyalayas, Navodaya Vidyalayas, residential "
+            "government schools or private schools are not covered.",
+        ),
+        _catalogue_income("nmmss", cite("nmmss-guidelines-2022", 4, "para 1.1")),
+        _catalogue_no_other("nmmss", cite("nmmss-guidelines-2022", 5, "para 4.1")),
+    ),
+)
+
+
 SCHEMES: dict[str, Scheme] = {
-    scheme.id: scheme for scheme in (PRE_MATRIC, POST_MATRIC, TOP_CLASS, NFST, NOS)
+    scheme.id: scheme
+    for scheme in (PRE_MATRIC, POST_MATRIC, TOP_CLASS, NFST, NOS, CSSS, PRAGATI, NMMSS)
 }
+MOTA_SCHEME_IDS = tuple(sid for sid, scheme in SCHEMES.items() if scheme.kind == "mota")

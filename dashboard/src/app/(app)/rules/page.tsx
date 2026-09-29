@@ -15,7 +15,11 @@ export default async function RulesPage() {
       <div className="space-y-5">
         {rules.schemes.map(({ scheme, rules: list }) => (
           <Card key={scheme.id}>
-            <h2 className="font-display text-2xl font-bold">{scheme.name}</h2>
+            <p className="text-xs font-semibold tracking-wide text-ink-soft uppercase">
+              {scheme.provider}
+              {scheme.kind === "catalogue" && " · shown to students for discovery"}
+            </p>
+            <h2 className="mt-1 font-display text-2xl font-bold">{scheme.name}</h2>
             <p className="mt-1 text-sm text-ink-soft">
               {scheme.summary} Applications: {scheme.system_of_record}.
             </p>

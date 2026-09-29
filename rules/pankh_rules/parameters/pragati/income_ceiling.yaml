@@ -1,0 +1,6 @@
+description: Maximum family income from all sources per year (INR)
+reference: pragati-degree-guidelines-2021, page 2, para 2.0 (3)
+unit: currency-INR
+values:
+  2021-07-01:
+    value: 800000

@@ -81,7 +81,15 @@ export interface Citation {
 export interface Rules {
   academic_year_label: string;
   schemes: {
-    scheme: { id: string; name: string; short_name: string; summary: string; system_of_record: string };
+    scheme: {
+      id: string;
+      kind: "mota" | "catalogue";
+      provider: string;
+      name: string;
+      short_name: string;
+      summary: string;
+      system_of_record: string;
+    };
     rules: { id: string; title: string; citation: Citation }[];
   }[];
 }

@@ -119,3 +119,24 @@ def test_rule_passes_when_every_possible_answer_passes():
 def test_numbers_and_dates_are_never_assumed():
     rule = _rule({"education_level": "phd"}, "nfst.age_limit")
     assert (rule.outcome, rule.missing_facts) == (Outcome.UNKNOWN, ("date_of_birth",))
+
+
+def test_catalogue_schemes_are_alternatives_to_a_mota_award(profiles):
+    facts = profiles["csss"] | {"current_mota_award": "post_matric"}
+    rule = _rule(facts, "csss.no_other_scholarship")
+    assert rule.outcome is Outcome.FAIL
+    assert "keep the one that gives you more" in rule.remedy
+
+
+def test_pragati_is_for_girls(profiles):
+    assert (
+        _rule(profiles["pragati"] | {"gender": "male"}, "pragati.girl_student").outcome
+        is Outcome.FAIL
+    )
+
+
+def test_nmmss_income_ceiling_rose_in_2022(profiles):
+    facts = profiles["nmmss"] | {"family_income": 300000}
+    assert _rule(facts, "nmmss.income_within_ceiling", year=2022).outcome is Outcome.PASS
+    rule = _rule(facts | {"family_income": 360000}, "nmmss.income_within_ceiling", year=2022)
+    assert rule.title == "Family income is at most ₹3,50,000 a year"

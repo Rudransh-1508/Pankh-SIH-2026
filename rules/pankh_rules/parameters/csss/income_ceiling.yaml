@@ -1,0 +1,6 @@
+description: Maximum gross parental or family income per year (INR)
+reference: csss-guidelines-2022, page 2, para 4 (v)
+unit: currency-INR
+values:
+  2022-07-01:
+    value: 450000

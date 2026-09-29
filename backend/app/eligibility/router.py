@@ -31,7 +31,8 @@ def _judge(facts: dict[str, Any], academic_year: int | None) -> EligibilityOut:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(error)) from error
     schemes = sorted(
         (SchemeResultOut.of(result) for result in results),
-        key=lambda result: _STATUS_ORDER[result.status],
+        # Within each status, the five MoTA Schemes come before Catalogue Schemes.
+        key=lambda result: (_STATUS_ORDER[result.status], result.scheme.kind != "mota"),
     )
     return EligibilityOut(
         academic_year=year,

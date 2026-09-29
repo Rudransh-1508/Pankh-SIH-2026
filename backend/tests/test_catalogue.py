@@ -1,6 +1,13 @@
-async def test_lists_the_five_mota_schemes(client):
+async def test_lists_the_five_mota_schemes_then_the_catalogue(client):
     schemes = (await client.get("/v1/schemes")).json()
-    assert [s["id"] for s in schemes] == ["pre_matric", "post_matric", "top_class", "nfst", "nos"]
+    assert [s["id"] for s in schemes if s["kind"] == "mota"] == [
+        "pre_matric",
+        "post_matric",
+        "top_class",
+        "nfst",
+        "nos",
+    ]
+    assert {s["id"] for s in schemes if s["kind"] == "catalogue"} == {"csss", "pragati", "nmmss"}
     benefit = schemes[0]["benefits"][0]
     assert benefit["citation"]["url"].endswith(".pdf#page=4")
 
@@ -22,8 +29,9 @@ async def test_fact_schema_describes_forms(client):
 
 async def test_lists_official_sources(client):
     sources = (await client.get("/v1/sources")).json()
-    assert len(sources) == 10
-    assert all(s["url"].startswith("https://tribal.nic.in/") for s in sources)
+    assert len(sources) == 13
+    assert all(s["url"].startswith("https://") for s in sources)
+    assert sum(s["url"].startswith("https://tribal.nic.in/") for s in sources) == 10
 
 
 async def test_searches_top_class_institutes(client):

@@ -133,7 +133,13 @@ class _Results extends ConsumerWidget {
             ),
             const SizedBox(height: PankhSpace.md),
           ],
-          for (final result in eligibility.schemes) ...[
+          _SectionLabel(l10n.motaSection),
+          for (final result in eligibility.schemes.where((r) => r.scheme.isMota)) ...[
+            _SchemeCard(result: result),
+            const SizedBox(height: PankhSpace.md - 4),
+          ],
+          _SectionLabel(l10n.catalogueSection, note: l10n.catalogueNote),
+          for (final result in eligibility.schemes.where((r) => !r.scheme.isMota)) ...[
             _SchemeCard(result: result),
             const SizedBox(height: PankhSpace.md - 4),
           ],
@@ -349,6 +355,28 @@ class _RemindersButton extends ConsumerWidget {
         label: Text('$count'),
         backgroundColor: PankhColors.laterite,
         child: const Icon(Icons.notifications_none_rounded),
+      ),
+    );
+  }
+}
+
+class _SectionLabel extends StatelessWidget {
+  const _SectionLabel(this.title, {this.note});
+
+  final String title;
+  final String? note;
+
+  @override
+  Widget build(BuildContext context) {
+    final text = Theme.of(context).textTheme;
+    return Padding(
+      padding: const EdgeInsets.only(top: PankhSpace.md, bottom: PankhSpace.sm + 2),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: text.titleMedium),
+          if (note != null) ...[const SizedBox(height: 2), Text(note!, style: text.bodySmall)],
+        ],
       ),
     );
   }

@@ -7,10 +7,19 @@ from openfisca_core.taxbenefitsystems import TaxBenefitSystem
 from openfisca_core.variables import Variable
 
 from pankh_rules.entities import entities
-from pankh_rules.variables import derived, facts, nfst, nos, post_matric, pre_matric, top_class
+from pankh_rules.variables import (
+    catalogue,
+    derived,
+    facts,
+    nfst,
+    nos,
+    post_matric,
+    pre_matric,
+    top_class,
+)
 
 PACKAGE_DIR = Path(__file__).resolve().parent
-VARIABLE_MODULES = (facts, derived, pre_matric, post_matric, top_class, nfst, nos)
+VARIABLE_MODULES = (facts, derived, pre_matric, post_matric, top_class, nfst, nos, catalogue)
 
 # OpenFisca reads these only from a class's own namespace, so values set on our base classes
 # (such as the entity and definition period) are copied onto each concrete variable.

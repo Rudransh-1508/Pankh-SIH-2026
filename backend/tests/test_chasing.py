@@ -148,11 +148,14 @@ async def test_workflow_checks_daily_and_survives_long_waits():
         checks.append(student_id)
         return {"sent": 0, "proposed": 0}
 
-    async with await WorkflowEnvironment.start_time_skipping() as env, Worker(
-        env.client,
-        task_queue="test-chasing",
-        workflows=[workflows.ChaseStudent],
-        activities=[fake_check],
+    async with (
+        await WorkflowEnvironment.start_time_skipping() as env,
+        Worker(
+            env.client,
+            task_queue="test-chasing",
+            workflows=[workflows.ChaseStudent],
+            activities=[fake_check],
+        ),
     ):
         student_id = str(uuid.uuid4())
         handle = await env.client.start_workflow(

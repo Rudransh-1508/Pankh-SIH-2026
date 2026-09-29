@@ -16,9 +16,10 @@ from pankh_rules.engine import (
     validate_facts,
 )
 from pankh_rules.institutes import TopClassInstitute, search_top_class, top_class_institutes
-from pankh_rules.schemes import SCHEMES, Benefit, Rule, Scheme
+from pankh_rules.schemes import MOTA_SCHEME_IDS, SCHEMES, Benefit, Rule, Scheme
 
 __all__ = [
+    "MOTA_SCHEME_IDS",
     "SCHEMES",
     "Benefit",
     "Citation",
