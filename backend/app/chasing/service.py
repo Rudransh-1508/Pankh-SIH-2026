@@ -5,14 +5,24 @@ from dataclasses import dataclass
 from datetime import UTC, date, datetime
 
 import httpx
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.applications.service import track
 from app.auth.sms import SmsSender
 from app.chasing.planner import OpenIssue, plan
 from app.config import Settings
-from app.models import AuditEvent, Identity, Nudge, Official, Student, VerificationException
+from app.models import (
+    AuditEvent,
+    Identity,
+    Nudge,
+    Official,
+    RefreshToken,
+    Student,
+    VerificationException,
+)
+from app.phone.ivr import place_call
+from app.sources.http import SourceUnavailable
 from app.sources.scholarship_systems import ScholarshipSystemsClient
 
 AGENT_ID = uuid.UUID(int=1)  # the chasing agent, as an actor in the audit log
@@ -91,7 +101,47 @@ async def check_student(
             )
         )
     await session.flush()
+    topics = [
+        CALL_TOPICS[p.kind]
+        for p in proposals
+        if p.audience == "student" and p.dedupe_key not in known and p.kind in CALL_TOPICS
+    ]
+    if topics and settings.exotel_url and not await _active(session, student, settings):
+        try:
+            call = await place_call(session, settings, http, student, topics[0])
+        except SourceUnavailable:
+            call = None
+        if call is not None:
+            session.add(
+                AuditEvent(
+                    actor_type="agent",
+                    actor_id=AGENT_ID,
+                    action="call.placed",
+                    subject_type="student",
+                    subject_id=student.id,
+                    detail={"call_sid": call.call_sid, "topic": call.topic},
+                )
+            )
+            await session.flush()
     return CheckResult(sent, proposed)
+
+
+# Problems urgent enough to call about, and the part of the phone menu that explains each.
+CALL_TOPICS = {
+    "payment_problem": "payments",
+    "deficiency": "applications",
+    "stale_document": "documents",
+}
+
+
+async def _active(session: AsyncSession, student: Student, settings: Settings) -> bool:
+    """Whether the Student has used the app recently enough to have seen the message there."""
+    last = await session.scalar(
+        select(func.max(func.coalesce(RefreshToken.used_at, RefreshToken.created_at))).where(
+            RefreshToken.student_id == student.id
+        )
+    )
+    return last is not None and datetime.now(UTC) - last < settings.call_if_inactive_for
 
 
 async def send_approved(

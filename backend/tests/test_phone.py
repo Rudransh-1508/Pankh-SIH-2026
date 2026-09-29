@@ -1,4 +1,11 @@
+from datetime import UTC, datetime, timedelta
+
+from pankh_simulators.exotel import calls
 from pankh_simulators.population import population
+from sqlalchemy import delete, update
+
+from app.db import get_sessionmaker
+from app.models import Nudge, PhoneCall, RefreshToken
 
 TOKEN = {"X-Phone-Token": "development-phone-token"}
 
@@ -92,3 +99,42 @@ async def test_webhooks_need_the_token(client):
         "/v1/phone/exotel/wrong/gather", params={"CallSid": "x", "From": "09123456780"}
     )
     assert wrong.status_code == 401
+
+
+async def test_an_inactive_student_is_called_about_a_failed_payment(
+    client, sign_in, link_digilocker, official, sms
+):
+    # P00015's last instalment failed because the account is not linked to Aadhaar.
+    person = population().by_id("P00015")
+    tokens = await sign_in(f"+91{person.phone}")
+    await link_digilocker({"Authorization": f"Bearer {tokens['access_token']}"}, person)
+    ministry = await official("ministry")
+
+    # Seen in the app today: a text is enough.
+    before = len(calls)
+    await client.post("/v1/ministry/chasing/sweep", headers=ministry)
+    assert len(calls) == before
+
+    async with get_sessionmaker()() as session:
+        await session.execute(
+            update(RefreshToken).values(
+                created_at=datetime.now(UTC) - timedelta(days=30), used_at=None
+            )
+        )
+        # Forget the texts already sent, so the next check acts on the problem again.
+        await session.execute(delete(Nudge))
+        await session.commit()
+    await client.post("/v1/ministry/chasing/sweep", headers=ministry)
+    (placed,) = calls[before:]
+    assert placed["To"] == f"+91{person.phone}"
+    assert placed["CustomField"] == "payments"
+
+    press = caller(client, placed["Sid"], f"0{person.phone}")
+    welcome = await press()
+    assert welcome["say"].startswith("नमस्ते। यह पंख है। आपकी छात्रवृत्ति के बारे में")
+    answer = await press("2")
+    assert "did not reach you" in answer["say"]
+    assert answer["say"].endswith("For the menu, press 0. Or hang up.")
+    async with get_sessionmaker()() as session:
+        call = await session.get(PhoneCall, placed["Sid"])
+        assert (call.direction, call.topic, call.stage) == ("outbound", None, "menu")

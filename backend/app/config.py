@@ -50,6 +50,15 @@ class Settings(BaseSettings):
     temporal_namespace: str = "default"
     chasing_task_queue: str = "pankh-chasing"
 
+    # Outbound calls go through Exotel's call API. Defaults point at the simulator.
+    exotel_url: str | None = "http://localhost:8100/exotel"
+    exotel_api_key: str = "pankh-simulator-key"
+    exotel_caller_id: str = "0000000000"
+    # The Exotel flow a placed call runs; its Gather applet calls the phone line's webhook.
+    exotel_flow_url: str = "http://my.exotel.com/pankh/exoml/start_voice/1"
+    # Students who have not opened the app for this long also get a call about urgent problems.
+    call_if_inactive_for: timedelta = timedelta(days=14)
+
     # The phone line's webhooks carry this token, since telephony providers do not sign requests.
     phone_webhook_token: str = "development-phone-token"
 

@@ -3,7 +3,14 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 
-from pankh_simulators import cpgrams, digilocker, paper, registers, scholarship_systems
+from pankh_simulators import (
+    cpgrams,
+    digilocker,
+    exotel,
+    paper,
+    registers,
+    scholarship_systems,
+)
 
 app = FastAPI(
     title="Pankh simulators",
@@ -16,6 +23,7 @@ app.include_router(registers.router)
 app.include_router(scholarship_systems.router)
 app.include_router(paper.router)
 app.include_router(cpgrams.router)
+app.include_router(exotel.router)
 
 
 _PHONE = (Path(__file__).parent / "templates" / "phone.html").read_text()

@@ -454,5 +454,12 @@ class PhoneCall(CreatedAt, Base):
         ForeignKey("students.id", ondelete="SET NULL"), index=True
     )
     language: Mapped[str | None] = mapped_column(String(8))
-    stage: Mapped[str] = mapped_column(String(16), nullable=False)  # language | menu | ended
+    stage: Mapped[str] = mapped_column(
+        String(16), nullable=False
+    )  # placed | language | menu | ended
     keys: Mapped[list[str]] = mapped_column(_json(), nullable=False, default=list)
+    direction: Mapped[str] = mapped_column(
+        String(8), nullable=False, default="inbound", server_default="inbound"
+    )
+    topic: Mapped[str | None] = mapped_column(String(16))
+    """For a call Pankh places: what it is about (payments, applications or documents)."""

@@ -7,6 +7,11 @@ WELCOME = (
     "Namaste. This is Pankh, for Ministry of Tribal Affairs scholarships. For English, press 2."
 )
 
+OUTBOUND_WELCOME = (
+    "नमस्ते। यह पंख है। आपकी छात्रवृत्ति के बारे में एक ज़रूरी बात है। हिंदी के लिए 1 दबाएँ। "
+    "Namaste. This is Pankh, with news about your scholarship. For English, press 2."
+)
+
 TEXT = {
     "en": {
         "menu": "For your applications, press 1. For payments, press 2. For documents, press 3. For next year's renewal, press 4. For scholarships you can get, press 5. To ask your district office to call you back, press 9. To hear this again, press 0.",

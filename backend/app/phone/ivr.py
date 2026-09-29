@@ -17,7 +17,9 @@ from app.jago.agent import Jago
 from app.jago.texts import TEXT as JAGO_TEXT
 from app.jago.tools import ToolContext
 from app.models import AuditEvent, Identity, Nudge, PhoneCall, Student
-from app.phone.texts import TEXT, WELCOME
+from app.phone.texts import OUTBOUND_WELCOME, TEXT, WELCOME
+
+TOPIC_KEYS = {"applications": "1", "payments": "2", "documents": "3"}
 
 _MENU_INTENTS = {
     "1": "applications",
@@ -57,6 +59,9 @@ async def handle(
     digits: str | None,
 ) -> Prompt:
     call = await session.get(PhoneCall, call_sid)
+    if call is not None and call.stage == "placed":
+        call.stage = "language"
+        return Prompt(OUTBOUND_WELCOME, "hi,en")
     if call is None:
         try:
             phone = normalise_indian_mobile(caller)
@@ -78,10 +83,13 @@ async def handle(
     call.keys = [*call.keys, key]
     if call.stage == "language":
         if key not in ("1", "2"):
-            return Prompt(WELCOME, "hi,en")
+            return Prompt(OUTBOUND_WELCOME if call.direction == "outbound" else WELCOME, "hi,en")
         call.language = "hi" if key == "1" else "en"
         call.stage = "menu"
-        return _menu(call)
+        if call.topic is None:
+            return _menu(call)
+        # A call Pankh placed goes straight to what it is about.
+        key, call.topic = TOPIC_KEYS[call.topic], None
 
     language = call.language or "en"
     text = TEXT[language]
@@ -155,3 +163,23 @@ async def end(session: AsyncSession, call_sid: str) -> None:
     call = await session.get(PhoneCall, call_sid)
     if call is not None:
         call.stage = "ended"
+
+
+async def place_call(
+    session: AsyncSession, settings: Settings, http: httpx.AsyncClient, student: Student, topic: str
+) -> PhoneCall:
+    """Call a Student about one topic. The call runs the same menu once they choose a language."""
+    from app.sources.exotel import ExotelClient
+
+    sid = await ExotelClient(http, settings).connect(student.phone, settings.exotel_flow_url, topic)
+    call = PhoneCall(
+        call_sid=sid,
+        phone=student.phone,
+        student_id=student.id,
+        stage="placed",
+        keys=[],
+        direction="outbound",
+        topic=topic,
+    )
+    session.add(call)
+    return call
