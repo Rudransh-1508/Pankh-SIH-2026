@@ -127,3 +127,20 @@ async def _age_otps(by: timedelta) -> None:
     async with get_sessionmaker()() as session:
         await session.execute(update(OtpChallenge).values(created_at=OtpChallenge.created_at - by))
         await session.commit()
+
+
+async def test_a_demo_deployment_shows_codes_only_for_demo_numbers(client, sms):
+    from app.config import get_settings
+    from app.main import app
+
+    settings = get_settings().model_copy(update={"demo_sign_in": True})
+    app.dependency_overrides[get_settings] = lambda: settings
+    try:
+        demo = (await client.post("/v1/auth/otp/request", json={"phone": "9000000011"})).json()
+        assert demo["demo_code"] == sms.sent["+919000000011"]
+        real = (await client.post("/v1/auth/otp/request", json={"phone": "9876543210"})).json()
+        assert "demo_code" not in real
+    finally:
+        app.dependency_overrides.pop(get_settings, None)
+    normal = (await client.post("/v1/auth/otp/request", json={"phone": "9000000012"})).json()
+    assert "demo_code" not in normal

@@ -27,6 +27,10 @@ class Settings(BaseSettings):
     otp_resend_cooldown: timedelta = timedelta(seconds=30)
     otp_max_per_hour: int = 5
     sms_sender: Literal["console"] = "console"
+    # For public demos before real SMS exists: codes for the synthetic demo numbers (and only
+    # those) are returned to the app, which shows them. Real numbers never see a code this way.
+    demo_sign_in: bool = False
+    demo_phone_prefix: str = "+9190000"
 
     # Source Systems and Data Sources. Defaults point at the local simulators.
     digilocker_url: str = "http://localhost:8100/digilocker"

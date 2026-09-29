@@ -9,16 +9,18 @@ export interface LoginState {
   step: "phone" | "code";
   phone?: string;
   error?: string;
+  /** Only on a demo deployment, for the demo officials' numbers. */
+  demoCode?: string;
 }
 
 export async function signIn(state: LoginState, form: FormData): Promise<LoginState> {
   if (state.step === "phone") {
     try {
-      const sent = await publicApi<{ phone: string }>("/auth/otp/request", {
+      const sent = await publicApi<{ phone: string; demo_code?: string }>("/auth/otp/request", {
         method: "POST",
         body: JSON.stringify({ phone: String(form.get("phone") ?? "") }),
       });
-      return { step: "code", phone: sent.phone };
+      return { step: "code", phone: sent.phone, demoCode: sent.demo_code };
     } catch (error) {
       return { step: "phone", error: error instanceof ApiError ? error.message : "Could not send the code." };
     }

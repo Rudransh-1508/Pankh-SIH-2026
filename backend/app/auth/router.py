@@ -31,6 +31,8 @@ class OtpRequested(BaseModel):
     phone: str
     expires_in: int
     resend_after: int
+    demo_code: str | None = None
+    """Only on a demo deployment, and only for the synthetic demo numbers."""
 
 
 class OtpVerification(BaseModel):
@@ -67,7 +69,7 @@ def _phone(raw: str) -> str:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(error)) from error
 
 
-@router.post("/otp/request", status_code=status.HTTP_202_ACCEPTED)
+@router.post("/otp/request", status_code=status.HTTP_202_ACCEPTED, response_model_exclude_none=True)
 async def request_otp(
     body: OtpRequest,
     session: SessionDep,
@@ -89,7 +91,12 @@ async def request_otp(
         phone=phone,
         expires_in=int(settings.otp_ttl.total_seconds()),
         resend_after=int(settings.otp_resend_cooldown.total_seconds()),
+        demo_code=code if is_demo_number(settings, phone) else None,
     )
+
+
+def is_demo_number(settings, phone: str) -> bool:
+    return settings.demo_sign_in and phone.startswith(settings.demo_phone_prefix)
 
 
 @router.post("/otp/verify")

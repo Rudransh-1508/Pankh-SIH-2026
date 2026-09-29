@@ -19,10 +19,13 @@ class ApiException implements Exception {
 }
 
 class OtpRequested {
-  const OtpRequested({required this.phone, required this.resendAfter});
+  const OtpRequested({required this.phone, required this.resendAfter, this.demoCode});
 
   final String phone;
   final int resendAfter;
+
+  /// Only on a demo deployment, for the synthetic demo numbers, which get no SMS.
+  final String? demoCode;
 }
 
 /// Talks to the Pankh API. Signed-in requests refresh the access token automatically.
@@ -52,7 +55,11 @@ class PankhApi {
 
   Future<OtpRequested> requestOtp(String phone) async {
     final json = await _send(() => _dio.post('/auth/otp/request', data: {'phone': phone}));
-    return OtpRequested(phone: json['phone'] as String, resendAfter: json['resend_after'] as int);
+    return OtpRequested(
+      phone: json['phone'] as String,
+      resendAfter: json['resend_after'] as int,
+      demoCode: json['demo_code'] as String?,
+    );
   }
 
   Future<void> verifyOtp(String phone, String code) async {
@@ -174,8 +181,12 @@ class PankhApi {
     () => _dio.get('/me/facilitator/students', queryParameters: {'language': language}),
   );
 
-  Future<void> requestConsent(String phone) =>
-      _send(() => _dio.post('/me/facilitator/students', data: {'phone': phone}));
+  /// Returns the consent code only on a demo deployment, for the synthetic demo numbers.
+  Future<String?> requestConsent(String phone) async =>
+      (await _send(
+            () => _dio.post('/me/facilitator/students', data: {'phone': phone}),
+          ))['demo_code']
+          as String?;
 
   Future<void> confirmConsent(String phone, String code) => _send(
     () => _dio.post('/me/facilitator/students/confirm', data: {'phone': phone, 'code': code}),

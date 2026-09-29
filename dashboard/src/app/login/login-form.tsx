@@ -38,6 +38,11 @@ export function LoginForm() {
           />
         </label>
       )}
+      {state.demoCode && (
+        <p className="rounded-lg bg-turmeric-mist px-3 py-2 text-sm">
+          Demo: no SMS is sent to demo numbers. Your code is <span className="font-semibold tabular">{state.demoCode}</span>.
+        </p>
+      )}
       {state.error && (
         <p role="alert" className="rounded-lg bg-laterite-mist px-3 py-2 text-sm text-laterite">
           {state.error}

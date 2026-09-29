@@ -468,5 +468,13 @@
   "voiceMute": "Mute",
   "voiceUnmute": "Unmute",
   "voiceYou": "You",
-  "voiceUnavailable": "Voice is not available right now. You can still type to JAGO."
+  "voiceUnavailable": "Voice is not available right now. You can still type to JAGO.",
+  "demoCode": "Demo: no SMS is sent to demo numbers. Your code is {code}.",
+  "@demoCode": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  }
 }

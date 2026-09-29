@@ -8,6 +8,7 @@ import '../l10n/generated/app_localizations.dart';
 import '../state/providers.dart';
 import '../theme.dart';
 import '../widgets/error_view.dart';
+import 'sign_in_screens.dart' show DemoCodeNote;
 import 'wallet_screen.dart' show showApiError;
 
 /// For facilitators: register, add Students with their consent, and answer questions for them.
@@ -171,6 +172,7 @@ class _AddStudentState extends ConsumerState<_AddStudent> {
   final _code = TextEditingController();
   bool _sent = false;
   bool _busy = false;
+  String? _demoCode;
 
   @override
   void dispose() {
@@ -218,6 +220,10 @@ class _AddStudentState extends ConsumerState<_AddStudent> {
             onChanged: (_) => setState(() {}),
           ),
           if (_sent) ...[
+            if (_demoCode != null) ...[
+              const SizedBox(height: PankhSpace.sm + 2),
+              DemoCodeNote(code: _demoCode!),
+            ],
             const SizedBox(height: PankhSpace.sm + 2),
             TextField(
               controller: _code,
@@ -234,8 +240,11 @@ class _AddStudentState extends ConsumerState<_AddStudent> {
               onPressed: _busy || _phone.text.length != 10
                   ? null
                   : () => _run(() async {
-                      await ref.read(apiProvider).requestConsent(_phone.text);
-                      setState(() => _sent = true);
+                      final demo = await ref.read(apiProvider).requestConsent(_phone.text);
+                      setState(() {
+                        _sent = true;
+                        _demoCode = demo;
+                      });
                     }),
               child: Text(l10n.helpSend),
             )

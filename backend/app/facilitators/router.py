@@ -17,6 +17,7 @@ import pankh_rules
 from app.academic_year import current_academic_year
 from app.auth.deps import CurrentOfficial, CurrentStudent, SessionDep, SettingsDep
 from app.auth.phone import InvalidPhoneNumber, normalise_indian_mobile
+from app.auth.router import is_demo_number
 from app.auth.sms import SmsSender, get_sms_sender
 from app.config import Settings
 from app.facts.service import FactSource, current_facts, record_facts
@@ -180,7 +181,7 @@ async def add_student(
     session: SessionDep,
     settings: SettingsDep,
     sms: SmsDep,
-) -> dict[str, int]:
+) -> dict[str, int | str]:
     """Send a consent code to the Student's phone. They share it only if they agree."""
     facilitator = await _approved(session, account)
     phone = _phone(body.phone)
@@ -213,7 +214,10 @@ async def add_student(
         "anyone sign in as you.",
     )
     await session.commit()
-    return {"expires_in": int(CODE_TTL.total_seconds())}
+    result: dict[str, int | str] = {"expires_in": int(CODE_TTL.total_seconds())}
+    if is_demo_number(settings, phone):
+        result["demo_code"] = code
+    return result
 
 
 @router.post("/me/facilitator/students/confirm", status_code=status.HTTP_201_CREATED)

@@ -129,6 +129,7 @@ class _CodeScreenState extends ConsumerState<CodeScreen> {
   final _controller = TextEditingController();
   late String _phone = widget.sent.phone;
   late int _wait = widget.sent.resendAfter;
+  late String? _demoCode = widget.sent.demoCode;
   Timer? _timer;
   String? _error;
   bool _busy = false;
@@ -160,6 +161,7 @@ class _CodeScreenState extends ConsumerState<CodeScreen> {
       setState(() {
         _phone = sent.phone;
         _wait = sent.resendAfter;
+        _demoCode = sent.demoCode;
         _error = null;
       });
       _startTimer();
@@ -193,6 +195,10 @@ class _CodeScreenState extends ConsumerState<CodeScreen> {
       title: l10n.codeTitle,
       body: l10n.codeBody(readable),
       children: [
+        if (_demoCode != null) ...[
+          DemoCodeNote(code: _demoCode!),
+          const SizedBox(height: PankhSpace.md),
+        ],
         TextField(
           controller: _controller,
           autofocus: true,
@@ -238,5 +244,25 @@ class _Spinner extends StatelessWidget {
   Widget build(BuildContext context) => const SizedBox.square(
     dimension: 22,
     child: CircularProgressIndicator(strokeWidth: 2.5, color: Colors.white),
+  );
+}
+
+/// On a demo deployment, demo numbers get no SMS; the code is shown instead.
+class DemoCodeNote extends StatelessWidget {
+  const DemoCodeNote({super.key, required this.code});
+
+  final String code;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      color: PankhColors.turmericMist,
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Text(
+      AppLocalizations.of(context).demoCode(code),
+      style: Theme.of(context).textTheme.bodyMedium,
+    ),
   );
 }
