@@ -265,6 +265,8 @@ async def test_a_paper_certificate_goes_to_the_district_with_its_photo(
     case = (await client.get(f"/v1/review/exceptions/{item['id']}", headers=reviewer)).json()
     assert case["photo"]["name"] == "caste certificate"
     assert case["photo"]["fields"]["category"] == "ST"
+    assert case["copilot"]["headline"] == "A paper certificate no register could confirm"
+    assert any("seal and signature" in line for line in case["copilot"]["look_at"])
     photo = await client.get(case["photo"]["url"])
     assert photo.content == JPEG
 

@@ -30,6 +30,12 @@ export interface Case extends QueueItem {
   documents: string[];
   name_comparison: { on_document: string; on_aadhaar: string; keys: [string, string]; score: number } | null;
   photo: { id: string; name: string; content_type: string; url: string | null; fields: Record<string, unknown> } | null;
+  copilot: {
+    headline: string;
+    points: string[];
+    look_at: string[];
+    words: { on_document: string | null; on_aadhaar: string | null; note: string }[];
+  } | null;
 }
 
 export interface Counts {

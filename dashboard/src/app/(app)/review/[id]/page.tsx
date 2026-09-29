@@ -68,6 +68,30 @@ export default async function CasePage({ params }: { params: Promise<{ id: strin
       </header>
       <div className="grid gap-5 lg:grid-cols-[1fr_360px]">
         <div className="space-y-5">
+          {item.copilot && (
+            <Card className="border-peacock bg-peacock-mist/40">
+              <p className="text-xs font-semibold tracking-wide text-peacock-deep uppercase">Copilot summary</p>
+              <h2 className="mt-1 mb-3 font-display text-xl font-bold">{item.copilot.headline}</h2>
+              {item.copilot.points.length > 0 && (
+                <ul className="list-disc space-y-1.5 pl-5">
+                  {item.copilot.points.map((point) => (
+                    <li key={point}>{point}</li>
+                  ))}
+                </ul>
+              )}
+              {item.copilot.look_at.length > 0 && (
+                <>
+                  <p className="mt-4 mb-1.5 text-sm font-semibold">Look at</p>
+                  <ul className="list-disc space-y-1 pl-5 text-sm text-ink-soft">
+                    {item.copilot.look_at.map((line) => (
+                      <li key={line}>{line}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
+              <p className="mt-4 text-xs text-ink-soft">Built only from this case&apos;s records. The decision is yours.</p>
+            </Card>
+          )}
           <Card>
             <h2 className="mb-2 font-display text-xl font-bold">What we found</h2>
             <p className="text-lg">{item.message}</p>

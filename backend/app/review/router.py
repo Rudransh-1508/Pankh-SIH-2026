@@ -21,6 +21,7 @@ from app.models import (
     UploadedDocument,
     VerificationException,
 )
+from app.review.copilot import Precedent, summarise
 from app.verification.names import match_names
 from app.verification.service import issue_proof
 
@@ -67,6 +68,13 @@ class CasePhoto(BaseModel):
     fields: dict[str, Any]
 
 
+class CopilotOut(BaseModel):
+    headline: str
+    points: list[str]
+    look_at: list[str]
+    words: list[dict[str, str | None]]
+
+
 class CaseOut(QueueItem):
     remedy: str | None
     evidence: dict[str, Any]
@@ -75,6 +83,7 @@ class CaseOut(QueueItem):
     documents: list[str]
     name_comparison: NameComparison | None
     photo: CasePhoto | None = None
+    copilot: CopilotOut | None = None
 
 
 class DecisionIn(BaseModel):
@@ -171,18 +180,69 @@ async def case(
             keys=(result.left_key, result.right_key),
             score=result.score,
         )
+    facts = {
+        name: {"value": s.value, "source": s.source, "verified": s.verified}
+        for name, s in statuses.items()
+    }
+    photo = await _photo(session, settings, official, exception)
     return CaseOut(
         **_item(exception, identity),
         remedy=exception.remedy,
         evidence=evidence,
         resolution=exception.resolution,
-        facts={
-            name: {"value": s.value, "source": s.source, "verified": s.verified}
-            for name, s in statuses.items()
-        },
+        facts=facts,
         documents=list(documents),
         name_comparison=comparison,
-        photo=await _photo(session, settings, official, exception),
+        photo=photo,
+        copilot=_copilot(
+            exception,
+            facts,
+            photo.fields if photo else None,
+            await _precedent(session, exception, identity),
+        ),
+    )
+
+
+async def _precedent(
+    session, exception: VerificationException, identity: Identity | None
+) -> Precedent:
+    state = identity.state if identity else exception.state
+    rows = (
+        await session.execute(
+            select(VerificationException.status, func.count())
+            .join(
+                Identity,
+                Identity.student_id == VerificationException.student_id,
+                isouter=True,
+            )
+            .where(VerificationException.kind == exception.kind)
+            .where(VerificationException.id != exception.id)
+            .where(VerificationException.status.in_(("resolved", "rejected")))
+            .where(func.coalesce(Identity.state, VerificationException.state) == state)
+            .group_by(VerificationException.status)
+        )
+    ).all()
+    counts = dict(rows)
+    return Precedent(confirmed=counts.get("resolved", 0), returned=counts.get("rejected", 0))
+
+
+def _copilot(exception, facts, photo_fields, precedent) -> CopilotOut:
+    summary = summarise(
+        exception.kind,
+        exception.fact_name,
+        exception.evidence or {},
+        facts,
+        photo_fields,
+        precedent,
+    )
+    return CopilotOut(
+        headline=summary.headline,
+        points=summary.points,
+        look_at=summary.look_at,
+        words=[
+            {"on_document": w.on_document, "on_aadhaar": w.on_aadhaar, "note": w.note}
+            for w in summary.words
+        ],
     )
 
 
