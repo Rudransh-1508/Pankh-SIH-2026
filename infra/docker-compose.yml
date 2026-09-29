@@ -18,5 +18,17 @@ services:
       timeout: 3s
       retries: 30
 
+  # Durable workflows for Agents, such as chasing stalled applications. Development server with
+  # its web UI on http://localhost:8233. Start the worker with: uv run python -m app.chasing.worker
+  temporal:
+    image: temporalio/temporal:latest
+    command: ["server", "start-dev", "--ip", "0.0.0.0", "--db-filename", "/data/temporal.db"]
+    ports:
+      - "7233:7233"
+      - "8233:8233"
+    volumes:
+      - temporal-data:/data
+
 volumes:
   postgres-data:
+  temporal-data:

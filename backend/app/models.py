@@ -276,3 +276,30 @@ class JagoMessage(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.clock_timestamp(), nullable=False
     )
+
+
+class Nudge(CreatedAt, Base):
+    """A reminder an Agent sends, or proposes, to a Student or an office.
+
+    Nudges to a Student about their own case go out at once. Nudges to an office are proposed,
+    and go out only when an official approves them.
+    """
+
+    __tablename__ = "nudges"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    student_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("students.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    audience: Mapped[str] = mapped_column(String(16), nullable=False)  # student | office
+    kind: Mapped[str] = mapped_column(String(32), nullable=False)
+    message: Mapped[str] = mapped_column(Text, nullable=False)
+    level: Mapped[str | None] = mapped_column(String(16))
+    state: Mapped[str | None] = mapped_column(String(64))
+    district: Mapped[str | None] = mapped_column(String(64))
+    status: Mapped[str] = mapped_column(
+        String(16), nullable=False, index=True
+    )  # proposed | sent | dismissed
+    dedupe_key: Mapped[str] = mapped_column(String(200), unique=True, nullable=False)
+    decided_by: Mapped[uuid.UUID | None] = mapped_column()
+    sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))

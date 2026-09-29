@@ -28,9 +28,13 @@ PHONE = "+919876543210"
 class CapturingSmsSender:
     def __init__(self) -> None:
         self.sent: dict[str, str] = {}
+        self.texts: list[tuple[str, str]] = []
 
     async def send_otp(self, phone: str, code: str) -> None:
         self.sent[phone] = code
+
+    async def send_text(self, phone: str, text: str) -> None:
+        self.texts.append((phone, text))
 
 
 @pytest.fixture(scope="session", autouse=True)

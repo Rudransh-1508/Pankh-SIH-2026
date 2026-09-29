@@ -40,6 +40,12 @@ class Settings(BaseSettings):
     llm_api_key: str | None = None
     llm_model: str | None = None
 
+    # Temporal runs long-lived Agent work such as chasing stalled applications. Unset, nothing is
+    # scheduled; the ministry can still run a sweep by hand.
+    temporal_address: str | None = None
+    temporal_namespace: str = "default"
+    chasing_task_queue: str = "pankh-chasing"
+
     # Proofs are signed with an Ed25519 key. Unset, a key is derived from secret_key.
     proof_signing_key: str | None = None
     proof_ttl: timedelta = timedelta(days=365)

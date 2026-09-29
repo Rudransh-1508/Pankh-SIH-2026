@@ -8,6 +8,7 @@ from pydantic import BaseModel
 from sqlalchemy import select
 
 from app.auth.deps import CurrentStudent, SessionDep, SettingsDep
+from app.chasing.workflows import start_chasing
 from app.facts.service import fact_statuses
 from app.models import Identity, Proof, ReferencedDocument, VerificationException
 from app.sources.digilocker import DigiLockerClient, DigiLockerError
@@ -176,6 +177,7 @@ async def complete_digilocker(
     """Finish linking: read the Student's documents and confirm the Facts they prove."""
     result = await _run(verifier.complete_digilocker(student, body.code, body.state))
     await session.commit()
+    await start_chasing(str(student.id))
     return LinkOut(
         documents=[_document(d) for d in result.documents],
         proofs=[_proof(p) for p in result.proofs],

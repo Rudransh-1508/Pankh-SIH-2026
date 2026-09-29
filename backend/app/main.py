@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.applications.router import router as applications_router
 from app.auth.router import router as auth_router
+from app.chasing.router import router as chasing_router
 from app.config import get_settings
 from app.coverage.router import router as coverage_router
 from app.eligibility.router import router as eligibility_router
@@ -36,6 +37,7 @@ def create_app() -> FastAPI:
         review_router,
         coverage_router,
         jago_router,
+        chasing_router,
     ):
         app.include_router(router, prefix="/v1")
 
