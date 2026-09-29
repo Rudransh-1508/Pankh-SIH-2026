@@ -15,6 +15,8 @@ class Settings(BaseSettings):
     database_url: str = "postgresql+asyncpg://pankh:pankh@localhost:5433/pankh"
     secret_key: str = DEVELOPMENT_SECRET
     cors_origins: list[str] = ["http://localhost:3000"]
+    # Where people outside Pankh (such as school nodal officers) open links Pankh sends them.
+    public_api_url: str = "http://localhost:8000"
 
     access_token_ttl: timedelta = timedelta(minutes=15)
     refresh_token_ttl: timedelta = timedelta(days=60)

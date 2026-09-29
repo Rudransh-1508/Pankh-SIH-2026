@@ -105,3 +105,20 @@ export interface Reminder {
   status: "proposed" | "sent" | "dismissed";
   created_at: string;
 }
+
+export interface Campaign {
+  id: string;
+  state: string;
+  district: string | null;
+  channel: "school" | "family";
+  language: "en" | "hi";
+  status: "draft" | "sent" | "cancelled";
+  created_at: string;
+  sent_at: string | null;
+  students: number;
+  schools: number;
+  delivery: Partial<Record<"pending" | "sent" | "no_contact" | "failed", number>>;
+  applied_since: number | null;
+  preview: { to: "school" | "family"; school: string | null; students: number; text: string }[];
+  skipped_recent: number;
+}

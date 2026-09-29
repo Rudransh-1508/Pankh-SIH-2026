@@ -97,6 +97,7 @@ async def udise_school(code: str) -> dict:
     institution = population().institutions.get(code)
     if institution is None or institution.kind != "school":
         raise _not_found("school")
+    digits = int(hashlib.sha256(institution.code.encode()).hexdigest()[:8], 16) % 10**8
     return {
         "udise_code": institution.code,
         "name": institution.name,
@@ -104,6 +105,11 @@ async def udise_school(code: str) -> dict:
         "district": institution.district,
         "management": institution.management,
         "recognised": institution.recognised,
+        # The scholarship nodal officer schools name in UDISE+ (synthetic numbers).
+        "nodal_officer": {
+            "name": f"Head teacher, {institution.name}",
+            "phone": f"+9179{digits:08d}",
+        },
     }
 
 
@@ -143,6 +149,15 @@ async def udise_students(
             for p in page
         ],
     }
+
+
+@router.get("/udise/students/{student_ref}/contact", tags=["UDISE+"])
+async def udise_student_contact(student_ref: str) -> dict:
+    """The parent's mobile number a school recorded for a student in UDISE+."""
+    person = population().by_id(student_ref.removeprefix("UD-"))
+    if person is None or not person.enrolled_in_udise:
+        raise _not_found("student")
+    return {"student_ref": student_ref, "guardian_phone": f"+91{person.phone}"}
 
 
 @router.get("/apaar/students/{apaar_id}", tags=["APAAR"])

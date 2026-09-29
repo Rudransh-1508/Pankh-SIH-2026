@@ -11,6 +11,7 @@ from app.eligibility.router import router as eligibility_router
 from app.facts.router import router as facts_router
 from app.family.router import router as family_router
 from app.jago.router import router as jago_router
+from app.outreach.router import router as outreach_router
 from app.review.router import router as review_router
 from app.schemes.router import router as schemes_router
 from app.verification.router import router as verification_router
@@ -42,6 +43,7 @@ def create_app() -> FastAPI:
         chasing_router,
         family_router,
         documents_router,
+        outreach_router,
     ):
         app.include_router(router, prefix="/v1")
 

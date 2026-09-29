@@ -364,3 +364,58 @@ class GuardianLink(CreatedAt, Base):
         ForeignKey("students.id", ondelete="CASCADE"), index=True, nullable=False
     )
     ended_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class Campaign(CreatedAt, Base):
+    """An outreach campaign to Unreached Students in one state or district, from one coverage run.
+
+    Drafted by an official, who sees every message before approving it; nothing is sent before.
+    """
+
+    __tablename__ = "campaigns"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    created_by: Mapped[uuid.UUID] = mapped_column(ForeignKey("officials.id"), nullable=False)
+    coverage_run_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("coverage_runs.id", ondelete="CASCADE"), nullable=False
+    )
+    state: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    district: Mapped[str | None] = mapped_column(String(64))
+    channel: Mapped[str] = mapped_column(String(16), nullable=False)  # school | family
+    language: Mapped[str] = mapped_column(String(8), nullable=False)
+    status: Mapped[str] = mapped_column(String(16), nullable=False)  # draft | sent | cancelled
+    approved_by: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("officials.id"))
+    sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class CampaignTarget(Base):
+    """One Unreached Student in a campaign, and whether the message about them was delivered."""
+
+    __tablename__ = "campaign_targets"
+    __table_args__ = (
+        Index("uq_campaign_targets_student", "campaign_id", "student_ref", unique=True),
+    )
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    campaign_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("campaigns.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    student_ref: Mapped[str] = mapped_column(String(64), nullable=False)
+    udise_code: Mapped[str] = mapped_column(String(32), nullable=False)
+    district: Mapped[str] = mapped_column(String(64), nullable=False)
+    status: Mapped[str] = mapped_column(
+        String(16), nullable=False
+    )  # pending | sent | no_contact | failed
+    sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class OutreachLink(Base):
+    """A short code for one school's list in one campaign, so the message stays one SMS long."""
+
+    __tablename__ = "outreach_links"
+
+    code: Mapped[str] = mapped_column(String(16), primary_key=True)
+    campaign_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("campaigns.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    udise_code: Mapped[str] = mapped_column(String(32), nullable=False)

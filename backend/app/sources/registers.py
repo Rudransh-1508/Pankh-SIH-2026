@@ -26,6 +26,9 @@ class RegistersClient:
     async def net_result(self, roll_number: str) -> dict[str, Any] | None:
         return await self._get(f"/nta/net-results/{roll_number}", "UGC-NTA")
 
+    async def udise_student_contact(self, student_ref: str) -> dict[str, Any] | None:
+        return await self._get(f"/udise/students/{student_ref}/contact", "UDISE+")
+
     async def apaar_student(self, apaar_id: str) -> dict[str, Any] | None:
         return await self._get(f"/apaar/students/{apaar_id}", "APAAR")
 
