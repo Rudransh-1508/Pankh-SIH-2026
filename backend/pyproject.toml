@@ -21,6 +21,7 @@ dependencies = [
     "temporalio>=1.33.0",
     "boto3>=1.43.104",
     "pdfplumber>=0.11",
+    "livekit-api>=1.2",
 ]
 
 [dependency-groups]

@@ -8,6 +8,8 @@ package = false
 
 [tool.uv.workspace]
 members = ["rules", "backend", "simulators"]
+# The voice agent has its own environment (see voice/pyproject.toml).
+exclude = ["voice"]
 
 [dependency-groups]
 dev = [

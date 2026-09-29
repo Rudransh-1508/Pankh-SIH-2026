@@ -65,6 +65,15 @@ class Settings(BaseSettings):
     # Students who have not opened the app for this long also get a call about urgent problems.
     call_if_inactive_for: timedelta = timedelta(days=14)
 
+    # In-app voice: LiveKit carries the audio, the voice agent service (voice/) listens and
+    # speaks with Sarvam, and asks JAGO here for every reply, with this shared token.
+    livekit_url: str | None = None
+    livekit_api_key: str | None = None
+    livekit_api_secret: str | None = None
+    sarvam_api_key: str | None = None
+    voice_service_token: str = "development-voice-token"
+    voice_session_ttl: timedelta = timedelta(minutes=15)
+
     # The phone line's webhooks carry this token, since telephony providers do not sign requests.
     phone_webhook_token: str = "development-phone-token"
 
@@ -93,6 +102,8 @@ class Settings(BaseSettings):
     def _require_real_secret_outside_development(self) -> "Settings":
         if self.environment == "production" and self.secret_key == DEVELOPMENT_SECRET:
             raise ValueError("PANKH_SECRET_KEY must be set in production")
+        if self.environment == "production" and self.voice_service_token.startswith("development"):
+            raise ValueError("PANKH_VOICE_SERVICE_TOKEN must be set in production")
         if self.environment == "production" and self.phone_webhook_token.startswith("development"):
             raise ValueError("PANKH_PHONE_WEBHOOK_TOKEN must be set in production")
         if len(self.secret_key) < 32:

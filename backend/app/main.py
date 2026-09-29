@@ -21,6 +21,7 @@ from app.renewal.router import router as renewal_router
 from app.review.router import router as review_router
 from app.schemes.router import router as schemes_router
 from app.verification.router import router as verification_router
+from app.voice.router import router as voice_router
 
 
 def create_app() -> FastAPI:
@@ -56,6 +57,7 @@ def create_app() -> FastAPI:
         authoring_router,
         letters_router,
         facilitators_router,
+        voice_router,
     ):
         app.include_router(router, prefix="/v1")
 

@@ -1,0 +1,16 @@
+[project]
+name = "pankh-voice"
+version = "0.1.0"
+description = "JAGO's voice agent: listens and speaks with Sarvam over LiveKit, answers from the Pankh API"
+requires-python = ">=3.13,<3.14"
+# Kept out of the Python workspace: LiveKit Agents needs a newer psutil than OpenFisca allows.
+dependencies = [
+    "livekit-agents>=1.8",
+    "livekit-plugins-sarvam>=1.8",
+    "livekit-plugins-silero>=1.8",
+    "httpx>=0.28",
+    "python-dotenv>=1.0",
+]
+
+[tool.uv]
+package = false
