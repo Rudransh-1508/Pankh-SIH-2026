@@ -1,5 +1,5 @@
 from collections.abc import AsyncIterator
-from datetime import datetime
+from datetime import UTC, datetime
 from functools import cache
 
 from sqlalchemy import DateTime, MetaData, func
@@ -26,9 +26,16 @@ class Base(DeclarativeBase):
     metadata = MetaData(naming_convention=NAMING_CONVENTION)
 
 
+def now() -> datetime:
+    return datetime.now(UTC)
+
+
 class CreatedAt:
+    # Set by the app, not the database, so every timestamp the code compares comes from one
+    # clock (a database in a container can run a little behind the host). The database default
+    # stays for rows inserted by hand.
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now(), nullable=False
+        DateTime(timezone=True), default=now, server_default=func.now(), nullable=False
     )
 
 

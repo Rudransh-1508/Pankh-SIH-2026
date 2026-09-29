@@ -189,6 +189,8 @@ def from_nsp(record: dict[str, Any]) -> Application:
         )
     else:
         stage, waiting_on = _NSP_STAGES.get(status_text, (Stage.SUBMITTED, None))
+    instalments = _instalments(record["payments"])
+    stage, status_text = _still_paying(stage, status_text, instalments)
     return Application(
         source_system="NSP",
         external_id=record["application_id"],
@@ -201,8 +203,19 @@ def from_nsp(record: dict[str, Any]) -> Application:
         deficiency=deficiency,
         sanctioned_amount=record.get("sanctioned_amount"),
         timeline=history,
-        instalments=_instalments(record["payments"]),
+        instalments=instalments,
     )
+
+
+def _still_paying(stage: Stage, status_text: str, instalments: list[Instalment]):
+    """NSP can say "Paid" while an instalment has not reached the Student. Until every
+    instalment is credited, the application is still paying out, and says which is pending."""
+    waiting = [i for i in instalments if i.status is not InstalmentStatus.CREDITED]
+    if stage is not Stage.CLOSED or not waiting:
+        return stage, status_text
+    first = waiting[0]
+    reason = "pending at the bank" if first.status is InstalmentStatus.PENDING else "not paid"
+    return Stage.DISBURSING, f"Instalment {first.number} {reason}"
 
 
 def from_sfmp(record: dict[str, Any]) -> Application:

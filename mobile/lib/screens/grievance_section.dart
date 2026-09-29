@@ -80,6 +80,8 @@ class GrievanceSection extends ConsumerWidget {
     final note = TextEditingController();
     final approved = await showModalBottomSheet<bool>(
       context: context,
+      // Over the tab bar, not under it.
+      useRootNavigator: true,
       showDragHandle: true,
       isScrollControlled: true,
       builder: (context) {

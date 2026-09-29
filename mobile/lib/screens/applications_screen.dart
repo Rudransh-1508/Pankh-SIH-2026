@@ -219,6 +219,7 @@ class StageSteps extends StatelessWidget {
     final text = Theme.of(context).textTheme;
     final labels = [l10n.stepApplied, l10n.stepVerified, l10n.stepSanctioned, l10n.stepPaid];
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         for (var i = 0; i < labels.length; i++)
           Expanded(
@@ -238,10 +239,17 @@ class StageSteps extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 6),
-                Text(
-                  labels[i],
-                  style: text.labelMedium?.copyWith(
-                    color: i <= _reached ? PankhColors.ink : PankhColors.inkSoft,
+                // One line each, shrunk a little if a label (say, in Hindi) is long, so a word
+                // never breaks and the bars stay in line.
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    labels[i],
+                    maxLines: 1,
+                    style: text.labelMedium?.copyWith(
+                      color: i <= _reached ? PankhColors.ink : PankhColors.inkSoft,
+                    ),
                   ),
                 ),
               ],

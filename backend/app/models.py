@@ -6,7 +6,7 @@ from sqlalchemy import JSON, Date, DateTime, Float, ForeignKey, Index, Integer, 
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
-from app.db import Base, CreatedAt
+from app.db import Base, CreatedAt, now
 
 
 class Student(CreatedAt, Base):
@@ -68,7 +68,7 @@ class FactRecord(Base):
     source: Mapped[str] = mapped_column(String(32), nullable=False)
     proof_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("proofs.id", ondelete="SET NULL"))
     recorded_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now(), nullable=False
+        DateTime(timezone=True), default=now, server_default=func.now(), nullable=False
     )
 
 
@@ -93,7 +93,7 @@ class Identity(Base):
     state: Mapped[str | None] = mapped_column(String(64), index=True)
     district: Mapped[str | None] = mapped_column(String(64), index=True)
     linked_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now(), nullable=False
+        DateTime(timezone=True), default=now, server_default=func.now(), nullable=False
     )
 
 
@@ -213,7 +213,7 @@ class Consent(Base):
     scope: Mapped[str] = mapped_column(String(200), nullable=False)
     purpose: Mapped[str] = mapped_column(Text, nullable=False)
     granted_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now(), nullable=False
+        DateTime(timezone=True), default=now, server_default=func.now(), nullable=False
     )
     withdrawn_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
@@ -278,7 +278,7 @@ class AuditEvent(Base):
     subject_id: Mapped[uuid.UUID] = mapped_column(nullable=False, index=True)
     detail: Mapped[dict[str, Any]] = mapped_column(_json(), nullable=False, default=dict)
     at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now(), nullable=False
+        DateTime(timezone=True), default=now, server_default=func.now(), nullable=False
     )
 
 

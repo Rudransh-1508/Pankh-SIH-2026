@@ -76,3 +76,11 @@ def test_what_if_questions_go_to_the_scheme_path():
     assert classify("what is my plan for the future") == "path"
     # Naming a Scheme without asking about the future is still about that Scheme.
     assert classify("tell me about top class") == "scheme:top_class"
+
+
+def test_plural_words_are_understood():
+    from app.jago.understanding import classify
+
+    assert classify("Hello, where are my applications?") == "applications"
+    assert classify("any problems with my documents") == "documents"
+    assert classify("have the payments come") == "payments"

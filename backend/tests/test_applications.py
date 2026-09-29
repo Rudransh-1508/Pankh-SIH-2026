@@ -91,3 +91,44 @@ def test_two_active_mota_schemes_are_flagged():
     top_class = from_nsp(_nsp("Submitted", 5) | {"scheme_code": "TOPCLASS-ST"})
     assert exclusivity_warning([post_matric, top_class])
     assert exclusivity_warning([post_matric]) is None
+
+
+def test_paid_is_not_shown_while_an_instalment_is_still_at_the_bank():
+    from app.applications.tracker import Stage, from_nsp
+
+    record = {
+        "application_id": "NSP1",
+        "scheme_code": "POST-MATRIC-ST",
+        "academic_year": "2026-27",
+        "status": "Paid",
+        "defect_remarks": None,
+        "history": [{"status": "Paid", "on": "2026-08-09"}],
+        "sanctioned_amount": 18500,
+        "payments": [
+            {
+                "instalment": 1,
+                "amount": 9250,
+                "pfms_status": "Credited",
+                "initiated_on": "2026-06-01",
+                "credited_on": "2026-06-05",
+                "utr": "PFMS1",
+                "failure_code": None,
+                "failure_reason": None,
+            },
+            {
+                "instalment": 2,
+                "amount": 9250,
+                "pfms_status": "Pending at Bank",
+                "initiated_on": "2026-08-09",
+                "credited_on": None,
+                "utr": None,
+                "failure_code": None,
+                "failure_reason": None,
+            },
+        ],
+    }
+    application = from_nsp(record)
+    assert application.stage is Stage.DISBURSING
+    assert application.status_text == "Instalment 2 pending at the bank"
+    record["payments"][1] |= {"pfms_status": "Credited", "credited_on": "2026-08-12"}
+    assert from_nsp(record).stage is Stage.CLOSED

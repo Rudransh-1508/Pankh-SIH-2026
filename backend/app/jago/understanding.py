@@ -302,6 +302,11 @@ def classify(text: str) -> str:
     text = _norm(text)
     words = set(_words(text))
 
+    # "applications" and "payments" should count as "application" and "payment".
+    words |= {w[:-1] for w in words if w.endswith("s")} | {
+        w[:-2] for w in words if w.endswith("es")
+    }
+
     def mentions(cues: tuple[str, ...]) -> bool:
         return any(
             (cue in words) if " " not in cue and cue.isascii() else (cue in text) for cue in cues

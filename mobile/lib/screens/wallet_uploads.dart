@@ -49,6 +49,8 @@ class _PhotoSectionState extends ConsumerState<PhotoSection> {
     final l10n = AppLocalizations.of(context);
     final fromCamera = await showModalBottomSheet<bool>(
       context: context,
+      // Over the tab bar, not under it.
+      useRootNavigator: true,
       showDragHandle: true,
       builder: (context) => SafeArea(
         child: Column(
@@ -131,6 +133,8 @@ class _PhotoSectionState extends ConsumerState<PhotoSection> {
         : (Icons.hourglass_top_rounded, PankhColors.peacock, l10n.photoReviewerTitle);
     return showModalBottomSheet<bool>(
       context: context,
+      // Over the tab bar, not under it.
+      useRootNavigator: true,
       showDragHandle: true,
       isScrollControlled: true,
       builder: (context) {
@@ -345,6 +349,8 @@ class _UploadTile extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final action = await showModalBottomSheet<String>(
       context: context,
+      // Over the tab bar, not under it.
+      useRootNavigator: true,
       showDragHandle: true,
       isScrollControlled: true,
       builder: (context) {
