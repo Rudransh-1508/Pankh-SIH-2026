@@ -13,6 +13,7 @@ from app.family.router import router as family_router
 from app.grievance.router import router as grievance_router
 from app.jago.router import router as jago_router
 from app.outreach.router import router as outreach_router
+from app.phone.router import router as phone_router
 from app.renewal.router import router as renewal_router
 from app.review.router import router as review_router
 from app.schemes.router import router as schemes_router
@@ -48,6 +49,7 @@ def create_app() -> FastAPI:
         outreach_router,
         renewal_router,
         grievance_router,
+        phone_router,
     ):
         app.include_router(router, prefix="/v1")
 

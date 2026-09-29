@@ -475,6 +475,11 @@ person's paper certificate at `http://localhost:8100/paper/<phone>/caste` (or `/
 photograph it in the app. Photos past their retention date are deleted by
 `uv run --directory backend python -m app.documents.retention`, run daily.
 
+**The phone line** (keypad menu, ADR 0013) can be called from a browser at
+`http://localhost:8100/phone`: enter a registered Student's number and press keys, and it reads the
+answers aloud. In production, point an Exotel flow's Gather applet at
+`/v1/phone/exotel/<PANKH_PHONE_WEBHOOK_TOKEN>/gather`.
+
 No SMS is sent in development: every sign-in code is written to the API log. The demo officials
 are `+91 90000 00001` (ministry), `…02` (Jharkhand), `…03` (Dumka) and `…04` (Mayurbhanj).
 

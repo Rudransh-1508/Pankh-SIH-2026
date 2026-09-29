@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     environment: Literal["development", "test", "production"] = "development"
     database_url: str = "postgresql+asyncpg://pankh:pankh@localhost:5433/pankh"
     secret_key: str = DEVELOPMENT_SECRET
-    cors_origins: list[str] = ["http://localhost:3000"]
+    cors_origins: list[str] = ["http://localhost:3000", "http://localhost:8100"]
     # Where people outside Pankh (such as school nodal officers) open links Pankh sends them.
     public_api_url: str = "http://localhost:8000"
 
@@ -50,6 +50,9 @@ class Settings(BaseSettings):
     temporal_namespace: str = "default"
     chasing_task_queue: str = "pankh-chasing"
 
+    # The phone line's webhooks carry this token, since telephony providers do not sign requests.
+    phone_webhook_token: str = "development-phone-token"
+
     # Proofs are signed with an Ed25519 key. Unset, a key is derived from secret_key.
     proof_signing_key: str | None = None
     proof_ttl: timedelta = timedelta(days=365)
@@ -75,6 +78,8 @@ class Settings(BaseSettings):
     def _require_real_secret_outside_development(self) -> "Settings":
         if self.environment == "production" and self.secret_key == DEVELOPMENT_SECRET:
             raise ValueError("PANKH_SECRET_KEY must be set in production")
+        if self.environment == "production" and self.phone_webhook_token.startswith("development"):
+            raise ValueError("PANKH_PHONE_WEBHOOK_TOKEN must be set in production")
         if len(self.secret_key) < 32:
             raise ValueError("PANKH_SECRET_KEY must be at least 32 characters")
         return self

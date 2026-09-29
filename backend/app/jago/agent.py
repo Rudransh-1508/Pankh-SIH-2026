@@ -63,6 +63,19 @@ class Jago:
         await self.ctx.session.flush()
         return reply
 
+    async def answer(self, intent: str) -> Reply:
+        """One grounded answer, for channels without a conversation, such as the phone line."""
+        reply = Reply(text="")
+        if intent == "eligibility":
+            return await self._eligibility(reply, ask=False)
+        handler = {
+            "applications": self._applications,
+            "payments": self._payments,
+            "documents": self._documents,
+            "renewal": self._renewal,
+        }[intent]
+        return await handler(reply)
+
     async def _history(self) -> list[JagoMessage]:
         rows = (
             await self.ctx.session.scalars(

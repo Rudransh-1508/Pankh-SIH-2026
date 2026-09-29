@@ -27,6 +27,7 @@ select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
 [tool.ruff.lint.per-file-ignores]
 # Prose read by people: wrapping it to the code line length hurts more than it helps.
 "backend/app/jago/texts.py" = ["E501"]
+"backend/app/phone/texts.py" = ["E501"]
 "rules/pankh_rules/questions.py" = ["E501"]
 "rules/pankh_rules/planner.py" = ["E501"]
 

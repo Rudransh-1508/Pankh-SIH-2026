@@ -59,14 +59,15 @@ export default async function RemindersPage({ searchParams }: { searchParams: Pr
           {reminders.map((reminder) => (
             <li key={reminder.id} className="rounded-2xl border-[1.5px] border-line bg-card p-5">
               <p className="text-xs font-semibold tracking-wide text-ink-soft uppercase">
-                To the {reminder.level} office · {[reminder.district, reminder.state].filter(Boolean).join(", ")}
+                {reminder.kind === "callback_request" ? "Callback requested" : `To the ${reminder.level} office`} ·{" "}
+                {[reminder.district, reminder.state].filter(Boolean).join(", ")}
               </p>
               <p className="mt-2 text-lg">{reminder.message}</p>
               {reminder.status === "proposed" && (
                 <div className="mt-4 flex flex-wrap gap-2">
                   <form action={decideReminder.bind(null, reminder.id, "approve")}>
                     <button className="rounded-xl bg-peacock px-4 py-2.5 text-sm font-semibold text-white hover:bg-peacock-deep">
-                      Approve and send
+                      {reminder.kind === "callback_request" ? "Mark as called back" : "Approve and send"}
                     </button>
                   </form>
                   <form action={decideReminder.bind(null, reminder.id, "dismiss")}>

@@ -441,3 +441,18 @@ class Grievance(CreatedAt, Base):
     reply: Mapped[str | None] = mapped_column(Text)
     closed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     checked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class PhoneCall(CreatedAt, Base):
+    """A call to the phone line, and where in the menu the caller is."""
+
+    __tablename__ = "phone_calls"
+
+    call_sid: Mapped[str] = mapped_column(String(64), primary_key=True)
+    phone: Mapped[str] = mapped_column(String(16), nullable=False)
+    student_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("students.id", ondelete="SET NULL"), index=True
+    )
+    language: Mapped[str | None] = mapped_column(String(8))
+    stage: Mapped[str] = mapped_column(String(16), nullable=False)  # language | menu | ended
+    keys: Mapped[list[str]] = mapped_column(_json(), nullable=False, default=list)

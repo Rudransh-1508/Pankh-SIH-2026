@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Annotated, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
@@ -96,7 +96,20 @@ async def decide_nudge(
         raise HTTPException(status.HTTP_404_NOT_FOUND, "No such reminder in your area")
     if nudge.status != "proposed":
         raise HTTPException(status.HTTP_409_CONFLICT, "This reminder has already been decided.")
-    if body.decision == "approve":
+    if body.decision == "approve" and nudge.kind == "callback_request":
+        # The official has called the Student back; there is nothing to send.
+        nudge.status, nudge.sent_at, nudge.decided_by = "sent", datetime.now(UTC), official.id
+        session.add(
+            AuditEvent(
+                actor_type="official",
+                actor_id=official.id,
+                action="callback.done",
+                subject_type="nudge",
+                subject_id=nudge.id,
+                detail={},
+            )
+        )
+    elif body.decision == "approve":
         await send_approved(session, sms, nudge, official)
     else:
         nudge.status, nudge.decided_by = "dismissed", official.id
