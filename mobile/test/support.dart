@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pankh/app.dart';
 import 'package:pankh/data/api.dart';
 import 'package:pankh/data/document_capture.dart';
+import 'package:pankh/data/sms_sign_in.dart';
 import 'package:pankh/data/voice_line.dart';
 import 'package:pankh/data/local_store.dart';
 import 'package:pankh/data/models.dart';
@@ -56,6 +57,21 @@ class FakeApi extends PankhApi {
     filedGrievances.add(key);
     return {'registration_number': 'MOTRA/E/2026/0000001'};
   }
+
+  /// Sign-ins, as the API saw them.
+  final signIns = <String>[];
+
+  @override
+  Future<OtpRequested> requestOtp(String phone) async {
+    signIns.add('code requested for $phone');
+    return OtpRequested(phone: '+91$phone', resendAfter: 30, demoCode: '123456');
+  }
+
+  @override
+  Future<void> verifyOtp(String phone, String code) async => signIns.add('code $code for $phone');
+
+  @override
+  Future<void> signInWithSms(String idToken) async => signIns.add('sms token $idToken');
 
   @override
   Future<Json> voiceSession(String language) async => {
@@ -224,6 +240,7 @@ Future<(Widget, FakeApi, SharedPreferences)> buildApp({
   Json? verification,
   DocumentCapture? capture,
   VoiceCall? voiceCall,
+  SmsSignIn? smsSignIn,
 }) async {
   SharedPreferences.setMockInitialValues({
     if (facts.isNotEmpty) 'facts': jsonEncode(facts),
@@ -237,6 +254,7 @@ Future<(Widget, FakeApi, SharedPreferences)> buildApp({
       apiProvider.overrideWithValue(api),
       if (capture != null) documentCaptureProvider.overrideWithValue(capture),
       if (voiceCall != null) voiceCallFactoryProvider.overrideWithValue(() => voiceCall),
+      if (smsSignIn != null) smsSignInProvider.overrideWithValue(smsSignIn),
     ],
     child: const PankhApp(),
   );

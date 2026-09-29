@@ -7,6 +7,7 @@ from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert
 
 from app.auth.deps import SessionDep, SettingsDep
+from app.auth.firebase import InvalidFirebaseToken, verified_phone
 from app.auth.otp import OtpInvalid, OtpRateLimited, issue_otp, verify_otp
 from app.auth.phone import InvalidPhoneNumber, normalise_indian_mobile
 from app.auth.sms import SmsSender, get_sms_sender
@@ -107,7 +108,32 @@ async def verify(body: OtpVerification, session: SessionDep, settings: SettingsD
     except OtpInvalid as error:
         await session.commit()  # keep the attempt count
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, str(error)) from error
-    if body.role == "official":
+    return await _sign_in(session, settings, phone, body.role)
+
+
+class FirebaseSignIn(BaseModel):
+    id_token: str = Field(min_length=20, max_length=4096)
+    role: Literal["student", "official"] = "student"
+
+
+@router.post("/firebase")
+async def firebase_sign_in(
+    body: FirebaseSignIn, session: SessionDep, settings: SettingsDep
+) -> Tokens:
+    """Sign in with a phone number Firebase Authentication verified by SMS."""
+    if not settings.firebase_project_id:
+        raise HTTPException(status.HTTP_503_SERVICE_UNAVAILABLE, "SMS sign-in is not set up.")
+    try:
+        verified = await verified_phone(body.id_token, settings.firebase_project_id)
+    except InvalidFirebaseToken as error:
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, str(error)) from error
+    return await _sign_in(session, settings, _phone(verified), body.role)
+
+
+async def _sign_in(session, settings, phone: str, role: str) -> Tokens:
+    """Tokens for a phone number that has just been proved: a Student's, created on first
+    sign-in, or an official's, who must already be registered."""
+    if role == "official":
         official = await session.scalar(select(Official).where(Official.phone == phone))
         await session.commit()
         if official is None:

@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../data/api.dart';
+import '../data/sms_sign_in.dart';
 import '../l10n/generated/app_localizations.dart';
 import '../state/providers.dart';
 import '../theme.dart';
@@ -70,11 +71,21 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen> {
       _error = null;
     });
     try {
-      final sent = await ref.read(apiProvider).requestOtp(_controller.text);
+      final sms = ref.read(smsSignInProvider);
+      final OtpRequested sent;
+      if (sms != null && !isDemoNumber(_controller.text)) {
+        final phone = '+91${_controller.text}';
+        await sms.send(phone);
+        sent = OtpRequested(phone: phone, resendAfter: 30, bySms: true);
+      } else {
+        sent = await ref.read(apiProvider).requestOtp(_controller.text);
+      }
       if (!mounted) return;
       unawaited(context.push('/sign-in/code', extra: sent));
     } on ApiException catch (error) {
       setState(() => _error = _message(context, error));
+    } on SmsSignInError catch (error) {
+      setState(() => _error = error.message);
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -131,18 +142,24 @@ class _CodeScreenState extends ConsumerState<CodeScreen> {
   late int _wait = widget.sent.resendAfter;
   late String? _demoCode = widget.sent.demoCode;
   Timer? _timer;
+  StreamSubscription<String>? _automatic;
   String? _error;
   bool _busy = false;
+
+  bool get _bySms => widget.sent.bySms;
 
   @override
   void initState() {
     super.initState();
     _startTimer();
+    // On Android the phone can read the SMS itself; then there is nothing to type.
+    _automatic = ref.read(smsSignInProvider)?.verifiedAutomatically.listen(_finish);
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    unawaited(_automatic?.cancel());
     _controller.dispose();
     super.dispose();
   }
@@ -157,16 +174,26 @@ class _CodeScreenState extends ConsumerState<CodeScreen> {
 
   Future<void> _resend() async {
     try {
-      final sent = await ref.read(apiProvider).requestOtp(_phone);
-      setState(() {
-        _phone = sent.phone;
-        _wait = sent.resendAfter;
-        _demoCode = sent.demoCode;
-        _error = null;
-      });
+      if (_bySms) {
+        await ref.read(smsSignInProvider)!.send(_phone);
+        setState(() {
+          _wait = 30;
+          _error = null;
+        });
+      } else {
+        final sent = await ref.read(apiProvider).requestOtp(_phone);
+        setState(() {
+          _phone = sent.phone;
+          _wait = sent.resendAfter;
+          _demoCode = sent.demoCode;
+          _error = null;
+        });
+      }
       _startTimer();
     } on ApiException catch (error) {
       if (mounted) setState(() => _error = _message(context, error));
+    } on SmsSignInError catch (error) {
+      if (mounted) setState(() => _error = error.message);
     }
   }
 
@@ -176,15 +203,35 @@ class _CodeScreenState extends ConsumerState<CodeScreen> {
       _error = null;
     });
     try {
-      await ref.read(apiProvider).verifyOtp(_phone, _controller.text);
-      await ref.read(sessionProvider.notifier).signedIn(_phone);
-      await ref.read(profileProvider.notifier).adoptAfterSignIn();
-      if (mounted) context.go('/discover');
+      if (_bySms) {
+        await _finish(await ref.read(smsSignInProvider)!.confirm(_controller.text));
+      } else {
+        await ref.read(apiProvider).verifyOtp(_phone, _controller.text);
+        await _signedIn();
+      }
     } on ApiException catch (error) {
       if (mounted) setState(() => _error = _message(context, error));
+    } on SmsSignInError catch (error) {
+      if (mounted) setState(() => _error = error.message);
     } finally {
       if (mounted) setState(() => _busy = false);
     }
+  }
+
+  /// The number is proved by SMS: exchange Firebase's token for a Pankh session.
+  Future<void> _finish(String idToken) async {
+    try {
+      await ref.read(apiProvider).signInWithSms(idToken);
+      await _signedIn();
+    } on ApiException catch (error) {
+      if (mounted) setState(() => _error = _message(context, error));
+    }
+  }
+
+  Future<void> _signedIn() async {
+    await ref.read(sessionProvider.notifier).signedIn(_phone);
+    await ref.read(profileProvider.notifier).adoptAfterSignIn();
+    if (mounted) context.go('/discover');
   }
 
   @override

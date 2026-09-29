@@ -9,6 +9,7 @@ import '../data/upload_queue.dart';
 import '../data/voice_line.dart';
 import '../data/local_store.dart';
 import '../data/models.dart';
+import '../data/sms_sign_in.dart';
 
 /// Overridden in main() once SharedPreferences has loaded.
 final sharedPreferencesProvider = Provider<SharedPreferences>(
@@ -18,6 +19,12 @@ final sharedPreferencesProvider = Provider<SharedPreferences>(
 final localStoreProvider = Provider((ref) => LocalStore(ref.watch(sharedPreferencesProvider)));
 
 final tokenStoreProvider = Provider((ref) => TokenStore());
+
+/// Real SMS sign-in, or null when this build has no Firebase configuration. Set in main().
+final smsSignInProvider = Provider<SmsSignIn?>((ref) => null);
+
+/// Synthetic demo numbers always use the API's own codes, never real SMS.
+bool isDemoNumber(String tenDigits) => tenDigits.startsWith('90000');
 
 final apiProvider = Provider((ref) {
   final api = PankhApi(baseUrl: apiBaseUrl(), tokens: ref.watch(tokenStoreProvider));

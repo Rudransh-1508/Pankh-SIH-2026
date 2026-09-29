@@ -41,6 +41,8 @@ services:
         generateValue: true
       - key: PANKH_DEMO_SIGN_IN
         value: "true"
+      - key: PANKH_FIREBASE_PROJECT_ID
+        sync: false
       # Public addresses of the other services
       - key: PANKH_CORS_ORIGINS
         value: '["https://pankh-sih-dashboard.onrender.com","https://pankh-sih-sim.onrender.com"]'

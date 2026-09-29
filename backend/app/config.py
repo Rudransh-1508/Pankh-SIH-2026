@@ -31,6 +31,9 @@ class Settings(BaseSettings):
     # For public demos before real SMS exists: codes for the synthetic demo numbers (and only
     # those) are returned to the app, which shows them. Real numbers never see a code this way.
     demo_sign_in: bool = False
+    # Real SMS sign-in through Firebase Authentication (Google sends the SMS). Unset, only the
+    # API's own codes work.
+    firebase_project_id: str | None = None
     demo_phone_prefix: str = "+9190000"
 
     # Source Systems and Data Sources. Defaults point at the local simulators.

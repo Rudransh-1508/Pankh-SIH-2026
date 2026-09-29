@@ -5,6 +5,12 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// Real SMS sign-in needs a Firebase project's google-services.json here (kept out of git).
+// Without it the app builds as before and uses the API's own sign-in codes.
+if (file("google-services.json").exists()) {
+    apply(plugin = "com.google.gms.google-services")
+}
+
 android {
     namespace = "in.pankh.pankh"
     compileSdk = flutter.compileSdkVersion

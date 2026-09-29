@@ -19,13 +19,21 @@ class ApiException implements Exception {
 }
 
 class OtpRequested {
-  const OtpRequested({required this.phone, required this.resendAfter, this.demoCode});
+  const OtpRequested({
+    required this.phone,
+    required this.resendAfter,
+    this.demoCode,
+    this.bySms = false,
+  });
 
   final String phone;
   final int resendAfter;
 
   /// Only on a demo deployment, for the synthetic demo numbers, which get no SMS.
   final String? demoCode;
+
+  /// True when the code was sent by real SMS (Firebase), false when the API issued it.
+  final bool bySms;
 }
 
 /// Talks to the Pankh API. Signed-in requests refresh the access token automatically.
@@ -66,6 +74,15 @@ class PankhApi {
     final json = await _send(
       () => _dio.post('/auth/otp/verify', data: {'phone': phone, 'code': code}),
     );
+    await _tokens.save(
+      access: json['access_token'] as String,
+      refresh: json['refresh_token'] as String,
+    );
+  }
+
+  /// Sign in with the ID token Firebase gave after confirming the number by SMS.
+  Future<void> signInWithSms(String idToken) async {
+    final json = await _send(() => _dio.post('/auth/firebase', data: {'id_token': idToken}));
     await _tokens.save(
       access: json['access_token'] as String,
       refresh: json['refresh_token'] as String,
