@@ -1,0 +1,131 @@
+# Pankh on Render (free tier). In Render: New → Blueprint → pick this repository.
+# See deploy/RENDER.md for the steps, and for what the free tier leaves out.
+#
+# Services reach each other by their public addresses, which Render derives from the names
+# below. If Render says a name is taken, it adds a suffix: update the addresses marked
+# "public address" in each service's Environment tab to match.
+
+databases:
+  - name: pankh-sih-db
+    plan: free
+    region: singapore
+    databaseName: pankh
+    user: pankh
+
+services:
+  - type: web
+    name: pankh-sih-api
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./deploy/python.Dockerfile
+    dockerContext: .
+    # Free services have no pre-deploy step, so migrations and demo seeding run at start.
+    dockerCommand: >-
+      sh -c "alembic upgrade head && python -m app.seed &&
+      uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-10000}
+      --proxy-headers --forwarded-allow-ips='*'"
+    healthCheckPath: /health
+    envVars:
+      - key: PANKH_ENVIRONMENT
+        value: production
+      - key: PANKH_DATABASE_URL
+        fromDatabase:
+          name: pankh-sih-db
+          property: connectionString
+      - key: PANKH_SECRET_KEY
+        generateValue: true
+      - key: PANKH_PHONE_WEBHOOK_TOKEN
+        generateValue: true
+      - key: PANKH_VOICE_SERVICE_TOKEN
+        generateValue: true
+      - key: PANKH_DEMO_SIGN_IN
+        value: "true"
+      # Public addresses of the other services
+      - key: PANKH_CORS_ORIGINS
+        value: '["https://pankh-sih-dashboard.onrender.com","https://pankh-sih-sim.onrender.com"]'
+      - key: PANKH_DIGILOCKER_URL
+        value: https://pankh-sih-sim.onrender.com/digilocker
+      - key: PANKH_REGISTERS_URL
+        value: https://pankh-sih-sim.onrender.com
+      - key: PANKH_CPGRAMS_URL
+        value: https://pankh-sih-sim.onrender.com/cpgrams
+      - key: PANKH_EXOTEL_URL
+        value: https://pankh-sih-sim.onrender.com/exotel
+      # Photos: free services have no lasting disk. Leave "file" to keep photos only until the
+      # next restart, or use a free Cloudflare R2 bucket (see deploy/RENDER.md).
+      - key: PANKH_OBJECT_STORE
+        value: file
+      - key: PANKH_S3_ENDPOINT_URL
+        sync: false
+      - key: PANKH_S3_BUCKET
+        value: pankh-documents
+      - key: PANKH_S3_REGION
+        value: auto
+      - key: PANKH_S3_ACCESS_KEY_ID
+        sync: false
+      - key: PANKH_S3_SECRET_ACCESS_KEY
+        sync: false
+      # Voice (needs the paid voice worker below) and JAGO on Bedrock: optional
+      - key: PANKH_LIVEKIT_URL
+        sync: false
+      - key: PANKH_LIVEKIT_API_KEY
+        sync: false
+      - key: PANKH_LIVEKIT_API_SECRET
+        sync: false
+      - key: PANKH_BEDROCK_MODEL_ID
+        sync: false
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+      - key: PANKH_AWS_REGION
+        value: ap-south-1
+
+  - type: web
+    name: pankh-sih-sim
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./deploy/python.Dockerfile
+    dockerContext: .
+    dockerCommand: >-
+      sh -c "uvicorn pankh_simulators.app:app --host 0.0.0.0 --port ${PORT:-10000}"
+    healthCheckPath: /health
+
+  - type: web
+    name: pankh-sih-dashboard
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./dashboard/Dockerfile
+    dockerContext: ./dashboard
+    envVars:
+      - key: PANKH_API_URL
+        value: https://pankh-sih-api.onrender.com/v1
+
+  # The voice agent must stay on, which Render only offers on a paid plan (about $7 a month).
+  # To add it, remove the comment marks and redeploy the Blueprint.
+  # - type: worker
+  #   name: pankh-sih-voice
+  #   runtime: docker
+  #   plan: starter
+  #   region: singapore
+  #   dockerfilePath: ./voice/Dockerfile
+  #   dockerContext: ./voice
+  #   envVars:
+  #     - key: PANKH_API_URL
+  #       value: https://pankh-sih-api.onrender.com
+  #     - key: PANKH_VOICE_SERVICE_TOKEN
+  #       fromService:
+  #         name: pankh-sih-api
+  #         type: web
+  #         envVarKey: PANKH_VOICE_SERVICE_TOKEN
+  #     - key: PANKH_SARVAM_API_KEY
+  #       sync: false
+  #     - key: PANKH_LIVEKIT_URL
+  #       sync: false
+  #     - key: PANKH_LIVEKIT_API_KEY
+  #       sync: false
+  #     - key: PANKH_LIVEKIT_API_SECRET
+  #       sync: false

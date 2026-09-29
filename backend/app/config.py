@@ -1,8 +1,9 @@
+import os
 from datetime import timedelta
 from functools import cache
 from typing import Literal
 
-from pydantic import model_validator
+from pydantic import field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 DEVELOPMENT_SECRET = "development-only-secret-change-me-0123456789"
@@ -101,6 +102,23 @@ class Settings(BaseSettings):
     document_uploads_per_day: int = 20
     # Photos are deleted this long after the academic session they were uploaded for ends.
     document_retention: timedelta = timedelta(days=365)
+
+    @field_validator("database_url")
+    @classmethod
+    def _use_the_async_driver(cls, url: str) -> str:
+        # Hosts such as Render give "postgres://…" or "postgresql://…"; the API needs asyncpg.
+        for prefix in ("postgres://", "postgresql://"):
+            if url.startswith(prefix):
+                return "postgresql+asyncpg://" + url.removeprefix(prefix)
+        return url
+
+    @model_validator(mode="after")
+    def _public_url_from_host(self) -> "Settings":
+        # Render tells each service its own public address.
+        external = os.environ.get("RENDER_EXTERNAL_URL")
+        if external and "public_api_url" not in self.model_fields_set:
+            self.public_api_url = external.rstrip("/")
+        return self
 
     @model_validator(mode="after")
     def _require_real_secret_outside_development(self) -> "Settings":
