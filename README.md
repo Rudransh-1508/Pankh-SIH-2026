@@ -474,8 +474,9 @@ S3-compatible store in the compose file instead, start the API with `PANKH_OBJEC
 PANKH_S3_ENDPOINT_URL=http://localhost:8333 PANKH_S3_ACCESS_KEY_ID=pankh
 PANKH_S3_SECRET_ACCESS_KEY=pankh-s3-secret`. To try the document agent, open a synthetic
 person's paper certificate at `http://localhost:8100/paper/<phone>/caste` (or `/income`) and
-photograph it in the app. Photos past their retention date are deleted by
-`uv run --directory backend python -m app.documents.retention`, run daily.
+photograph it in the app. Photos past their retention date are deleted daily by the Temporal worker
+(`uv run --directory backend python -m app.chasing.worker`), or by hand with
+`uv run --directory backend python -m app.documents.retention`.
 
 **The phone line** (keypad menu, ADR 0013) can be called from a browser at
 `http://localhost:8100/phone`: enter a registered Student's number and press keys, and it reads the

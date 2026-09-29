@@ -384,3 +384,34 @@ async def test_photos_are_purged_after_their_retention_period(client, auth, stor
     assert document.status == "deleted"
     assert document.object_key is None
     assert not [p for p in store.root.rglob("*") if p.is_file()]
+
+
+async def test_the_purge_runs_every_day():
+    from temporalio import activity
+    from temporalio.testing import WorkflowEnvironment
+    from temporalio.worker import Worker
+
+    from app.documents.workflows import PurgeExpiredPhotos
+
+    runs: list[int] = []
+
+    @activity.defn(name="purge_expired_activity")
+    async def fake_purge() -> int:
+        runs.append(1)
+        return 0
+
+    async with (
+        await WorkflowEnvironment.start_time_skipping() as env,
+        Worker(
+            env.client,
+            task_queue="test-purge",
+            workflows=[PurgeExpiredPhotos],
+            activities=[fake_purge],
+        ),
+    ):
+        handle = await env.client.start_workflow(
+            PurgeExpiredPhotos.run, id="purge", task_queue="test-purge"
+        )
+        await env.sleep(timedelta(days=2, hours=1))
+        assert len(runs) == 3  # now, then once each day
+        await handle.terminate()
